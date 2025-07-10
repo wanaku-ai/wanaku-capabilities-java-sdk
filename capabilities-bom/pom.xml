@@ -36,6 +36,11 @@
                 <artifactId>capabilities-exchange</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>ai.wanaku.sdk</groupId>
+                <artifactId>capabilities-runtime</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

@@ -21,6 +21,7 @@
         <module>capabilities-discovery</module>
         <module>capabilities-data-files</module>
         <module>capabilities-exchange</module>
+        <module>capabilities-runtime</module>
         <module>capabilities-bom</module>
     </modules>
 
