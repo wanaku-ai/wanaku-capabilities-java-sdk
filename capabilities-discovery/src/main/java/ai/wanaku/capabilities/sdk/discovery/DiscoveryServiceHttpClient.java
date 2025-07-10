@@ -4,6 +4,7 @@ import jakarta.ws.rs.core.MediaType;
 
 import ai.wanaku.api.types.discovery.ServiceState;
 import ai.wanaku.api.types.providers.ServiceTarget;
+import ai.wanaku.capabilities.sdk.discovery.config.DiscoveryServiceConfig;
 import ai.wanaku.capabilities.sdk.discovery.serializer.Serializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
@@ -16,15 +17,22 @@ import java.net.http.HttpResponse;
 public class DiscoveryServiceHttpClient {
 
     private final HttpClient httpClient;
-    private final String baseUrl; // e.g., "http://localhost:8080"
-    private final String serviceBasePath = "/api/v1/management/discovery";
+    private final String baseUrl;
     private final Serializer serializer;
 
-    public DiscoveryServiceHttpClient(String baseUrl, Serializer serializer) {
+    private final String serviceBasePath = "/api/v1/management/discovery";
+
+    public DiscoveryServiceHttpClient(DiscoveryServiceConfig config) {
         this.httpClient = HttpClient.newHttpClient();
-        this.serializer = serializer;
+
+        this.baseUrl = sanitize(config);
+        this.serializer = config.getSerializer();
+    }
+
+    private static String sanitize(DiscoveryServiceConfig config) {
         // Ensure baseUrl doesn't have a trailing slash to prevent double slashes
-        this.baseUrl = baseUrl != null && baseUrl.endsWith("/") ? baseUrl.substring(0, baseUrl.length() - 1) : baseUrl;
+        return config.getBaseUrl() != null && config.getBaseUrl().endsWith("/") ?
+                config.getBaseUrl().substring(0, config.getBaseUrl().length() - 1) : config.getBaseUrl();
     }
 
     private HttpResponse<String> executePost(String operationPath, ServiceTarget serviceTarget) {
@@ -45,7 +53,6 @@ public class DiscoveryServiceHttpClient {
         } catch (InterruptedException | IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
 
