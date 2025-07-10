@@ -22,6 +22,12 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * An implementation of {@link RegistrationManager} that handles the lifecycle registration
+ * of a capability service with the Wanaku Discovery and Registration API.
+ * This manager is responsible for registering, deregistering, pinging, and updating the state of a service,
+ * and it uses {@link InstanceDataManager} to persist service-related data.
+ */
 public class ZeroDepRegistrationManager implements RegistrationManager {
     private static final Logger LOG = LoggerFactory.getLogger(ZeroDepRegistrationManager.class);
 
@@ -34,6 +40,14 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
     private final ScheduledExecutorService scheduler;
     private ScheduledFuture<?> registrationTask;
 
+    /**
+     * Constructs a {@code ZeroDepRegistrationManager}.
+     *
+     * @param client The {@link DiscoveryServiceHttpClient} to communicate with the Discovery API.
+     * @param target The {@link ServiceTarget} representing the service to manage.
+     * @param config The {@link RegistrationConfig} for registration parameters.
+     * @param deserializer The {@link Deserializer} to deserialize API responses.
+     */
     public ZeroDepRegistrationManager(DiscoveryServiceHttpClient client, ServiceTarget target,
             RegistrationConfig config, Deserializer deserializer) {
         this.client = client;
@@ -57,10 +71,19 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
         }
     }
 
+    /**
+     * Checks if the service is currently registered.
+     *
+     * @return {@code true} if the service is registered, {@code false} otherwise.
+     */
     private boolean isRegistered() {
         return registered;
     }
 
+    /**
+     * Attempts to register the service with the Wanaku Discovery API.
+     * This method includes retry logic based on the configured maximum retries and wait time.
+     */
     private void tryRegistering() {
         // Reset retries for each new registration attempt
         int retries = config.getMaxRetries();
@@ -101,6 +124,15 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
         } while (retries > 0);
     }
 
+    /**
+     * Waits for a specified duration and decrements the retry count.
+     *
+     * @param serviceName The name of the service being registered.
+     * @param e The exception that caused the retry.
+     * @param currentRetries The current number of retries remaining.
+     * @param waitSeconds The number of seconds to wait before retrying.
+     * @return The updated number of retries remaining.
+     */
     private int waitAndRetry(String serviceName, Exception e, int currentRetries, int waitSeconds) {
         if (currentRetries > 0) {
             LOG.info("Retrying registration for service {} in {} seconds. Retries left: {}", serviceName, waitSeconds, currentRetries - 1);
@@ -114,6 +146,9 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
         return currentRetries - 1;
     }
 
+    /**
+     * Registers the service. If already registered, it pings the service; otherwise, it attempts registration.
+     */
     @Override
     public void register() {
         if (isRegistered()) {
@@ -124,6 +159,9 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
 
     }
 
+    /**
+     * Attempts to deregister the service from the Wanaku Discovery API.
+     */
     private void tryDeregistering() {
         if (target != null && target.getId() != null) {
             try {
@@ -141,6 +179,9 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
         }
     }
 
+    /**
+     * Deregisters the service and stops any scheduled tasks.
+     */
     @Override
     public void deregister() {
         try {
@@ -150,6 +191,9 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
         }
     }
 
+    /**
+     * Sends a ping to the Wanaku Discovery API to keep the service registration alive.
+     */
     @Override
     public void ping() {
         if (target != null && target.getId() != null) {
@@ -174,6 +218,11 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
         }
     }
 
+    /**
+     * Updates the service's state to 'unhealthy' with a given reason.
+     *
+     * @param reason The reason for the service being unhealthy.
+     */
     @Override
     public void lastAsFail(String reason) {
         if (target.getId() == null) {
@@ -195,6 +244,9 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
         }
     }
 
+    /**
+     * Updates the service's state to 'healthy'.
+     */
     @Override
     public void lastAsSuccessful() {
         if (target.getId() == null) {
@@ -216,10 +268,17 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
         }
     }
 
+    /**
+     * Starts the scheduled registration task, which periodically calls the {@link #register()} method.
+     * The initial delay and period are configured via {@link RegistrationConfig}.
+     */
     public void start() {
         registrationTask = scheduler.scheduleAtFixedRate(this::register, config.getInitialDelay(), config.getPeriod(), TimeUnit.SECONDS);
     }
 
+    /**
+     * Stops the scheduled registration task and shuts down the scheduler.
+     */
     private void stop() {
         try {
             registrationTask.cancel(true);
