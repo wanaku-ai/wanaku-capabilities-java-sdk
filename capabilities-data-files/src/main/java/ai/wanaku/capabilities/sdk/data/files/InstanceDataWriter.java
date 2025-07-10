@@ -71,6 +71,14 @@ public class InstanceDataWriter implements AutoCloseable {
     public void write(ServiceEntry entry) throws IOException {
         checkBufferCapacity();
 
+        if (entry.getId().isEmpty()) {
+            throw new IOException("Empty service entry");
+        }
+
+        if (entry.getId().length() != ServiceEntry.ID_LENGTH) {
+            throw new IOException("Service entry id too long (it must not exceed the length of " + ServiceEntry.BYTES + ")" );
+        }
+
         byteBuffer.put(entry.getId().getBytes());
     }
 
