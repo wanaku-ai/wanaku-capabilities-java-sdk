@@ -13,6 +13,8 @@
 
     <artifactId>capabilities-discovery</artifactId>
 
+    <name>Wanaku Capabilities SDK :: Discovery</name>
+
     <dependencies>
         <dependency>
             <groupId>ai.wanaku.sdk</groupId>

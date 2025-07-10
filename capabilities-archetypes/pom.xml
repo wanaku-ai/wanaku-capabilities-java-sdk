@@ -12,7 +12,7 @@
     <version>0.0.6-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Wanaku Capabilities Archetypes</name>
+    <name>Wanaku Capabilities SDK :: Archetypes</name>
 
     <modules>
         <module>capabilities-archetypes-java-tool</module>

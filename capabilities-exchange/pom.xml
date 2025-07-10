@@ -13,6 +13,8 @@
 
     <artifactId>capabilities-exchange</artifactId>
 
+    <name>Wanaku Capabilities SDK :: Exchange</name>
+
     <dependencies>
         <dependency>
             <groupId>io.grpc</groupId>

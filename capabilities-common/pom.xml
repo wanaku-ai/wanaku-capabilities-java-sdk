@@ -13,6 +13,8 @@
 
     <artifactId>capabilities-common</artifactId>
 
+    <name>Wanaku Capabilities SDK :: Common</name>
+
     <build>
         <resources>
             <resource>

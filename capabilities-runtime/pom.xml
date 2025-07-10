@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>capabilities-runtime</artifactId>
-    <name>Wanaku Capabilities Runtime</name>
+    <name>Wanaku Capabilities SDK :: Runtime</name>
 
     <dependencies>
         <dependency>

@@ -13,6 +13,8 @@
 
     <artifactId>capabilities-data-files</artifactId>
 
+    <name>Wanaku Capabilities SDK :: Data Files</name>
+
     <dependencies>
 <!--        <dependency>-->
 <!--            <groupId>ai.wanaku</groupId>-->

@@ -10,7 +10,7 @@
     <artifactId>capabilities-archetypes-java-tool</artifactId>
     <packaging>maven-archetype</packaging>
 
-    <name>Wanaku Capabilities Java Tool Archetype</name>
+    <name>Wanaku Capabilities SDK :: Archetypes :: Java Tool</name>
 
     <build>
         <extensions>

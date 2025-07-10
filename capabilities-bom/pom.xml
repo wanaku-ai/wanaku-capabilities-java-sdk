@@ -14,6 +14,8 @@
     <artifactId>capabilities-bom</artifactId>
     <packaging>pom</packaging>
 
+    <name>Wanaku Capabilities SDK :: BOM</name>
+
     <dependencyManagement>
         <dependencies>
             <dependency>

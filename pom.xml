@@ -9,6 +9,8 @@
     <version>0.0.6-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <name>Wanaku Capabilities SDK :: Java SDK</name>
+
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
