@@ -1,5 +1,6 @@
 package ai.wanaku.capabilities.sdk.data.files;
 
+import ai.wanaku.api.exceptions.WanakuException;
 import ai.wanaku.api.types.providers.ServiceTarget;
 import ai.wanaku.api.types.providers.ServiceType;
 import java.io.File;
@@ -59,6 +60,16 @@ public class InstanceDataManager {
         }
 
         try (InstanceDataReader reader = new InstanceDataReader(file))  {
+            final FileHeader header = reader.getHeader();
+            if (header == null) {
+                throw new WanakuException("Invalid data file");
+            }
+
+            final String formatName = reader.getHeader().getFormatName();
+            if (formatName == null) {
+                throw new WanakuException("Invalid data file");
+            }
+
             return reader.readEntry();
         } catch (IOException e) {
             throw new RuntimeException(e);
