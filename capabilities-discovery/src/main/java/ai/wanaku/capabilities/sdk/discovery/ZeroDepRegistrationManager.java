@@ -10,6 +10,7 @@ import ai.wanaku.api.types.discovery.ServiceState;
 import ai.wanaku.api.types.providers.ServiceTarget;
 import ai.wanaku.capabilities.sdk.data.files.InstanceDataManager;
 import ai.wanaku.capabilities.sdk.data.files.ServiceEntry;
+import ai.wanaku.capabilities.sdk.discovery.config.RegistrationConfig;
 import ai.wanaku.capabilities.sdk.discovery.deserializer.Deserializer;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
@@ -26,33 +27,22 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
 
     private final DiscoveryServiceHttpClient client;
     private final ServiceTarget target;
-    private int maxRetries;
-    private final int waitSeconds;
-    private final String dataDir;
+    private final RegistrationConfig config;
     private final InstanceDataManager instanceDataManager;
     private final Deserializer deserializer;
     private volatile boolean registered;
     private final ScheduledExecutorService scheduler;
     private ScheduledFuture<?> registrationTask;
-    private final long initialDelay;
-    private final long period;
-    private final TimeUnit timeUnit;
 
     public ZeroDepRegistrationManager(DiscoveryServiceHttpClient client, ServiceTarget target,
-            int maxRetries, int waitSeconds, String dataDir, Deserializer deserializer,
-            long initialDelay, long period, TimeUnit timeUnit) {
+            RegistrationConfig config, Deserializer deserializer) {
         this.client = client;
         this.target = target;
-        this.maxRetries = maxRetries;
-        this.waitSeconds = waitSeconds;
-        this.dataDir = dataDir;
+        this.config = config;
         this.deserializer = deserializer;
         this.scheduler = Executors.newSingleThreadScheduledExecutor();
-        this.initialDelay = initialDelay;
-        this.period = period;
-        this.timeUnit = timeUnit;
 
-        instanceDataManager = new InstanceDataManager(dataDir, target.getService());
+        instanceDataManager = new InstanceDataManager(config.getDataDir(), target.getService());
         if (instanceDataManager.dataFileExists()) {
             final ServiceEntry serviceEntry = instanceDataManager.readEntry();
             if (serviceEntry != null) {
@@ -73,7 +63,7 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
 
     private void tryRegistering() {
         // Reset retries for each new registration attempt
-        int retries = this.maxRetries;
+        int retries = config.getMaxRetries();
         do {
             try {
                 final HttpResponse<String> response = client.register(target);
@@ -99,14 +89,14 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
                 } else {
                     LOG.warn("Unable to register service because of: {} ({})", e.getMessage(), e.getResponse().getStatus());
                 }
-                retries = waitAndRetry(target.getService(), e, retries, waitSeconds);
+                retries = waitAndRetry(target.getService(), e, retries, config.getWaitSeconds());
             } catch (Exception e) {
                 if (LOG.isDebugEnabled()) {
                     LOG.warn("Unable to register service because of: {}", e.getMessage(), e);
                 } else {
                     LOG.warn("Unable to register service because of: {}", e.getMessage());
                 }
-                retries = waitAndRetry(target.getService(), e, retries, waitSeconds);
+                retries = waitAndRetry(target.getService(), e, retries, config.getWaitSeconds());
             }
         } while (retries > 0);
     }
@@ -227,7 +217,7 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
     }
 
     public void start() {
-        registrationTask = scheduler.scheduleAtFixedRate(this::register, initialDelay, period, timeUnit);
+        registrationTask = scheduler.scheduleAtFixedRate(this::register, config.getInitialDelay(), config.getPeriod(), TimeUnit.SECONDS);
     }
 
     private void stop() {
