@@ -23,7 +23,7 @@
         <slf4j.version>2.0.16</slf4j.version>
         <log4j.version>2.21.1</log4j.version>
         <protoc-version>3.25.5</protoc-version>
-        <grpc-version>1.69.1</grpc-version>
+        <grpc.version>1.69.1</grpc.version>
         <protoc-gen-grpc-java>1.72.0</protoc-gen-grpc-java>
         <annotations-api.version>6.0.53</annotations-api.version>
     </properties>
@@ -37,7 +37,26 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-netty-shaded</artifactId>
+                <version>${grpc.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-protobuf</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-stub</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+
         </dependencies>
+
     </dependencyManagement>
 
     <dependencies>
