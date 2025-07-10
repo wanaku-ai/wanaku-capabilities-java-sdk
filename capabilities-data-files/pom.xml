@@ -15,12 +15,4 @@
 
     <name>Wanaku Capabilities SDK :: Data Files</name>
 
-    <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>ai.wanaku</groupId>-->
-<!--            <artifactId>wanaku-api</artifactId>-->
-<!--            <version>${wanaku.version}</version>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
-    </dependencies>
 </project>
