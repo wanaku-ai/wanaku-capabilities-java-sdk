@@ -8,6 +8,10 @@ import java.nio.channels.FileChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Writes instance data to a file, including file headers and service entries.
+ * This class implements {@link AutoCloseable} to ensure proper resource management.
+ */
 public class InstanceDataWriter implements AutoCloseable {
     private static final Logger LOG = LoggerFactory.getLogger(InstanceDataWriter.class);
 
@@ -16,10 +20,10 @@ public class InstanceDataWriter implements AutoCloseable {
     private final ByteBuffer byteBuffer = ByteBuffer.allocateDirect(FileHeader.BYTES + ServiceEntry.BYTES);
 
     /**
-     * Constructor
-     * @param reportFile the rate report file name
-     * @param fileHeader the file header
-     * @throws IOException in case of I/O errors
+     * Constructs an {@code InstanceDataWriter}.
+     * @param reportFile The file to write instance data to.
+     * @param fileHeader The {@link FileHeader} to write at the beginning of the file.
+     * @throws IOException If an I/O error occurs during file channel creation or header writing.
      */
     InstanceDataWriter(final File reportFile, final FileHeader fileHeader) throws IOException {
         fileChannel = new FileOutputStream(reportFile).getChannel();
@@ -27,6 +31,11 @@ public class InstanceDataWriter implements AutoCloseable {
         writeHeader(fileHeader);
     }
 
+    /**
+     * Writes the content of the byte buffer to the file channel.
+     * After writing, the buffer is flipped and cleared for subsequent writes.
+     * @throws IOException If an I/O error occurs during writing.
+     */
     private void write() throws IOException {
         byteBuffer.flip();
 
@@ -39,6 +48,11 @@ public class InstanceDataWriter implements AutoCloseable {
     }
 
 
+    /**
+     * Writes the provided {@link FileHeader} to the file.
+     * @param header The {@link FileHeader} to write.
+     * @throws IOException If an I/O error occurs during writing the header.
+     */
     private void writeHeader(final FileHeader header) throws IOException {
         byteBuffer.clear();
         byteBuffer.put(header.getFormatName().getBytes());
@@ -50,9 +64,9 @@ public class InstanceDataWriter implements AutoCloseable {
 
 
     /**
-     * Writes an entry to the file
-     * @param entry the service entry
-     * @throws IOException for multiple types of I/O errors
+     * Writes a {@link ServiceEntry} to the file.
+     * @param entry The {@link ServiceEntry} to write.
+     * @throws IOException If an I/O error occurs during writing the entry.
      */
     public void write(ServiceEntry entry) throws IOException {
         checkBufferCapacity();
@@ -60,6 +74,11 @@ public class InstanceDataWriter implements AutoCloseable {
         byteBuffer.put(entry.getId().getBytes());
     }
 
+    /**
+     * Checks if there is enough capacity in the byte buffer for a new {@link ServiceEntry}.
+     * If not, the current buffer content is written to the file.
+     * @throws IOException If an I/O error occurs during writing the buffer.
+     */
     private void checkBufferCapacity() throws IOException {
         final int remaining = byteBuffer.remaining();
 
@@ -73,14 +92,18 @@ public class InstanceDataWriter implements AutoCloseable {
     }
 
     /**
-     * Flushes the data to disk
-     * @throws IOException in case of I/O errors
+     * Flushes any buffered data to the underlying file and forces it to be written to the storage device.
+     * @throws IOException If an I/O error occurs during flushing.
      */
     public void flush() throws IOException {
         write();
         fileChannel.force(true);
     }
 
+    /**
+     * Closes the underlying file channel and releases any system resources associated with it.
+     * Any {@code IOException} that occurs during closing is logged.
+     */
     @Override
     public void close() {
         try {

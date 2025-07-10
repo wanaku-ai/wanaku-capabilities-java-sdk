@@ -9,6 +9,10 @@ import java.nio.channels.FileChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Reads instance data from a file, including file headers and service entries.
+ * This class implements {@link AutoCloseable} to ensure proper resource management.
+ */
 public class InstanceDataReader implements AutoCloseable {
     private static final Logger LOG = LoggerFactory.getLogger(InstanceDataReader.class);
 
@@ -24,9 +28,9 @@ public class InstanceDataReader implements AutoCloseable {
 
 
     /**
-     * Constructor
-     * @param fileName the report file name
-     * @throws IOException in case of I/O errors
+     * Constructs an {@code InstanceDataReader}.
+     * @param fileName The file to read instance data from.
+     * @throws IOException If an I/O error occurs during file channel creation or header reading.
      */
     InstanceDataReader(final File fileName) throws IOException {
         fileChannel = new FileInputStream(fileName).getChannel();
@@ -35,13 +39,19 @@ public class InstanceDataReader implements AutoCloseable {
     }
 
     /**
-     * Gets the file header
-     * @return the file header
+     * Gets the file header that was read upon initialization.
+     * @return The {@link FileHeader} of the data file.
      */
     public FileHeader getHeader() {
         return fileHeader;
     }
 
+    /**
+     * Reads the file header from the beginning of the file.
+     * @return The {@link FileHeader} read from the file.
+     * @throws IOException If an I/O error occurs during reading.
+     * @throws IllegalArgumentException If the file does not contain a valid header.
+     */
     private FileHeader readHeader() throws IOException {
         byteBuffer.clear();
         int bytesRead = fileChannel.read(byteBuffer);
@@ -66,9 +76,9 @@ public class InstanceDataReader implements AutoCloseable {
     }
 
     /**
-     * Read an entry from the file
-     * @return A rate entry from the file or null on end-of-file
-     * @throws IOException if unable to read the entry
+     * Reads a {@link ServiceEntry} from the file.
+     * @return A {@link ServiceEntry} from the file, or {@code null} if the end of the file is reached.
+     * @throws IOException If an I/O error occurs during reading the entry.
      */
     public ServiceEntry readEntry() throws IOException {
         logBufferInfo();
@@ -93,6 +103,9 @@ public class InstanceDataReader implements AutoCloseable {
         return new ServiceEntry(new String(idBytes));
     }
 
+    /**
+     * Logs information about the current state of the byte buffer for debugging purposes.
+     */
     private void logBufferInfo() {
         LOG.trace("Remaining: {}", byteBuffer.remaining());
         LOG.trace("Position: {}", byteBuffer.position());
@@ -100,7 +113,8 @@ public class InstanceDataReader implements AutoCloseable {
     }
 
     /**
-     * Close the reader and release resources
+     * Closes the underlying file channel and releases any system resources associated with it.
+     * Any {@code IOException} that occurs during closing is logged.
      */
     @Override
     public void close() {
