@@ -4,7 +4,7 @@
     <parent>
         <groupId>ai.wanaku.sdk</groupId>
         <artifactId>capabilities-archetypes</artifactId>
-        <version>0.0.6</version>
+        <version>0.0.7-SNAPSHOT</version>
     </parent>
 
     <artifactId>capabilities-archetypes-java-tool</artifactId>
