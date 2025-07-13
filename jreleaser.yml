@@ -1,0 +1,31 @@
+project:
+  name: wanaku-capabilities-java-sdk
+  description: Wanaku Capabilities - Java SDK
+  longDescription: This project is a plain-Java SDK designed to facilitate the creation of new capabilities for the Wanaku MCP Router
+  authors:
+    - The Wanaku Development Team
+  license: Apache-2.0
+  languages:
+    java:
+      groupId: ai.wanaku
+      version: 21
+  links:
+    homepage: https://wanaku.ai
+    bugTracker: https://github.com/wanaku-ai/wanaku-capabilities-java-sdk/issues
+  inceptionYear: 2025
+  tags:
+    - 'ai'
+    - 'mcp'
+    - 'java'
+    - 'agentic'
+    - 'agents'
+
+release:
+  github:
+    owner: wanaku-ai
+    overwrite: false
+    issues:
+      enabled: true
+    update:
+      enabled: true
+
