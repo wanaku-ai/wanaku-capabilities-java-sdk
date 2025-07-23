@@ -34,7 +34,8 @@ public class ProvisionBase extends ProvisionerGrpc.ProvisionerImplBase {
     }
 
     public Map<String, PropertySchema> properties() {
-        return Map.of("yaml-file", toPropertySchema("The name of the yaml file", "string", true));
+        // Use this to push any server-side properties/arguments
+        return Map.of();
     }
 
     private static PropertySchema toPropertySchema(String description, String type, boolean required) {
