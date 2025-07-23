@@ -4,7 +4,7 @@
     <parent>
         <groupId>ai.wanaku.sdk</groupId>
         <artifactId>capabilities-parent</artifactId>
-        <version>0.0.7-SNAPSHOT</version>
+        <version>0.0.7</version>
         <relativePath>../capabilities-parent/pom.xml</relativePath>
     </parent>
 
