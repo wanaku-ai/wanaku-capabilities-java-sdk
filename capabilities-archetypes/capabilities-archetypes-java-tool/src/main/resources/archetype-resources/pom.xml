@@ -13,6 +13,7 @@
         <slf4j.version>2.0.16</slf4j.version>
         <log4j.version>2.21.1</log4j.version>
         <picocli.version>4.7.6</picocli.version>
+        <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
         <wanaku.sdk.version>${wanaku-sdk-version}</wanaku.sdk.version>
     </properties>
 
@@ -78,4 +79,35 @@
         <!-- Other dependencies go here -->
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven-assembly-plugin.version}</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>${package}.App</mainClass>
+                        </manifest>
+                    </archive>
+                    <finalName>${artifactId}-app</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
