@@ -22,7 +22,7 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <wanaku.version>0.0.6</wanaku.version>
+        <wanaku.version>0.0.7</wanaku.version>
         <jackson-databind.version>2.17.1</jackson-databind.version>
         <jakarta.ws.rs-api.version>3.1.0</jakarta.ws.rs-api.version>
         <slf4j.version>2.0.17</slf4j.version>
