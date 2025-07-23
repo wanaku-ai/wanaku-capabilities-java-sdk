@@ -34,10 +34,14 @@ public class ProvisionBase extends ProvisionerGrpc.ProvisionerImplBase {
     }
 
     public Map<String, PropertySchema> properties() {
-        // Use this to push any server-side properties/arguments
+        // Use this to push any server-side properties/arguments. Use the toPropertySchema to serialize their additional details
+        // Map.of("argument-name", toPropertySchema("The description for what argument-name is", "string", true));
         return Map.of();
     }
 
+    /*
+     * You can use this to serialize the server-side properties to push.
+     */
     private static PropertySchema toPropertySchema(String description, String type, boolean required) {
         return PropertySchema.newBuilder()
                 .setDescription(description)
