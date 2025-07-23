@@ -5,12 +5,12 @@
     <parent>
         <groupId>ai.wanaku.sdk</groupId>
         <artifactId>wanaku-capabilities-java-sdk</artifactId>
-        <version>0.0.7</version>
+        <version>0.0.8-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>capabilities-parent</artifactId>
-    <version>0.0.7</version>
+    <version>0.0.8-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Wanaku Capabilities SDK :: Parent</name>
 
