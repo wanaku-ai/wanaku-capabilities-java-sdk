@@ -15,10 +15,25 @@ import java.io.File;
 
 import static ai.wanaku.capabilities.sdk.data.files.util.DataFileHelper.newRandomizedDataFile;
 
+/**
+ * Factory class for creating file-based configuration provisioners.
+ * Handles loading and setup of provisioners that write configurations and secrets to files.
+ */
 public final class FileProvisionerLoader {
 
+    /**
+     * Private constructor to prevent instantiation.
+     */
     private FileProvisionerLoader() {}
 
+    /**
+     * Creates a new file-based configuration provisioner based on the provision request.
+     *
+     * @param request The provision request containing configuration and secret details.
+     * @param name The service name used to determine the storage location.
+     * @return A configured {@link ConfigProvisioner} instance.
+     * @throws UnsupportedOperationException If the payload type is not supported.
+     */
     public static ConfigProvisioner newConfigProvisioner(ProvisionRequest request, String name) {
         final Configuration configuration = request.getConfiguration();
         final Secret secret = request.getSecret();

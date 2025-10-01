@@ -23,6 +23,10 @@ import java.time.Instant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Handles OAuth2 authentication with the Wanaku Discovery Service.
+ * Manages access tokens, refresh tokens, and automatic token renewal.
+ */
 public class DiscoveryAuthenticator {
     private static final Logger LOG = LoggerFactory.getLogger(DiscoveryAuthenticator.class);
     private final DiscoveryServiceConfig config;
@@ -30,6 +34,11 @@ public class DiscoveryAuthenticator {
     private RefreshToken refreshToken;
     private Instant creationTime;
 
+    /**
+     * Creates a new authenticator and obtains an initial access token.
+     *
+     * @param config The discovery service configuration containing OAuth2 credentials.
+     */
     public DiscoveryAuthenticator(DiscoveryServiceConfig config) {
         this.config = config;
 
@@ -38,11 +47,22 @@ public class DiscoveryAuthenticator {
         LOG.info("Received token with a lifetime of {} seconds", accessToken.getLifetime());
     }
 
+    /**
+     * Renews the access token using either client credentials or refresh token grant.
+     *
+     * @param config The discovery service configuration.
+     */
     private void renewToken(DiscoveryServiceConfig config) {
         final TokenRequest request = createTokenRequest(config);
         requestToken(request);
     }
 
+    /**
+     * Creates an OAuth2 token request using appropriate grant type.
+     *
+     * @param config The discovery service configuration.
+     * @return The configured token request.
+     */
     private TokenRequest createTokenRequest(DiscoveryServiceConfig config) {
         final ClientAuthentication clientAuth = getClientAuthentication(config);
 
@@ -60,12 +80,24 @@ public class DiscoveryAuthenticator {
         return request;
     }
 
+    /**
+     * Creates client authentication for OAuth2 requests.
+     *
+     * @param config The discovery service configuration containing client credentials.
+     * @return The client authentication object.
+     */
     private static ClientAuthentication getClientAuthentication(DiscoveryServiceConfig config) {
         ClientID clientID = new ClientID(config.getClientId());
         Secret clientSecret = new Secret(config.getSecret());
         return new ClientSecretBasic(clientID, clientSecret);
     }
 
+    /**
+     * Executes the token request and updates internal token state.
+     *
+     * @param request The OAuth2 token request to execute.
+     * @throws DiscoveryAuthException If authentication fails.
+     */
     private void requestToken(TokenRequest request) {
         TokenResponse response = null;
         try {
@@ -89,6 +121,11 @@ public class DiscoveryAuthenticator {
         creationTime = Instant.now();
     }
 
+    /**
+     * Returns a valid access token, renewing it if necessary.
+     *
+     * @return A valid access token value.
+     */
     private String currentValidAccessToken() {
         final long elapsedSeconds = Duration.between(creationTime, Instant.now()).getSeconds();
 
@@ -100,6 +137,11 @@ public class DiscoveryAuthenticator {
         return accessToken.getValue();
     }
 
+    /**
+     * Formats the access token as an Authorization header value.
+     *
+     * @return The formatted Bearer token header value.
+     */
     public String toHeaderValue() {
         return String.format("Bearer %s", currentValidAccessToken());
     }
