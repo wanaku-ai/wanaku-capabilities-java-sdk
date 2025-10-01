@@ -14,6 +14,12 @@ public class ServicesHelper {
      * @return The canonical home directory path for the service.
      */
     public static String getCanonicalServiceHome(String name) {
-        return System.getProperty("user.home") + File.separator + name;
+        return System.getProperty("user.home")
+                + File.separator
+                + ".wanaku"
+                + File.separator
+                + "services"
+                + File.separator
+                + name;
     }
 }
