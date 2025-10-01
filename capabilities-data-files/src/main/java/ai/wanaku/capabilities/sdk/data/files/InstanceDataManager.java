@@ -6,6 +6,8 @@ import ai.wanaku.api.types.providers.ServiceType;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Manages permanent data for a capabilities instance, such as its service ID.
@@ -13,6 +15,7 @@ import java.nio.file.Files;
  * after registration with the Wanaku Discovery and Registration API.
  */
 public class InstanceDataManager {
+    private static final Logger LOG = LoggerFactory.getLogger(InstanceDataManager.class);
 
     private final String dataDir;
     private final String name;
@@ -26,6 +29,8 @@ public class InstanceDataManager {
     public InstanceDataManager(String dataDir, String name) {
         this.dataDir = dataDir;
         this.name = name;
+
+        LOG.debug("Using {} as the data directory", dataDir);
     }
 
     /**
@@ -35,6 +40,7 @@ public class InstanceDataManager {
      */
     public boolean dataFileExists() {
         final File serviceFile = serviceFile();
+        LOG.debug("Checking if file {} exists", serviceFile);
         return serviceFile.exists();
     }
 
