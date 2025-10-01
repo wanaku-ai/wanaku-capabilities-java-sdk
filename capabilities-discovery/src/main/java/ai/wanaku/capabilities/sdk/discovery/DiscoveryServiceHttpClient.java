@@ -2,9 +2,11 @@ package ai.wanaku.capabilities.sdk.discovery;
 
 import jakarta.ws.rs.core.MediaType;
 
+import ai.wanaku.api.exceptions.WanakuException;
 import ai.wanaku.api.types.discovery.ServiceState;
 import ai.wanaku.api.types.providers.ServiceTarget;
 import ai.wanaku.capabilities.sdk.discovery.config.DiscoveryServiceConfig;
+import ai.wanaku.capabilities.sdk.discovery.exceptions.InvalidResponseDataException;
 import ai.wanaku.capabilities.sdk.discovery.serializer.Serializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
@@ -12,18 +14,23 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A client for interacting with the Wanaku Discovery and Registration API.
  * This class handles HTTP requests for service registration, deregistration, ping, and state updates.
  */
 public class DiscoveryServiceHttpClient {
+    private static final Logger LOG = LoggerFactory.getLogger(DiscoveryServiceHttpClient.class);
 
     private final HttpClient httpClient;
     private final String baseUrl;
     private final Serializer serializer;
 
     private final String serviceBasePath = "/api/v1/management/discovery";
+
+    private final DiscoveryAuthenticator discoveryAuthenticator;
 
     /**
      * Constructs a {@code DiscoveryServiceHttpClient} with the given configuration.
@@ -35,6 +42,8 @@ public class DiscoveryServiceHttpClient {
 
         this.baseUrl = sanitize(config);
         this.serializer = config.getSerializer();
+
+        discoveryAuthenticator = new DiscoveryAuthenticator(config);
     }
 
     /**
@@ -58,6 +67,7 @@ public class DiscoveryServiceHttpClient {
      * @throws RuntimeException If JSON processing fails or an I/O error occurs during the request.
      */
     private HttpResponse<String> executePost(String operationPath, ServiceTarget serviceTarget) {
+
         try {
             String jsonRequestBody = serializer.serialize(serviceTarget);
             URI uri = URI.create(this.baseUrl + this.serviceBasePath + operationPath);
@@ -66,14 +76,19 @@ public class DiscoveryServiceHttpClient {
                     .uri(uri)
                     .header("Content-Type", MediaType.APPLICATION_JSON)
                     .header("Accept", MediaType.WILDCARD)
+                    .header("Authorization", discoveryAuthenticator.toHeaderValue())
                     .POST(HttpRequest.BodyPublishers.ofString(jsonRequestBody))
                     .build();
 
             return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException | IOException e) {
-            throw new RuntimeException(e);
+            throw new InvalidResponseDataException(e);
+        } catch (IOException e) {
+            throw new WanakuException(e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            LOG.warn("Interrupted while waiting for request to POST");
+            return null;
         }
     }
 
@@ -111,6 +126,7 @@ public class DiscoveryServiceHttpClient {
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(uri)
+                    .header("Authorization", discoveryAuthenticator.toHeaderValue())
                     .POST(HttpRequest.BodyPublishers.ofString(jsonRequestBody))
                     .build();
 
@@ -137,6 +153,7 @@ public class DiscoveryServiceHttpClient {
                     .uri(uri)
                     .header("Content-Type", MediaType.APPLICATION_JSON)
                     .header("Accept", MediaType.WILDCARD)
+                    .header("Authorization", discoveryAuthenticator.toHeaderValue())
                     .POST(HttpRequest.BodyPublishers.ofString(jsonRequestBody))
                     .build();
 

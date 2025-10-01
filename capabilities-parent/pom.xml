@@ -32,6 +32,7 @@
         <protoc-gen-grpc-java>1.72.0</protoc-gen-grpc-java>
         <annotations-api.version>6.0.53</annotations-api.version>
         <junit-jupiter-api.version>5.13.3</junit-jupiter-api.version>
+        <oauth2-oidc-sdk.version>11.29.2</oauth2-oidc-sdk.version>
     </properties>
 
     <dependencyManagement>
@@ -61,6 +62,11 @@
                 <version>${grpc.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>oauth2-oidc-sdk</artifactId>
+                <version>${oauth2-oidc-sdk.version}</version>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>
