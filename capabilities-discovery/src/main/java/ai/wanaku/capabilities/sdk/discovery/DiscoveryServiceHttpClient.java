@@ -7,7 +7,7 @@ import ai.wanaku.api.types.discovery.ServiceState;
 import ai.wanaku.api.types.providers.ServiceTarget;
 import ai.wanaku.capabilities.sdk.discovery.config.DiscoveryServiceConfig;
 import ai.wanaku.capabilities.sdk.discovery.exceptions.InvalidResponseDataException;
-import ai.wanaku.capabilities.sdk.discovery.serializer.Serializer;
+import ai.wanaku.capabilities.sdk.common.serializer.Serializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 import java.net.URI;

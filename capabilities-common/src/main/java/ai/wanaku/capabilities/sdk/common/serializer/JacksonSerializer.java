@@ -1,4 +1,4 @@
-package ai.wanaku.capabilities.sdk.discovery.serializer;
+package ai.wanaku.capabilities.sdk.common.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

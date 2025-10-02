@@ -69,6 +69,7 @@
         <module>capabilities-data-files</module>
         <module>capabilities-exchange</module>
         <module>capabilities-runtime</module>
+        <module>capabilities-services-client</module>
         <module>capabilities-bom</module>
         <module>capabilities-archetypes</module>
     </modules>
