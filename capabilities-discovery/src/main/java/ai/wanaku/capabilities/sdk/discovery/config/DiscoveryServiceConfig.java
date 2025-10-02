@@ -1,6 +1,6 @@
 package ai.wanaku.capabilities.sdk.discovery.config;
 
-import ai.wanaku.capabilities.sdk.discovery.serializer.Serializer;
+import ai.wanaku.capabilities.sdk.common.serializer.Serializer;
 
 /**
  * Configuration interface for the Discovery Service, defining essential parameters

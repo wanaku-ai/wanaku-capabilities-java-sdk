@@ -1,13 +1,13 @@
 package ai.wanaku.capabilities.sdk.discovery.config;
 
-import ai.wanaku.capabilities.sdk.discovery.serializer.Serializer;
+import ai.wanaku.capabilities.sdk.common.serializer.Serializer;
 
 /**
  * Default implementation of {@link DiscoveryServiceConfig} providing configuration
  * for the Discovery Service including authentication and serialization settings.
  * This class uses a builder pattern for easy instantiation.
  */
-public class DefaultServiceConfig implements DiscoveryServiceConfig {
+public class DefaultDiscoveryServiceConfig implements DiscoveryServiceConfig {
 
     private final String baseUrl;
     private final Serializer serializer;
@@ -20,7 +20,7 @@ public class DefaultServiceConfig implements DiscoveryServiceConfig {
      *
      * @param builder The builder instance containing the configuration parameters.
      */
-    private DefaultServiceConfig(Builder builder) {
+    private DefaultDiscoveryServiceConfig(Builder builder) {
         this.baseUrl = builder.baseUrl;
         this.serializer = builder.serializer;
         this.clientId = builder.clientId;
@@ -63,7 +63,7 @@ public class DefaultServiceConfig implements DiscoveryServiceConfig {
     }
 
     /**
-     * Builder class for {@link DefaultServiceConfig}.
+     * Builder class for {@link DefaultDiscoveryServiceConfig}.
      */
     public static class Builder {
         private String baseUrl;
@@ -137,12 +137,12 @@ public class DefaultServiceConfig implements DiscoveryServiceConfig {
         }
 
         /**
-         * Builds a {@link DefaultServiceConfig} instance with the configured parameters.
+         * Builds a {@link DefaultDiscoveryServiceConfig} instance with the configured parameters.
          *
-         * @return A new {@link DefaultServiceConfig} instance.
+         * @return A new {@link DefaultDiscoveryServiceConfig} instance.
          */
-        public DefaultServiceConfig build() {
-            return new DefaultServiceConfig(this);
+        public DefaultDiscoveryServiceConfig build() {
+            return new DefaultDiscoveryServiceConfig(this);
         }
     }
 }
