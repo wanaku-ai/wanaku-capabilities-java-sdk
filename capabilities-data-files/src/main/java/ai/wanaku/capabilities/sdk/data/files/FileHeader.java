@@ -36,6 +36,11 @@ public class FileHeader {
      */
     public static final FileHeader RESOURCE_PROVIDER = new FileHeader(FORMAT_NAME, ServiceType.RESOURCE_PROVIDER, CURRENT_FILE_VERSION);
 
+    /**
+     * Predefined {@code FileHeader} for a RESOURCE_PROVIDER service type.
+     */
+    public static final FileHeader MULTI_CAPABILITY = new FileHeader(FORMAT_NAME, ServiceType.MULTI_CAPABILITY, CURRENT_FILE_VERSION);
+
     static {
         // The underlying header size is format + file version + service type;
         BYTES = FORMAT_NAME_SIZE + Integer.BYTES + Integer.BYTES + Integer.BYTES + 2;
