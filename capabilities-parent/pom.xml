@@ -26,7 +26,7 @@
         <jackson-databind.version>2.17.1</jackson-databind.version>
         <jakarta.ws.rs-api.version>3.1.0</jakarta.ws.rs-api.version>
         <slf4j.version>2.0.17</slf4j.version>
-        <log4j.version>2.25.1</log4j.version>
+        <log4j.version>2.25.2</log4j.version>
         <protoc-version>3.25.5</protoc-version>
         <grpc.version>1.69.1</grpc.version>
         <protoc-gen-grpc-java>1.72.0</protoc-gen-grpc-java>
