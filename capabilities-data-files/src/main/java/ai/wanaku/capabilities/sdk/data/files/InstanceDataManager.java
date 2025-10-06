@@ -120,10 +120,10 @@ public class InstanceDataManager {
      * @return The appropriate {@link FileHeader}.
      */
     private static FileHeader newFileHeader(ServiceTarget serviceTarget) {
-        if (serviceTarget.getServiceType() == ServiceType.RESOURCE_PROVIDER) {
-            return FileHeader.RESOURCE_PROVIDER;
-        } else {
-            return FileHeader.TOOL_INVOKER;
-        }
+        return switch (serviceTarget.getServiceType()) {
+            case TOOL_INVOKER -> FileHeader.TOOL_INVOKER;
+            case RESOURCE_PROVIDER -> FileHeader.RESOURCE_PROVIDER;
+            case MULTI_CAPABILITY -> FileHeader.MULTI_CAPABILITY;
+        };
     }
 }
