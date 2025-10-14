@@ -9,6 +9,6 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
-    # Camel related
     ignore:
+      # Camel related
       - dependency-name: "org.apache.camel:*"
