@@ -121,13 +121,12 @@ public class DiscoveryServiceHttpClient {
      */
     public HttpResponse<String> ping(String id) {
         try {
-            String jsonRequestBody = serializer.serialize(id);
             URI uri = URI.create(this.baseUrl + this.serviceBasePath + "/ping/");
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(uri)
                     .header("Authorization", discoveryAuthenticator.toHeaderValue())
-                    .POST(HttpRequest.BodyPublishers.ofString(jsonRequestBody))
+                    .POST(HttpRequest.BodyPublishers.ofString(id))
                     .build();
 
             return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
