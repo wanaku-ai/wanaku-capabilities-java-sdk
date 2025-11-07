@@ -3,6 +3,7 @@ package ai.wanaku.capabilities.sdk.discovery;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 
+import ai.wanaku.api.discovery.DiscoveryCallback;
 import ai.wanaku.api.discovery.RegistrationManager;
 import ai.wanaku.api.exceptions.WanakuException;
 import ai.wanaku.api.types.WanakuResponse;
@@ -15,10 +16,13 @@ import ai.wanaku.capabilities.sdk.discovery.deserializer.Deserializer;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
 import java.net.http.HttpResponse;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +43,7 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
     private volatile boolean registered;
     private final ScheduledExecutorService scheduler;
     private ScheduledFuture<?> registrationTask;
+    private final List<DiscoveryCallback> callbacks = new CopyOnWriteArrayList<>();
 
     /**
      * Constructs a {@code ZeroDepRegistrationManager}.
@@ -69,6 +74,8 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
                 throw new WanakuException(e);
             }
         }
+
+        callbacks.add(new DiscoveryLogCallback());
     }
 
     /**
@@ -104,7 +111,7 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
                 target.setId(entity.data().getId());
                 instanceDataManager.writeEntry(target);
                 registered = true;
-                LOG.debug("The service {} successfully registered with ID {}.", target.getService(), target.getId());
+                runCallBack(c -> c.onRegistration(this, target));
                 break;
             } catch (WebApplicationException e) {
                 if (LOG.isDebugEnabled()) {
@@ -166,9 +173,8 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
         if (target != null && target.getId() != null) {
             try {
                 final HttpResponse<String> response = client.deregister(target);
-                if (response.statusCode() != 200) {
-                    LOG.warn("De-registering service {} failed with status {}", target.getServiceType().asValue(), response.statusCode());
-                }
+                final int status = response.statusCode();
+                runCallBack(c -> c.onDeregistration(this, target, status));
             } catch (Exception e) {
                 if (LOG.isDebugEnabled()) {
                     LOG.warn("De-registering failed with {}", e.getMessage(), e);
@@ -201,13 +207,8 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
             try {
                 // Assuming client.ping(target.getId()) exists and returns HttpResponse<String>
                 final HttpResponse<String> response = client.ping(target.getId());
-                if (response.statusCode() != 200) {
-                    LOG.warn("Pinging router failed with status {}", response.statusCode());
-                }
-
-                if (LOG.isDebugEnabled()) {
-                    LOG.trace("Pinging router completed successfully");
-                }
+                final int status = response.statusCode();
+                runCallBack(c -> c.onPing(this, target, status));
             } catch (Exception e) {
                 if (LOG.isDebugEnabled()) {
                     LOG.warn("Pinging router failed with {}", e.getMessage(), e);
@@ -285,6 +286,24 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
         } finally {
             scheduler.shutdown();
         }
+    }
 
+    private void runCallBack(Consumer<DiscoveryCallback> registrationManagerConsumer) {
+        for (DiscoveryCallback callback : callbacks) {
+            try {
+                registrationManagerConsumer.accept(callback);
+            } catch (Exception e) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.warn("Unable to run callback {} due to {}", callback.getClass().getName(), e.getMessage(), e);
+                } else {
+                    LOG.warn("Unable to run callback {}} due to {}", callback.getClass().getName(), e.getMessage());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void addCallBack(DiscoveryCallback callback) {
+        callbacks.add(callback);
     }
 }

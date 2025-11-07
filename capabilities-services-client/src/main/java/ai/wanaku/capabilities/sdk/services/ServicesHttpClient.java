@@ -3,6 +3,7 @@ package ai.wanaku.capabilities.sdk.services;
 import jakarta.ws.rs.core.MediaType;
 
 import ai.wanaku.api.exceptions.WanakuException;
+import ai.wanaku.api.types.DataStore;
 import ai.wanaku.api.types.ForwardReference;
 import ai.wanaku.api.types.Namespace;
 import ai.wanaku.api.types.ResourceReference;
@@ -10,6 +11,7 @@ import ai.wanaku.api.types.ToolReference;
 import ai.wanaku.api.types.WanakuResponse;
 import ai.wanaku.api.types.io.ResourcePayload;
 import ai.wanaku.api.types.io.ToolPayload;
+import ai.wanaku.capabilities.sdk.common.exceptions.WanakuWebException;
 import ai.wanaku.capabilities.sdk.common.serializer.Serializer;
 import ai.wanaku.capabilities.sdk.services.config.ServicesClientConfig;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -87,7 +89,7 @@ public class ServicesHttpClient {
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
                 return objectMapper.readValue(response.body(), typeReference);
             } else {
-                throw new WanakuException("HTTP error: " + response.statusCode() + " - " + response.body());
+                throw new WanakuWebException("HTTP error: " + response.statusCode() + " - " + response.body(), response.statusCode());
             }
         } catch (JsonProcessingException e) {
             throw new WanakuException("JSON processing error", e);
@@ -122,7 +124,7 @@ public class ServicesHttpClient {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() < 200 || response.statusCode() >= 300) {
-                throw new WanakuException("HTTP error: " + response.statusCode() + " - " + response.body());
+                throw new WanakuWebException("HTTP error: " + response.statusCode() + " - " + response.body(), response.statusCode());
             }
         } catch (JsonProcessingException e) {
             throw new WanakuException("JSON processing error", e);
@@ -158,7 +160,7 @@ public class ServicesHttpClient {
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
                 return objectMapper.readValue(response.body(), typeReference);
             } else {
-                throw new WanakuException("HTTP error: " + response.statusCode() + " - " + response.body());
+                throw new WanakuWebException("HTTP error: " + response.statusCode() + " - " + response.body(), response.statusCode());
             }
         } catch (JsonProcessingException e) {
             throw new WanakuException("JSON processing error", e);
@@ -370,5 +372,70 @@ public class ServicesHttpClient {
      */
     public WanakuResponse<List<Namespace>> listNamespaces() {
         return executeGet("/api/v1/namespaces/list", new TypeReference<WanakuResponse<List<Namespace>>>() {});
+    }
+
+    // ==================== DataStores API Methods ====================
+
+    /**
+     * Adds a new data store entry.
+     *
+     * @param dataStore The {@link DataStore} to add.
+     * @return The response containing the added data store.
+     * @throws WanakuException If an error occurs during the request.
+     */
+    public WanakuResponse<DataStore> addDataStore(DataStore dataStore) {
+        return executePost("/api/v1/data-store/add", dataStore, new TypeReference<WanakuResponse<DataStore>>() {});
+    }
+
+    /**
+     * Lists all data stores.
+     *
+     * @return The response containing the list of all data stores.
+     * @throws WanakuException If an error occurs during the request.
+     */
+    public WanakuResponse<List<DataStore>> listDataStores() {
+        return executeGet("/api/v1/data-store/list", new TypeReference<WanakuResponse<List<DataStore>>>() {});
+    }
+
+    /**
+     * Gets a data store by ID.
+     *
+     * @param id The ID of the data store to retrieve.
+     * @return The response containing the data store.
+     * @throws WanakuException If an error occurs during the request.
+     */
+    public WanakuResponse<DataStore> getDataStoreById(String id) {
+        return executeGet("/api/v1/data-store/get?id=" + id, new TypeReference<WanakuResponse<DataStore>>() {});
+    }
+
+    /**
+     * Gets data stores by name.
+     *
+     * @param name The name of the data stores to retrieve.
+     * @return The response containing the list of data stores.
+     * @throws WanakuException If an error occurs during the request.
+     */
+    public WanakuResponse<List<DataStore>> getDataStoresByName(String name) {
+        return executeGet("/api/v1/data-store/get?name=" + name, new TypeReference<WanakuResponse<List<DataStore>>>() {});
+    }
+
+    /**
+     * Removes a data store by ID.
+     *
+     * @param id The ID of the data store to remove.
+     * @throws WanakuException If an error occurs during the request.
+     */
+    public void removeDataStore(String id) {
+        executeDelete("/api/v1/data-store/remove?id=" + id);
+    }
+
+    /**
+     * Removes data stores by name.
+     *
+     * @param name The name of the data stores to remove.
+     * @throws WanakuException If an error occurs during the request.
+     */
+    public void removeDataStoresByName(String name) {
+        executeDelete("/api/v1/data-store/remove?name=" + name);
     }
 }
