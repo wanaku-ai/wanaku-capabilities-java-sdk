@@ -11,9 +11,10 @@ import ai.wanaku.api.types.ToolReference;
 import ai.wanaku.api.types.WanakuResponse;
 import ai.wanaku.api.types.io.ResourcePayload;
 import ai.wanaku.api.types.io.ToolPayload;
+import ai.wanaku.capabilities.sdk.common.config.ServiceConfig;
 import ai.wanaku.capabilities.sdk.common.exceptions.WanakuWebException;
 import ai.wanaku.capabilities.sdk.common.serializer.Serializer;
-import ai.wanaku.capabilities.sdk.services.config.ServicesClientConfig;
+import ai.wanaku.capabilities.sdk.security.ServiceAuthenticator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,26 +38,28 @@ public class ServicesHttpClient {
     private final String baseUrl;
     private final Serializer serializer;
     private final ObjectMapper objectMapper;
+    private final ServiceAuthenticator serviceAuthenticator;
 
     /**
      * Constructs a {@code ServicesHttpClient} with the given configuration.
      *
-     * @param config The {@link ServicesClientConfig} containing base URL and serializer.
+     * @param config The {@link ServiceConfig} containing base URL and serializer.
      */
-    public ServicesHttpClient(ServicesClientConfig config) {
+    public ServicesHttpClient(ServiceConfig config) {
         this.httpClient = HttpClient.newHttpClient();
         this.baseUrl = sanitize(config);
         this.serializer = config.getSerializer();
         this.objectMapper = new ObjectMapper();
+        this.serviceAuthenticator = new ServiceAuthenticator(config);
     }
 
     /**
      * Sanitizes the base URL from the configuration by removing a trailing slash if present.
      *
-     * @param config The {@link ServicesClientConfig} to sanitize the base URL from.
+     * @param config The {@link ServiceConfig} to sanitize the base URL from.
      * @return The sanitized base URL.
      */
-    private static String sanitize(ServicesClientConfig config) {
+    private static String sanitize(ServiceConfig config) {
         return config.getBaseUrl() != null && config.getBaseUrl().endsWith("/") ?
                 config.getBaseUrl().substring(0, config.getBaseUrl().length() - 1) : config.getBaseUrl();
     }
@@ -81,6 +84,7 @@ public class ServicesHttpClient {
                     .uri(uri)
                     .header("Content-Type", MediaType.APPLICATION_JSON)
                     .header("Accept", MediaType.APPLICATION_JSON)
+                    .header("Authorization", serviceAuthenticator.toHeaderValue())
                     .POST(HttpRequest.BodyPublishers.ofString(jsonRequestBody))
                     .build();
 
@@ -118,6 +122,7 @@ public class ServicesHttpClient {
                     .uri(uri)
                     .header("Content-Type", MediaType.APPLICATION_JSON)
                     .header("Accept", MediaType.APPLICATION_JSON)
+                    .header("Authorization", serviceAuthenticator.toHeaderValue())
                     .PUT(HttpRequest.BodyPublishers.ofString(jsonRequestBody))
                     .build();
 
@@ -152,6 +157,7 @@ public class ServicesHttpClient {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(uri)
                     .header("Accept", MediaType.APPLICATION_JSON)
+                    .header("Authorization", serviceAuthenticator.toHeaderValue())
                     .GET()
                     .build();
 
@@ -185,6 +191,7 @@ public class ServicesHttpClient {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(uri)
                     .header("Accept", MediaType.APPLICATION_JSON)
+                    .header("Authorization", serviceAuthenticator.toHeaderValue())
                     .PUT(HttpRequest.BodyPublishers.noBody())
                     .build();
 

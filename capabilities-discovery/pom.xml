@@ -27,8 +27,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>oauth2-oidc-sdk</artifactId>
+            <groupId>ai.wanaku.sdk</groupId>
+            <artifactId>capabilities-security</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

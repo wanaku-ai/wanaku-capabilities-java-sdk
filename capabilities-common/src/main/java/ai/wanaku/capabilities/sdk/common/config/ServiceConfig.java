@@ -1,0 +1,23 @@
+package ai.wanaku.capabilities.sdk.common.config;
+
+import ai.wanaku.capabilities.sdk.common.serializer.Serializer;
+import ai.wanaku.capabilities.sdk.common.security.SecurityServiceConfig;
+
+/**
+ * Configuration interface for the Discovery Service, defining essential parameters
+ * like the base URL and the serializer to be used for communication.
+ */
+public interface ServiceConfig extends SecurityServiceConfig {
+    /**
+     * Returns the base URL of the Discovery Service API.
+     *
+     * @return The base URL as a {@code String}.
+     */
+    String getBaseUrl();
+    /**
+     * Returns the {@link Serializer} instance used for serializing data sent to the Discovery Service.
+     *
+     * @return The {@link Serializer} instance.
+     */
+    Serializer getSerializer();
+}

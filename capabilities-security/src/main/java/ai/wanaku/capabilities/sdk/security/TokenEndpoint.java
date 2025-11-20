@@ -1,4 +1,4 @@
-package ai.wanaku.capabilities.sdk.discovery.config;
+package ai.wanaku.capabilities.sdk.security;
 
 /**
  * Utility class for constructing OAuth2 token endpoint URLs.

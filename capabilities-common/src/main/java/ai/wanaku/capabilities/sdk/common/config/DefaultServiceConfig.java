@@ -1,13 +1,13 @@
-package ai.wanaku.capabilities.sdk.discovery.config;
+package ai.wanaku.capabilities.sdk.common.config;
 
 import ai.wanaku.capabilities.sdk.common.serializer.Serializer;
 
 /**
- * Default implementation of {@link DiscoveryServiceConfig} providing configuration
- * for the Discovery Service including authentication and serialization settings.
+ * Default implementation of {@link ServiceConfig} providing configuration
+ * for the services including authentication and serialization settings.
  * This class uses a builder pattern for easy instantiation.
  */
-public class DefaultDiscoveryServiceConfig implements DiscoveryServiceConfig {
+public class DefaultServiceConfig implements ServiceConfig {
 
     private final String baseUrl;
     private final Serializer serializer;
@@ -20,7 +20,7 @@ public class DefaultDiscoveryServiceConfig implements DiscoveryServiceConfig {
      *
      * @param builder The builder instance containing the configuration parameters.
      */
-    private DefaultDiscoveryServiceConfig(Builder builder) {
+    private DefaultServiceConfig(Builder builder) {
         this.baseUrl = builder.baseUrl;
         this.serializer = builder.serializer;
         this.clientId = builder.clientId;
@@ -63,7 +63,7 @@ public class DefaultDiscoveryServiceConfig implements DiscoveryServiceConfig {
     }
 
     /**
-     * Builder class for {@link DefaultDiscoveryServiceConfig}.
+     * Builder class for {@link DefaultServiceConfig}.
      */
     public static class Builder {
         private String baseUrl;
@@ -73,7 +73,7 @@ public class DefaultDiscoveryServiceConfig implements DiscoveryServiceConfig {
         private String tokenEndpoint;
 
         /**
-         * Sets the base URL for the Discovery Service.
+         * Sets the base URL for the Service.
          *
          * @param baseUrl The base URL.
          * @return The builder instance.
@@ -137,12 +137,12 @@ public class DefaultDiscoveryServiceConfig implements DiscoveryServiceConfig {
         }
 
         /**
-         * Builds a {@link DefaultDiscoveryServiceConfig} instance with the configured parameters.
+         * Builds a {@link DefaultServiceConfig} instance with the configured parameters.
          *
-         * @return A new {@link DefaultDiscoveryServiceConfig} instance.
+         * @return A new {@link DefaultServiceConfig} instance.
          */
-        public DefaultDiscoveryServiceConfig build() {
-            return new DefaultDiscoveryServiceConfig(this);
+        public DefaultServiceConfig build() {
+            return new DefaultServiceConfig(this);
         }
     }
 }

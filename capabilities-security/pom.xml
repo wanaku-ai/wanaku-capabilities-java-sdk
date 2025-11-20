@@ -9,9 +9,9 @@
         <relativePath>../capabilities-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>capabilities-services-client</artifactId>
+    <artifactId>capabilities-security</artifactId>
 
-    <name>Wanaku Capabilities SDK :: Services Client</name>
+    <name>Wanaku Capabilities SDK :: Security</name>
 
     <dependencies>
         <dependency>
@@ -21,16 +21,8 @@
         </dependency>
 
         <dependency>
-            <groupId>ai.wanaku.sdk</groupId>
-            <artifactId>capabilities-data-files</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>ai.wanaku.sdk</groupId>
-            <artifactId>capabilities-security</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>oauth2-oidc-sdk</artifactId>
         </dependency>
     </dependencies>
-
 </project>
