@@ -1,7 +1,7 @@
-package ai.wanaku.capabilities.sdk.discovery;
+package ai.wanaku.capabilities.sdk.security;
 
-import ai.wanaku.capabilities.sdk.discovery.config.DiscoveryServiceConfig;
-import ai.wanaku.capabilities.sdk.discovery.exceptions.DiscoveryAuthException;
+import ai.wanaku.capabilities.sdk.common.security.SecurityServiceConfig;
+import ai.wanaku.capabilities.sdk.security.exceptions.ServiceAuthException;
 import com.nimbusds.oauth2.sdk.AccessTokenResponse;
 import com.nimbusds.oauth2.sdk.AuthorizationGrant;
 import com.nimbusds.oauth2.sdk.ClientCredentialsGrant;
@@ -24,12 +24,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Handles OAuth2 authentication with the Wanaku Discovery Service.
+ * Handles OAuth2 authentication with the Wanaku.
  * Manages access tokens, refresh tokens, and automatic token renewal.
  */
-public class DiscoveryAuthenticator {
-    private static final Logger LOG = LoggerFactory.getLogger(DiscoveryAuthenticator.class);
-    private final DiscoveryServiceConfig config;
+public class ServiceAuthenticator {
+    private static final Logger LOG = LoggerFactory.getLogger(ServiceAuthenticator.class);
+    private final SecurityServiceConfig config;
     private AccessToken accessToken;
     private RefreshToken refreshToken;
     private Instant creationTime;
@@ -37,9 +37,9 @@ public class DiscoveryAuthenticator {
     /**
      * Creates a new authenticator and obtains an initial access token.
      *
-     * @param config The discovery service configuration containing OAuth2 credentials.
+     * @param config The security service configuration containing OAuth2 credentials.
      */
-    public DiscoveryAuthenticator(DiscoveryServiceConfig config) {
+    public ServiceAuthenticator(SecurityServiceConfig config) {
         this.config = config;
 
         renewToken(config);
@@ -50,9 +50,9 @@ public class DiscoveryAuthenticator {
     /**
      * Renews the access token using either client credentials or refresh token grant.
      *
-     * @param config The discovery service configuration.
+     * @param config The security service configuration.
      */
-    private void renewToken(DiscoveryServiceConfig config) {
+    private void renewToken(SecurityServiceConfig config) {
         final TokenRequest request = createTokenRequest(config);
         requestToken(request);
     }
@@ -60,10 +60,10 @@ public class DiscoveryAuthenticator {
     /**
      * Creates an OAuth2 token request using appropriate grant type.
      *
-     * @param config The discovery service configuration.
+     * @param config The security service configuration.
      * @return The configured token request.
      */
-    private TokenRequest createTokenRequest(DiscoveryServiceConfig config) {
+    private TokenRequest createTokenRequest(SecurityServiceConfig config) {
         final ClientAuthentication clientAuth = getClientAuthentication(config);
 
         URI tokenEndpoint = URI.create(config.getTokenEndpoint());
@@ -83,10 +83,10 @@ public class DiscoveryAuthenticator {
     /**
      * Creates client authentication for OAuth2 requests.
      *
-     * @param config The discovery service configuration containing client credentials.
+     * @param config The security service configuration containing client credentials.
      * @return The client authentication object.
      */
-    private static ClientAuthentication getClientAuthentication(DiscoveryServiceConfig config) {
+    private static ClientAuthentication getClientAuthentication(SecurityServiceConfig config) {
         ClientID clientID = new ClientID(config.getClientId());
         Secret clientSecret = new Secret(config.getSecret());
         return new ClientSecretBasic(clientID, clientSecret);
@@ -96,21 +96,21 @@ public class DiscoveryAuthenticator {
      * Executes the token request and updates internal token state.
      *
      * @param request The OAuth2 token request to execute.
-     * @throws DiscoveryAuthException If authentication fails.
+     * @throws ServiceAuthException If authentication fails.
      */
     private void requestToken(TokenRequest request) {
         TokenResponse response = null;
         try {
             response = TokenResponse.parse(request.toHTTPRequest().send());
         } catch (IOException | ParseException e) {
-            throw new DiscoveryAuthException(e);
+            throw new ServiceAuthException(e);
         }
 
         if (!response.indicatesSuccess()) {
             // We got an error response...
             TokenErrorResponse errorResponse = response.toErrorResponse();
-            LOG.error("Unable to authenticate with discovery service: {}", errorResponse.getErrorObject().getDescription());
-            throw new RuntimeException(errorResponse.getErrorObject().getDescription());
+            LOG.error("Unable to authenticate with service: {}", errorResponse.getErrorObject().getDescription());
+            throw new ServiceAuthException(errorResponse.getErrorObject().getDescription());
         }
 
         AccessTokenResponse successResponse = response.toSuccessResponse();

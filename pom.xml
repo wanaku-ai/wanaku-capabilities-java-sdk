@@ -66,6 +66,7 @@
         <module>capabilities-parent</module>
         <module>capabilities-common</module>
         <module>capabilities-discovery</module>
+        <module>capabilities-security</module>
         <module>capabilities-data-files</module>
         <module>capabilities-exchange</module>
         <module>capabilities-runtime</module>

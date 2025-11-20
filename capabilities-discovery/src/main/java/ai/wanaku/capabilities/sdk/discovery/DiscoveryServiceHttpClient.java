@@ -5,9 +5,10 @@ import jakarta.ws.rs.core.MediaType;
 import ai.wanaku.api.exceptions.WanakuException;
 import ai.wanaku.api.types.discovery.ServiceState;
 import ai.wanaku.api.types.providers.ServiceTarget;
-import ai.wanaku.capabilities.sdk.discovery.config.DiscoveryServiceConfig;
+import ai.wanaku.capabilities.sdk.common.config.ServiceConfig;
 import ai.wanaku.capabilities.sdk.discovery.exceptions.InvalidResponseDataException;
 import ai.wanaku.capabilities.sdk.common.serializer.Serializer;
+import ai.wanaku.capabilities.sdk.security.ServiceAuthenticator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 import java.net.URI;
@@ -30,29 +31,29 @@ public class DiscoveryServiceHttpClient {
 
     private final String serviceBasePath = "/api/v1/management/discovery";
 
-    private final DiscoveryAuthenticator discoveryAuthenticator;
+    private final ServiceAuthenticator serviceAuthenticator;
 
     /**
      * Constructs a {@code DiscoveryServiceHttpClient} with the given configuration.
      *
-     * @param config The {@link DiscoveryServiceConfig} containing base URL and serializer.
+     * @param config The {@link ServiceConfig} containing base URL and serializer.
      */
-    public DiscoveryServiceHttpClient(DiscoveryServiceConfig config) {
+    public DiscoveryServiceHttpClient(ServiceConfig config) {
         this.httpClient = HttpClient.newHttpClient();
 
         this.baseUrl = sanitize(config);
         this.serializer = config.getSerializer();
 
-        discoveryAuthenticator = new DiscoveryAuthenticator(config);
+        serviceAuthenticator = new ServiceAuthenticator(config);
     }
 
     /**
      * Sanitizes the base URL from the configuration by removing a trailing slash if present.
      *
-     * @param config The {@link DiscoveryServiceConfig} to sanitize the base URL from.
+     * @param config The {@link ServiceConfig} to sanitize the base URL from.
      * @return The sanitized base URL.
      */
-    private static String sanitize(DiscoveryServiceConfig config) {
+    private static String sanitize(ServiceConfig config) {
         // Ensure baseUrl doesn't have a trailing slash to prevent double slashes
         return config.getBaseUrl() != null && config.getBaseUrl().endsWith("/") ?
                 config.getBaseUrl().substring(0, config.getBaseUrl().length() - 1) : config.getBaseUrl();
@@ -76,7 +77,7 @@ public class DiscoveryServiceHttpClient {
                     .uri(uri)
                     .header("Content-Type", MediaType.APPLICATION_JSON)
                     .header("Accept", MediaType.WILDCARD)
-                    .header("Authorization", discoveryAuthenticator.toHeaderValue())
+                    .header("Authorization", serviceAuthenticator.toHeaderValue())
                     .POST(HttpRequest.BodyPublishers.ofString(jsonRequestBody))
                     .build();
 
@@ -125,7 +126,7 @@ public class DiscoveryServiceHttpClient {
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(uri)
-                    .header("Authorization", discoveryAuthenticator.toHeaderValue())
+                    .header("Authorization", serviceAuthenticator.toHeaderValue())
                     .POST(HttpRequest.BodyPublishers.ofString(id))
                     .build();
 
@@ -152,7 +153,7 @@ public class DiscoveryServiceHttpClient {
                     .uri(uri)
                     .header("Content-Type", MediaType.APPLICATION_JSON)
                     .header("Accept", MediaType.WILDCARD)
-                    .header("Authorization", discoveryAuthenticator.toHeaderValue())
+                    .header("Authorization", serviceAuthenticator.toHeaderValue())
                     .POST(HttpRequest.BodyPublishers.ofString(jsonRequestBody))
                     .build();
 
