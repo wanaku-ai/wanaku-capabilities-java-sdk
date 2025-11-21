@@ -5,6 +5,7 @@ import ai.wanaku.capabilities.sdk.security.exceptions.ServiceAuthException;
 import com.nimbusds.oauth2.sdk.AccessTokenResponse;
 import com.nimbusds.oauth2.sdk.AuthorizationGrant;
 import com.nimbusds.oauth2.sdk.ClientCredentialsGrant;
+import com.nimbusds.oauth2.sdk.GeneralException;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.RefreshTokenGrant;
 import com.nimbusds.oauth2.sdk.TokenErrorResponse;
@@ -13,13 +14,19 @@ import com.nimbusds.oauth2.sdk.TokenResponse;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
 import com.nimbusds.oauth2.sdk.auth.ClientSecretBasic;
 import com.nimbusds.oauth2.sdk.auth.Secret;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
+import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.id.ClientID;
+import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.RefreshToken;
+import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
+import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +73,7 @@ public class ServiceAuthenticator {
     private TokenRequest createTokenRequest(SecurityServiceConfig config) {
         final ClientAuthentication clientAuth = getClientAuthentication(config);
 
-        URI tokenEndpoint = URI.create(config.getTokenEndpoint());
+        final URI tokenEndpoint = resolveTokenEndpointUri(config);
 
         TokenRequest request;
         if (refreshToken == null) {
@@ -78,6 +85,59 @@ public class ServiceAuthenticator {
         }
 
         return request;
+    }
+
+    /*
+     * We cannot use OIDCProviderMetadata.resolve directly, because it validates the provided
+     * config endpoint with the issuer endpoint. However, because Wanaku typically uses the
+     * OIDC Proxy, they are not the same (which causes it to throw a GeneralException).
+     * This mimics the resolve logic, but ignores the validation and other things we don't
+     * need.
+     */
+    private static Issuer resolveIssuer(SecurityServiceConfig config) {
+        // The OpenID provider issuer URL
+        Issuer issuer = new Issuer(config.getTokenEndpoint());
+
+        try {
+            final URL openIdConfigUrl = OIDCProviderMetadata.resolveURL(issuer);
+
+            HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, openIdConfigUrl);
+            HTTPResponse httpResponse = httpRequest.send();
+
+            if (httpResponse.getStatusCode() != 200) {
+                throw new ServiceAuthException("Unable to download OpenID Provider metadata from " + openIdConfigUrl
+                        + ": Status code " + httpResponse.getStatusCode());
+            }
+
+            JSONObject jsonObject = httpResponse.getBodyAsJSONObject();
+
+            OIDCProviderMetadata op = OIDCProviderMetadata.parse(jsonObject);
+
+            return op.getIssuer();
+        } catch (GeneralException e) {
+            throw new ServiceAuthException("Unable to resolve token endpoint URI: " + e.getMessage(), e);
+        } catch (IOException e) {
+            throw new ServiceAuthException("I/O error while resolving token endpoint URI: " + e.getMessage(), e);
+        }
+    }
+
+    private static URI resolveTokenEndpointUri(SecurityServiceConfig config) {
+
+        /* We cannot use Wanaku's base address because it's typically behind the OIDC
+         * proxy. Therefore, we first need to resolve the issuer address, and then
+         * use the issuer address to resolve the OIDC metadata.
+         */
+        Issuer issuer = new Issuer(resolveIssuer(config));
+
+        try {
+            final OIDCProviderMetadata resolvedOp = OIDCProviderMetadata.resolve(issuer);
+
+            return resolvedOp.getTokenEndpointURI();
+        } catch (GeneralException e) {
+            throw new ServiceAuthException("Unable to resolve token endpoint URI: " + e.getMessage(), e);
+        } catch (IOException e) {
+            throw new ServiceAuthException("I/O error while resolving token endpoint URI: " + e.getMessage(), e);
+        }
     }
 
     /**
