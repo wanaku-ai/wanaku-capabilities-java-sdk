@@ -30,4 +30,32 @@ public final class TokenEndpoint {
     public static String fromBaseUrl(String baseUrl) {
         return baseUrl + "/protocol/openid-connect/token";
     }
+
+    /**
+     * Constructs a token endpoint URL by appending the discovery OpenID Connect path to a base URL.
+     *
+     * @param baseUrl The base URL of the authentication server.
+     * @return The complete token endpoint URL.
+     */
+    public static String forDiscovery(String baseUrl) {
+        return baseUrl + "/q/oidc/";
+    }
+
+    /**
+     * Automatically resolve the best URI to use
+     * @param registrationUri
+     * @param tokenEndpointUri
+     * @return
+     */
+    public static String autoResolve(String registrationUri, String tokenEndpointUri) {
+        if (tokenEndpointUri != null) {
+            if (!tokenEndpointUri.isEmpty() && !tokenEndpointUri.endsWith("/realms/wanaku/")) {
+                return direct(tokenEndpointUri);
+            }
+
+            return fromBaseUrl(tokenEndpointUri);
+        }
+
+        return forDiscovery(registrationUri);
+    }
 }
