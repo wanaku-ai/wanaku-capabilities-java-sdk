@@ -16,6 +16,12 @@
     <dependencies>
         <dependency>
             <groupId>ai.wanaku.sdk</groupId>
+            <artifactId>capabilities-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ai.wanaku.sdk</groupId>
             <artifactId>capabilities-common</artifactId>
             <version>${project.version}</version>
         </dependency>

@@ -1,7 +1,7 @@
 package ai.wanaku.capabilities.sdk.data.files;
 
-import ai.wanaku.api.types.providers.ServiceTarget;
-import ai.wanaku.api.types.providers.ServiceType;
+import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
+import ai.wanaku.capabilities.sdk.api.types.providers.ServiceType;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

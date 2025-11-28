@@ -2,15 +2,15 @@ package ai.wanaku.capabilities.sdk.services;
 
 import jakarta.ws.rs.core.MediaType;
 
-import ai.wanaku.api.exceptions.WanakuException;
-import ai.wanaku.api.types.DataStore;
-import ai.wanaku.api.types.ForwardReference;
-import ai.wanaku.api.types.Namespace;
-import ai.wanaku.api.types.ResourceReference;
-import ai.wanaku.api.types.ToolReference;
-import ai.wanaku.api.types.WanakuResponse;
-import ai.wanaku.api.types.io.ResourcePayload;
-import ai.wanaku.api.types.io.ToolPayload;
+import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
+import ai.wanaku.capabilities.sdk.api.types.DataStore;
+import ai.wanaku.capabilities.sdk.api.types.ForwardReference;
+import ai.wanaku.capabilities.sdk.api.types.Namespace;
+import ai.wanaku.capabilities.sdk.api.types.ResourceReference;
+import ai.wanaku.capabilities.sdk.api.types.ToolReference;
+import ai.wanaku.capabilities.sdk.api.types.WanakuResponse;
+import ai.wanaku.capabilities.sdk.api.types.io.ResourcePayload;
+import ai.wanaku.capabilities.sdk.api.types.io.ToolPayload;
 import ai.wanaku.capabilities.sdk.common.config.ServiceConfig;
 import ai.wanaku.capabilities.sdk.common.exceptions.WanakuWebException;
 import ai.wanaku.capabilities.sdk.common.serializer.Serializer;

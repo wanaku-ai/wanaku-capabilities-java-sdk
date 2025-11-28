@@ -1,6 +1,6 @@
 package ai.wanaku.capabilities.sdk.data.files;
 
-import ai.wanaku.api.types.providers.ServiceType;
+import ai.wanaku.capabilities.sdk.api.types.providers.ServiceType;
 
 /**
  * Represents the header of a data file, containing metadata such as format name, service type, and file version.

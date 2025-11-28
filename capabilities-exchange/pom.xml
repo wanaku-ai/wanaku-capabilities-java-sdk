@@ -28,6 +28,12 @@
             <artifactId>grpc-stub</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>ai.wanaku.sdk</groupId>
+            <artifactId>capabilities-config-provider-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <dependency> <!-- necessary for Java 9+ -->
             <groupId>org.apache.tomcat</groupId>
             <artifactId>annotations-api</artifactId>
@@ -47,32 +53,6 @@
 
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>${maven-dependency-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>unpack-source-jar</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>ai.wanaku</groupId>
-                                    <artifactId>core-exchange</artifactId>
-                                    <version>${wanaku.version}</version>
-                                    <classifier>sources</classifier>
-                                    <outputDirectory>${project.basedir}/src/main/proto</outputDirectory>
-                                    <includes>**/*.proto</includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <version>${protobuf-maven-plugin.version}</version>
@@ -87,6 +67,19 @@
                         <goals>
                             <goal>compile</goal>
                             <goal>compile-custom</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
