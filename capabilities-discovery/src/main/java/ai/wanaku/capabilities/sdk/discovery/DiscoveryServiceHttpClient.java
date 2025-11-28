@@ -2,9 +2,9 @@ package ai.wanaku.capabilities.sdk.discovery;
 
 import jakarta.ws.rs.core.MediaType;
 
-import ai.wanaku.api.exceptions.WanakuException;
-import ai.wanaku.api.types.discovery.ServiceState;
-import ai.wanaku.api.types.providers.ServiceTarget;
+import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
+import ai.wanaku.capabilities.sdk.api.types.discovery.ServiceState;
+import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
 import ai.wanaku.capabilities.sdk.common.config.ServiceConfig;
 import ai.wanaku.capabilities.sdk.discovery.exceptions.InvalidResponseDataException;
 import ai.wanaku.capabilities.sdk.common.serializer.Serializer;

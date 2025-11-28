@@ -1,8 +1,8 @@
 package ai.wanaku.capabilities.sdk.data.files;
 
-import ai.wanaku.api.exceptions.WanakuException;
-import ai.wanaku.api.types.providers.ServiceTarget;
-import ai.wanaku.api.types.providers.ServiceType;
+import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
+import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
+import ai.wanaku.capabilities.sdk.api.types.providers.ServiceType;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,9 +10,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Manages permanent data for a capabilities instance, such as its service ID.
- * This class is used by a {@code RegistrationManager} to store information
- * after registration with the Wanaku Discovery and Registration API.
+ * Manages persistent storage of service instance data for capability provider services.
+ * <p>
+ * This class handles the lifecycle of service instance data files, including reading existing
+ * service entries, writing new entries, and managing the data directory structure. Each service
+ * instance maintains its identity across restarts by persisting its ID to a binary data file.
+ * <p>
+ * The manager creates data files with the naming convention {@code <service-name>.wanaku.dat}
+ * in the specified data directory. These files contain a {@link FileHeader} followed by
+ * {@link ServiceEntry} data.
+ *
+ * @see ServiceEntry
+ * @see FileHeader
+ * @see InstanceDataReader
+ * @see InstanceDataWriter
  */
 public class InstanceDataManager {
     private static final Logger LOG = LoggerFactory.getLogger(InstanceDataManager.class);
@@ -78,7 +89,7 @@ public class InstanceDataManager {
 
             return reader.readEntry();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new WanakuException(e);
         }
     }
 
@@ -109,7 +120,7 @@ public class InstanceDataManager {
         try (InstanceDataWriter writer = new InstanceDataWriter(file, fileHeader)) {
             writer.write(new ServiceEntry(serviceTarget.getId()));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new WanakuException(e);
         }
     }
 

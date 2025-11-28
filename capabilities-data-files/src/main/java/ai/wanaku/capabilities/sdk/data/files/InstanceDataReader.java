@@ -1,6 +1,6 @@
 package ai.wanaku.capabilities.sdk.data.files;
 
-import ai.wanaku.api.types.providers.ServiceType;
+import ai.wanaku.capabilities.sdk.api.types.providers.ServiceType;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

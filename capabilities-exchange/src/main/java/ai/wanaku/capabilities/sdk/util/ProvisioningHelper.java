@@ -1,7 +1,7 @@
 package ai.wanaku.capabilities.sdk.util;
 
-import ai.wanaku.core.config.provider.api.ConfigProvisioner;
-import ai.wanaku.core.config.provider.api.ProvisionedConfig;
+import ai.wanaku.capabilities.sdk.config.provider.api.ConfigProvisioner;
+import ai.wanaku.capabilities.sdk.config.provider.api.ProvisionedConfig;
 import ai.wanaku.core.exchange.Configuration;
 import ai.wanaku.core.exchange.ProvisionRequest;
 import ai.wanaku.core.exchange.Secret;

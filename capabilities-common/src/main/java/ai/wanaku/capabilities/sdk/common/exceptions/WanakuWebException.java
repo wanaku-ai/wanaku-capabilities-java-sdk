@@ -1,6 +1,6 @@
 package ai.wanaku.capabilities.sdk.common.exceptions;
 
-import ai.wanaku.api.exceptions.WanakuException;
+import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
 
 /**
  * Exception thrown when web-related operations fail in the Wanaku capabilities SDK.

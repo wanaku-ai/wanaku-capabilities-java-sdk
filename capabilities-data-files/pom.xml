@@ -13,4 +13,12 @@
 
     <name>Wanaku Capabilities SDK :: Data Files</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>ai.wanaku.sdk</groupId>
+            <artifactId>capabilities-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
 </project>
