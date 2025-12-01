@@ -8,11 +8,11 @@
  * <p>
  * Key types include:
  * <ul>
- *   <li>{@link ai.wanaku.api.types.discovery.ActivityRecord} - Service activity and health records</li>
- *   <li>{@link ai.wanaku.api.types.discovery.ServiceState} - Service state information</li>
- *   <li>{@link ai.wanaku.api.types.discovery.StandardMessages} - Standard status messages</li>
+ *   <li>{@link ai.wanaku.capabilities.sdk.api.types.discovery.ActivityRecord} - Service activity and health records</li>
+ *   <li>{@link ai.wanaku.capabilities.sdk.api.types.discovery.ServiceState} - Service state information</li>
+ *   <li>{@link ai.wanaku.capabilities.sdk.api.types.discovery.StandardMessages} - Standard status messages</li>
  * </ul>
  *
- * @see ai.wanaku.api.types
+ * @see ai.wanaku.capabilities.sdk.api.types
  */
 package ai.wanaku.capabilities.sdk.api.types.discovery;

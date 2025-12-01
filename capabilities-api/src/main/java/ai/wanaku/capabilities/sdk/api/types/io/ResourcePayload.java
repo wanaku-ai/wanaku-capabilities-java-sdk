@@ -17,6 +17,11 @@ import ai.wanaku.capabilities.sdk.api.types.ResourceReference;
  * </ul>
  */
 public class ResourcePayload implements ProvisionAwarePayload<ResourceReference> {
+    /**
+     * Default constructor for serialization frameworks.
+     */
+    public ResourcePayload() {}
+
     private ResourceReference resourceReference;
     private String configurationData;
     private String secretsData;

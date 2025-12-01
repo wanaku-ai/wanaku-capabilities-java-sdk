@@ -19,8 +19,17 @@ public class ImageContent implements PromptContent {
      */
     private String mimeType;
 
+    /**
+     * Default constructor for serialization frameworks.
+     */
     public ImageContent() {}
 
+    /**
+     * Creates a new ImageContent with the specified data and MIME type.
+     *
+     * @param data the base64-encoded image data
+     * @param mimeType the MIME type of the image
+     */
     public ImageContent(String data, String mimeType) {
         this.data = data;
         this.mimeType = mimeType;
@@ -31,18 +40,38 @@ public class ImageContent implements PromptContent {
         return TYPE;
     }
 
+    /**
+     * Gets the base64-encoded image data.
+     *
+     * @return the image data
+     */
     public String getData() {
         return data;
     }
 
+    /**
+     * Sets the base64-encoded image data.
+     *
+     * @param data the image data to set
+     */
     public void setData(String data) {
         this.data = data;
     }
 
+    /**
+     * Gets the MIME type of the image.
+     *
+     * @return the MIME type
+     */
     public String getMimeType() {
         return mimeType;
     }
 
+    /**
+     * Sets the MIME type of the image.
+     *
+     * @param mimeType the MIME type to set
+     */
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
     }

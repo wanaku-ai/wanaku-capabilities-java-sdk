@@ -11,6 +11,9 @@ public class ServiceState {
     private boolean healthy;
     private String reason;
 
+    /**
+     * Default constructor for serialization frameworks.
+     */
     public ServiceState() {}
 
     /**
@@ -43,18 +46,38 @@ public class ServiceState {
         this.timestamp = timestamp;
     }
 
+    /**
+     * Checks if the service is healthy.
+     *
+     * @return {@code true} if the service is healthy, {@code false} otherwise
+     */
     public boolean isHealthy() {
         return healthy;
     }
 
+    /**
+     * Sets the health status of the service.
+     *
+     * @param healthy the health status to set
+     */
     public void setHealthy(boolean healthy) {
         this.healthy = healthy;
     }
 
+    /**
+     * Gets the reason for the current service state.
+     *
+     * @return the reason message, or {@code null} if not set
+     */
     public String getReason() {
         return reason;
     }
 
+    /**
+     * Sets the reason for the current service state.
+     *
+     * @param reason the reason message to set
+     */
     public void setReason(String reason) {
         this.reason = reason;
     }
@@ -80,18 +103,39 @@ public class ServiceState {
         return "ServiceState{" + "timestamp=" + timestamp + ", healthy=" + healthy + ", reason='" + reason + '\'' + '}';
     }
 
+    /**
+     * Creates a new healthy service state with the current timestamp.
+     *
+     * @return a new healthy ServiceState instance
+     */
     public static ServiceState newHealthy() {
         return new ServiceState(Instant.now(), true, StandardMessages.HEALTHY);
     }
 
+    /**
+     * Creates a new unhealthy service state with the current timestamp and the specified reason.
+     *
+     * @param reason the reason for the unhealthy state
+     * @return a new unhealthy ServiceState instance
+     */
     public static ServiceState newUnhealthy(String reason) {
         return new ServiceState(Instant.now(), false, reason);
     }
 
+    /**
+     * Creates a new service state indicating the service is missing in action.
+     *
+     * @return a new ServiceState instance with missing-in-action status
+     */
     public static ServiceState newMissingInAction() {
         return new ServiceState(Instant.now(), false, StandardMessages.MISSING_IN_ACTION);
     }
 
+    /**
+     * Creates a new inactive service state with the current timestamp.
+     *
+     * @return a new inactive ServiceState instance
+     */
     public static ServiceState newInactive() {
         return new ServiceState(Instant.now(), true, StandardMessages.AUTO_DEREGISTRATION);
     }

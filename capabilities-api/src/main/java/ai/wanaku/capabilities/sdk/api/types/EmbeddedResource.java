@@ -14,8 +14,16 @@ public class EmbeddedResource implements PromptContent {
      */
     private ResourceReference resource;
 
+    /**
+     * Default constructor for serialization frameworks.
+     */
     public EmbeddedResource() {}
 
+    /**
+     * Creates a new EmbeddedResource with the specified resource reference.
+     *
+     * @param resource the resource to embed
+     */
     public EmbeddedResource(ResourceReference resource) {
         this.resource = resource;
     }
@@ -25,10 +33,20 @@ public class EmbeddedResource implements PromptContent {
         return TYPE;
     }
 
+    /**
+     * Gets the embedded resource reference.
+     *
+     * @return the resource reference
+     */
     public ResourceReference getResource() {
         return resource;
     }
 
+    /**
+     * Sets the embedded resource reference.
+     *
+     * @param resource the resource reference to set
+     */
     public void setResource(ResourceReference resource) {
         this.resource = resource;
     }

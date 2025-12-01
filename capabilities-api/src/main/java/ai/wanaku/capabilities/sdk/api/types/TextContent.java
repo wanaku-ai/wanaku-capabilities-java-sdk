@@ -14,8 +14,16 @@ public class TextContent implements PromptContent {
      */
     private String text;
 
+    /**
+     * Default constructor for serialization frameworks.
+     */
     public TextContent() {}
 
+    /**
+     * Creates a new TextContent with the specified text.
+     *
+     * @param text the text content
+     */
     public TextContent(String text) {
         this.text = text;
     }
@@ -25,10 +33,20 @@ public class TextContent implements PromptContent {
         return TYPE;
     }
 
+    /**
+     * Gets the text content.
+     *
+     * @return the text content
+     */
     public String getText() {
         return text;
     }
 
+    /**
+     * Sets the text content.
+     *
+     * @param text the text content to set
+     */
     public void setText(String text) {
         this.text = text;
     }

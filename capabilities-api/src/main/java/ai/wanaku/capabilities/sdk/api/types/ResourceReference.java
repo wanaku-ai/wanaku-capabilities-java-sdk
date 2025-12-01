@@ -7,6 +7,11 @@ import java.util.Objects;
  * Represents a resource reference, containing details such as location, type, and parameters.
  */
 public class ResourceReference extends LabelsAwareEntity<String> {
+    /**
+     * Default constructor for serialization frameworks.
+     */
+    public ResourceReference() {}
+
     private String id;
 
     /**
@@ -215,6 +220,11 @@ public class ResourceReference extends LabelsAwareEntity<String> {
      * A nested class representing a parameter of the resource.
      */
     public static class Param {
+        /**
+         * Default constructor for serialization frameworks.
+         */
+        public Param() {}
+
         /**
          * The name of the parameter (e.g. "key", "value").
          */

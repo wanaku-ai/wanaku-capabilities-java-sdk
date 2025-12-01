@@ -23,25 +23,54 @@ public class PromptMessage {
      */
     private PromptContent content;
 
+    /**
+     * Default constructor for serialization frameworks.
+     */
     public PromptMessage() {}
 
+    /**
+     * Creates a new PromptMessage with the specified role and content.
+     *
+     * @param role the role of the message sender
+     * @param content the content of the message
+     */
     public PromptMessage(String role, PromptContent content) {
         this.role = role;
         this.content = content;
     }
 
+    /**
+     * Gets the role of the message sender.
+     *
+     * @return the role
+     */
     public String getRole() {
         return role;
     }
 
+    /**
+     * Sets the role of the message sender.
+     *
+     * @param role the role to set
+     */
     public void setRole(String role) {
         this.role = role;
     }
 
+    /**
+     * Gets the content of the message.
+     *
+     * @return the message content
+     */
     public PromptContent getContent() {
         return content;
     }
 
+    /**
+     * Sets the content of the message.
+     *
+     * @param content the content to set
+     */
     public void setContent(PromptContent content) {
         this.content = content;
     }

@@ -7,6 +7,10 @@ package ai.wanaku.capabilities.sdk.api.types.management;
  * easy to access its configuration.
  */
 public class ServerInfo {
+    /**
+     * Default constructor for serialization frameworks.
+     */
+    public ServerInfo() {}
 
     /**
      * The version of the server software or platform running on this instance.

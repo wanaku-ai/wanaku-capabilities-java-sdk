@@ -6,6 +6,10 @@ import java.util.Objects;
  * Represents a single property in the input schema.
  */
 public class Property {
+    /**
+     * Default constructor for serialization frameworks.
+     */
+    public Property() {}
 
     private String type;
     private String description;

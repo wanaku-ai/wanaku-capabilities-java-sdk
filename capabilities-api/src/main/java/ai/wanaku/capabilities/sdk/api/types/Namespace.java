@@ -8,6 +8,11 @@ package ai.wanaku.capabilities.sdk.api.types;
  * its location within the namespace hierarchy.
  */
 public class Namespace extends LabelsAwareEntity<String> {
+    /**
+     * Default constructor for serialization frameworks.
+     */
+    public Namespace() {}
+
     private String id;
     private String name;
     private String path;

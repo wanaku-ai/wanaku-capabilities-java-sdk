@@ -18,6 +18,11 @@ import java.util.Objects;
  * @see CallableReference
  */
 public class RemoteToolReference extends LabelsAwareEntity<String> implements CallableReference {
+    /**
+     * Default constructor for serialization frameworks.
+     */
+    public RemoteToolReference() {}
+
     private String id;
     private String name;
     private String description;

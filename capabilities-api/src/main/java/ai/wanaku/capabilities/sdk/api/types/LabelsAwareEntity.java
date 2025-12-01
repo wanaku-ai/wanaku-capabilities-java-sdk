@@ -14,6 +14,10 @@ import java.util.Map;
  * @see WanakuEntity
  */
 public abstract class LabelsAwareEntity<T> implements WanakuEntity<T> {
+    /**
+     * Default constructor for serialization frameworks.
+     */
+    protected LabelsAwareEntity() {}
 
     private Map<String, String> labels;
 

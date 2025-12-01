@@ -17,6 +17,11 @@ import ai.wanaku.capabilities.sdk.api.types.ToolReference;
  * </ul>
  */
 public final class ToolPayload implements ProvisionAwarePayload<ToolReference> {
+    /**
+     * Default constructor for serialization frameworks.
+     */
+    public ToolPayload() {}
+
     private ToolReference toolReference;
     private String configurationData;
     private String secretsData;

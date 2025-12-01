@@ -8,11 +8,11 @@
  * <p>
  * Key types include:
  * <ul>
- *   <li>{@link ai.wanaku.api.types.io.ProvisionAwarePayload} - Interface for provisioning payloads</li>
- *   <li>{@link ai.wanaku.api.types.io.ToolPayload} - Tool provisioning payload</li>
- *   <li>{@link ai.wanaku.api.types.io.ResourcePayload} - Resource provisioning payload</li>
+ *   <li>{@link ai.wanaku.capabilities.sdk.api.types.io.ProvisionAwarePayload} - Interface for provisioning payloads</li>
+ *   <li>{@link ai.wanaku.capabilities.sdk.api.types.io.ToolPayload} - Tool provisioning payload</li>
+ *   <li>{@link ai.wanaku.capabilities.sdk.api.types.io.ResourcePayload} - Resource provisioning payload</li>
  * </ul>
  *
- * @see ai.wanaku.api.types
+ * @see ai.wanaku.capabilities.sdk.api.types
  */
 package ai.wanaku.capabilities.sdk.api.types.io;

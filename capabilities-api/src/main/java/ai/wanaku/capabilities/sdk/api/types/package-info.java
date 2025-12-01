@@ -16,7 +16,7 @@
  *   <li>{@link ai.wanaku.capabilities.sdk.api.types.NameNamespacePair} - Name-namespace identifier pairs</li>
  * </ul>
  *
- * @see ai.wanaku.capabilities.api.types.io
- * @see ai.wanaku.capabilities.api.types.discovery
+ * @see ai.wanaku.capabilities.sdk.api.types.io
+ * @see ai.wanaku.capabilities.sdk.api.types.discovery
  */
 package ai.wanaku.capabilities.sdk.api.types;

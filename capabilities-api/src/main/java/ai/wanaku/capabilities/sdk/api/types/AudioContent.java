@@ -19,8 +19,17 @@ public class AudioContent implements PromptContent {
      */
     private String mimeType;
 
+    /**
+     * Default constructor for serialization frameworks.
+     */
     public AudioContent() {}
 
+    /**
+     * Creates a new AudioContent with the specified data and MIME type.
+     *
+     * @param data the base64-encoded audio data
+     * @param mimeType the MIME type of the audio
+     */
     public AudioContent(String data, String mimeType) {
         this.data = data;
         this.mimeType = mimeType;
@@ -31,18 +40,38 @@ public class AudioContent implements PromptContent {
         return TYPE;
     }
 
+    /**
+     * Gets the base64-encoded audio data.
+     *
+     * @return the audio data
+     */
     public String getData() {
         return data;
     }
 
+    /**
+     * Sets the base64-encoded audio data.
+     *
+     * @param data the audio data to set
+     */
     public void setData(String data) {
         this.data = data;
     }
 
+    /**
+     * Gets the MIME type of the audio.
+     *
+     * @return the MIME type
+     */
     public String getMimeType() {
         return mimeType;
     }
 
+    /**
+     * Sets the MIME type of the audio.
+     *
+     * @param mimeType the MIME type to set
+     */
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
     }
