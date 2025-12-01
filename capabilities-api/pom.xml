@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>capabilities-api</artifactId>
+    <name>Wanaku Capabilities SDK :: API</name>
 
     <dependencies>
         <dependency>
