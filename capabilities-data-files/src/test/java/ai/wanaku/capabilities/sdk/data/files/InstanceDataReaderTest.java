@@ -60,9 +60,7 @@ class InstanceDataReaderTest {
             fos.write("invalid_header".getBytes());
         }
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            new InstanceDataReader(testFile);
-        });
+        assertThrows(IllegalArgumentException.class, () -> new InstanceDataReader(testFile));
     }
 
     @Test
