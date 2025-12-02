@@ -36,11 +36,10 @@ public abstract class PropertyBasedStore implements ConfigStore {
 
     @Override
     public Map<String, String> getEntries(String prefix) {
-        final Map<String, String> configs = properties.entrySet().stream()
+        return properties.entrySet().stream()
                 .filter(e -> e.getKey().toString().startsWith(prefix))
                 .collect(Collectors.toMap(
                         e -> e.getKey().toString(), e -> e.getValue().toString()));
-        return configs;
     }
 
     @Override

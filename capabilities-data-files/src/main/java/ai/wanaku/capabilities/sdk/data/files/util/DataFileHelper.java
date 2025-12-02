@@ -18,7 +18,6 @@ public final class DataFileHelper {
      */
     public static File newRandomizedDataFile(String serviceHome) {
         String uuid = UUID.randomUUID() + ".properties";
-        File dataFile = new File(serviceHome, uuid);
-        return dataFile;
+        return new File(serviceHome, uuid);
     }
 }
