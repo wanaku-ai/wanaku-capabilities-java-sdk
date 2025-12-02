@@ -159,9 +159,9 @@ public class DiscoveryServiceHttpClient {
 
             return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new InvalidResponseDataException(e);
         } catch (InterruptedException | IOException e) {
-            throw new RuntimeException(e);
+            throw new WanakuException(e);
         }
     }
 }
