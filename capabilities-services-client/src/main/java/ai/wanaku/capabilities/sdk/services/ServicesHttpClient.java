@@ -218,7 +218,8 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<ToolReference> addTool(ToolReference toolReference) {
-        return executePost("/api/v1/tools/add", toolReference, new TypeReference<WanakuResponse<ToolReference>>() {});
+        return executePost("/api/v1/tools/add", toolReference, new TypeReference<>() {
+        });
     }
 
     /**
@@ -229,7 +230,8 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<ToolReference> addToolWithPayload(ToolPayload toolPayload) {
-        return executePost("/api/v1/tools/addWithPayload", toolPayload, new TypeReference<WanakuResponse<ToolReference>>() {});
+        return executePost("/api/v1/tools/addWithPayload", toolPayload, new TypeReference<>() {
+        });
     }
 
     /**
@@ -239,7 +241,8 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<List<ToolReference>> listTools() {
-        return executeGet("/api/v1/tools/list", new TypeReference<WanakuResponse<List<ToolReference>>>() {});
+        return executeGet("/api/v1/tools/list", new TypeReference<>() {
+        });
     }
 
     /**
@@ -250,7 +253,8 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<ToolReference> getToolByName(String name) {
-        return executePost("/api/v1/tools?name=" + name, "", new TypeReference<WanakuResponse<ToolReference>>() {});
+        return executePost("/api/v1/tools?name=" + name, "", new TypeReference<>() {
+        });
     }
 
     /**
@@ -283,7 +287,8 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<ResourceReference> exposeResource(ResourceReference resourceReference) {
-        return executePost("/api/v1/resources/expose", resourceReference, new TypeReference<WanakuResponse<ResourceReference>>() {});
+        return executePost("/api/v1/resources/expose", resourceReference, new TypeReference<>() {
+        });
     }
 
     /**
@@ -294,7 +299,8 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<ResourceReference> exposeResourceWithPayload(ResourcePayload resourcePayload) {
-        return executePost("/api/v1/resources/exposeWithPayload", resourcePayload, new TypeReference<WanakuResponse<ResourceReference>>() {});
+        return executePost("/api/v1/resources/exposeWithPayload", resourcePayload, new TypeReference<>() {
+        });
     }
 
     /**
@@ -304,7 +310,8 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<List<ResourceReference>> listResources() {
-        return executeGet("/api/v1/resources/list", new TypeReference<WanakuResponse<List<ResourceReference>>>() {});
+        return executeGet("/api/v1/resources/list", new TypeReference<>() {
+        });
     }
 
     /**
@@ -346,7 +353,8 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<List<ForwardReference>> listForwards() {
-        return executeGet("/api/v1/forwards/list", new TypeReference<WanakuResponse<List<ForwardReference>>>() {});
+        return executeGet("/api/v1/forwards/list", new TypeReference<>() {
+        });
     }
 
     /**
@@ -378,7 +386,8 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<List<Namespace>> listNamespaces() {
-        return executeGet("/api/v1/namespaces/list", new TypeReference<WanakuResponse<List<Namespace>>>() {});
+        return executeGet("/api/v1/namespaces/list", new TypeReference<>() {
+        });
     }
 
     // ==================== DataStores API Methods ====================
@@ -391,7 +400,8 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<DataStore> addDataStore(DataStore dataStore) {
-        return executePost("/api/v1/data-store/add", dataStore, new TypeReference<WanakuResponse<DataStore>>() {});
+        return executePost("/api/v1/data-store/add", dataStore, new TypeReference<>() {
+        });
     }
 
     /**
@@ -401,7 +411,8 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<List<DataStore>> listDataStores() {
-        return executeGet("/api/v1/data-store/list", new TypeReference<WanakuResponse<List<DataStore>>>() {});
+        return executeGet("/api/v1/data-store/list", new TypeReference<>() {
+        });
     }
 
     /**
@@ -412,7 +423,8 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<DataStore> getDataStoreById(String id) {
-        return executeGet("/api/v1/data-store/get?id=" + id, new TypeReference<WanakuResponse<DataStore>>() {});
+        return executeGet("/api/v1/data-store/get?id=" + id, new TypeReference<>() {
+        });
     }
 
     /**
@@ -423,7 +435,8 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<List<DataStore>> getDataStoresByName(String name) {
-        return executeGet("/api/v1/data-store/get?name=" + name, new TypeReference<WanakuResponse<List<DataStore>>>() {});
+        return executeGet("/api/v1/data-store/get?name=" + name, new TypeReference<>() {
+        });
     }
 
     /**
