@@ -15,6 +15,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <version>${jakarta.ws.rs-api.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>ai.wanaku.sdk</groupId>
             <artifactId>capabilities-api</artifactId>
             <version>${project.version}</version>
