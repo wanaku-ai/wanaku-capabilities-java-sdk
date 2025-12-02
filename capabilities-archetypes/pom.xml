@@ -7,7 +7,6 @@
         <version>0.0.9-SNAPSHOT</version>
     </parent>
 
-    <groupId>ai.wanaku.sdk</groupId>
     <artifactId>capabilities-archetypes</artifactId>
     <version>0.0.9-SNAPSHOT</version>
     <packaging>pom</packaging>
