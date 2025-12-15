@@ -3,6 +3,9 @@ name: early-access
 on:
   workflow_dispatch:
   workflow_call:
+  schedule:
+    # Run every 2 days at 00:00 UTC
+    - cron: '0 0 */2 * *'
 
 jobs:
   publish-snapshot:
