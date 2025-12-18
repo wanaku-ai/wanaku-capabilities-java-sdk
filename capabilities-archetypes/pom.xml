@@ -4,11 +4,11 @@
     <parent>
         <groupId>ai.wanaku.sdk</groupId>
         <artifactId>wanaku-capabilities-java-sdk</artifactId>
-        <version>0.0.9-SNAPSHOT</version>
+        <version>0.0.9</version>
     </parent>
 
     <artifactId>capabilities-archetypes</artifactId>
-    <version>0.0.9-SNAPSHOT</version>
+    <version>0.0.9</version>
     <packaging>pom</packaging>
 
     <name>Wanaku Capabilities SDK :: Archetypes</name>
