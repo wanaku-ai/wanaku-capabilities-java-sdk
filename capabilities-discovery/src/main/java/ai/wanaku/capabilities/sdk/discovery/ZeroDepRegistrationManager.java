@@ -61,7 +61,7 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
         this.deserializer = deserializer;
         this.scheduler = Executors.newSingleThreadScheduledExecutor();
 
-        instanceDataManager = new InstanceDataManager(config.getDataDir(), target.getService());
+        instanceDataManager = new InstanceDataManager(config.getDataDir(), target.getServiceName());
         if (instanceDataManager.dataFileExists()) {
             final ServiceEntry serviceEntry = instanceDataManager.readEntry();
             if (serviceEntry != null) {
@@ -98,7 +98,7 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
             try {
                 final HttpResponse<String> response = client.register(target);
                 if (response.statusCode() != Response.Status.OK.getStatusCode()) {
-                    LOG.warn("The service {} failed to register. Response code: {}", target.getService(),
+                    LOG.warn("The service {} failed to register. Response code: {}", target.getServiceName(),
                             response.statusCode());
                 }
 
@@ -119,14 +119,14 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
                 } else {
                     LOG.warn("Unable to register service because of: {} ({})", e.getMessage(), e.getResponse().getStatus());
                 }
-                retries = waitAndRetry(target.getService(), e, retries, config.getWaitSeconds());
+                retries = waitAndRetry(target.getServiceName(), e, retries, config.getWaitSeconds());
             } catch (Exception e) {
                 if (LOG.isDebugEnabled()) {
                     LOG.warn("Unable to register service because of: {}", e.getMessage(), e);
                 } else {
                     LOG.warn("Unable to register service because of: {}", e.getMessage());
                 }
-                retries = waitAndRetry(target.getService(), e, retries, config.getWaitSeconds());
+                retries = waitAndRetry(target.getServiceName(), e, retries, config.getWaitSeconds());
             }
         } while (retries > 0);
     }
@@ -227,14 +227,14 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
     @Override
     public void lastAsFail(String reason) {
         if (target.getId() == null) {
-            LOG.warn("Trying to update the state of an unknown service {}", target.getService());
+            LOG.warn("Trying to update the state of an unknown service {}", target.getServiceName());
             return;
         }
 
         try {
             final HttpResponse<String> response = client.updateState(target.getId(), ServiceState.newUnhealthy(reason));
             if (response.statusCode() != 200) {
-                LOG.error("Could not update the state of an service {} ({})", target.getService(), target.getId());
+                LOG.error("Could not update the state of an service {} ({})", target.getServiceName(), target.getId());
             }
         } catch (Exception e) {
             if (LOG.isDebugEnabled()) {
@@ -251,14 +251,14 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
     @Override
     public void lastAsSuccessful() {
         if (target.getId() == null) {
-            LOG.warn("Trying to update the state of an unknown service {}", target.getService());
+            LOG.warn("Trying to update the state of an unknown service {}", target.getServiceName());
             return;
         }
 
         try {
             final HttpResponse<String> response = client.updateState(target.getId(), ServiceState.newHealthy());
             if (response.statusCode() != 200) {
-                LOG.error("Could not update the state of an service {} ({})", target.getService(), target.getId());
+                LOG.error("Could not update the state of an service {} ({})", target.getServiceName(), target.getId());
             }
         } catch (Exception e) {
             if (LOG.isDebugEnabled()) {

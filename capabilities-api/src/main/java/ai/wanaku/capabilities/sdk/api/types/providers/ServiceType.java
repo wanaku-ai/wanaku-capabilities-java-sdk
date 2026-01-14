@@ -17,7 +17,12 @@ public enum ServiceType {
     /**
      * This can do both: invoke tools and provide resources
      */
-    MULTI_CAPABILITY("multi-capability", 3);
+    MULTI_CAPABILITY("multi-capability", 3),
+
+    /**
+     * Executes code in a sandboxed environment
+     */
+    CODE_EXECUTION_ENGINE("code-execution-engine", 4);
 
     private final String value;
     private final int intValue;
@@ -61,6 +66,10 @@ public enum ServiceType {
 
         if (value == 3) {
             return MULTI_CAPABILITY;
+        }
+
+        if (value == 4) {
+            return CODE_EXECUTION_ENGINE;
         }
 
         throw new IllegalArgumentException("Invalid service type: " + value);
