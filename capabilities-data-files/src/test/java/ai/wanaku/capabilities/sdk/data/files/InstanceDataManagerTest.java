@@ -1,7 +1,6 @@
 package ai.wanaku.capabilities.sdk.data.files;
 
 import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
-import ai.wanaku.capabilities.sdk.api.types.providers.ServiceType;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +49,7 @@ class InstanceDataManagerTest {
 
         final String expectedID = UUID.randomUUID().toString();
         ServiceTarget serviceTarget = ServiceTarget
-                .newEmptyTarget("testService", "localhost", 9190, ServiceType.TOOL_INVOKER);
+                .newEmptyTarget("testService", "localhost", 9190, "tool-invoker");
         serviceTarget.setId(expectedID);
 
         instanceDataManager.writeEntry(serviceTarget);

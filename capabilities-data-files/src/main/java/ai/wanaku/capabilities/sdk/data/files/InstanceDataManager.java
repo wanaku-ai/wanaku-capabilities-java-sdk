@@ -2,7 +2,7 @@ package ai.wanaku.capabilities.sdk.data.files;
 
 import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
 import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
-import ai.wanaku.capabilities.sdk.api.types.providers.ServiceType;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -125,16 +125,23 @@ public class InstanceDataManager {
     }
 
     /**
-     * Creates a new {@link FileHeader} based on the {@link ServiceType} of the given {@link ServiceTarget}.
+     * Creates a new {@link FileHeader} based on the service type of the given {@link ServiceTarget}.
      *
      * @param serviceTarget The {@link ServiceTarget} to determine the file header from.
      * @return The appropriate {@link FileHeader}.
      */
     private static FileHeader newFileHeader(ServiceTarget serviceTarget) {
-        return switch (serviceTarget.getServiceType()) {
-            case TOOL_INVOKER -> FileHeader.TOOL_INVOKER;
-            case RESOURCE_PROVIDER -> FileHeader.RESOURCE_PROVIDER;
-            case MULTI_CAPABILITY -> FileHeader.MULTI_CAPABILITY;
+        String serviceType = serviceTarget.getServiceType();
+        if (serviceType == null) {
+            throw new IllegalArgumentException("Service type cannot be null");
+        }
+        
+        return switch (serviceType) {
+            case "tool-invoker" -> FileHeader.TOOL_INVOKER;
+            case "resource-provider" -> FileHeader.RESOURCE_PROVIDER;
+            case "multi-capability" -> FileHeader.MULTI_CAPABILITY;
+            case "code-execution-engine" -> FileHeader.MULTI_CAPABILITY; // Code execution engines are multi-capability
+            default -> throw new IllegalArgumentException("Unknown service type: " + serviceType);
         };
     }
 }

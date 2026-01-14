@@ -20,13 +20,13 @@ class DiscoveryLogCallback implements DiscoveryCallback {
 
     @Override
     public void onRegistration(RegistrationManager manager, ServiceTarget target) {
-        LOG.debug("The service {} successfully registered with ID {}.", target.getService(), target.getId());
+        LOG.debug("The service {} successfully registered with ID {}.", target.getServiceName(), target.getId());
     }
 
     @Override
     public void onDeregistration(RegistrationManager manager, ServiceTarget target, int status) {
         if (status != 200) {
-            LOG.warn("De-registering service {} failed with status {}", target.getServiceType().asValue(), status);
+            LOG.warn("De-registering service {} failed with status {}", target.getServiceType(), status);
         }
     }
 }

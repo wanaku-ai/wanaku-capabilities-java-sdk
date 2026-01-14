@@ -5,7 +5,6 @@ import java.util.concurrent.Callable;
 
 import ai.wanaku.api.discovery.RegistrationManager;
 import ai.wanaku.api.types.providers.ServiceTarget;
-import ai.wanaku.api.types.providers.ServiceType;
 import ai.wanaku.capabilities.sdk.common.ServicesHelper;
 import ai.wanaku.capabilities.sdk.discovery.DiscoveryServiceHttpClient;
 import ai.wanaku.capabilities.sdk.discovery.ZeroDepRegistrationManager;
@@ -66,7 +65,7 @@ public class App implements Callable<Integer> {
      */
     public RegistrationManager newRegistrationManager() {
         String address = DiscoveryHelper.resolveRegistrationAddress(registrationAnnounceAddress);
-        final ServiceTarget serviceTarget = ServiceTarget.newEmptyTarget(name, address, grpcPort, ServiceType.TOOL_INVOKER);
+        final ServiceTarget serviceTarget = ServiceTarget.newEmptyTarget(name, address, grpcPort, "tool-invoker");
 
         final DefaultServiceConfig serviceConfig = DefaultServiceConfig.Builder.newBuilder()
                 .baseUrl(registrationUrl)
