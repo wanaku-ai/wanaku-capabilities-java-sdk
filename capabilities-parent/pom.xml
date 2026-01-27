@@ -33,6 +33,8 @@
         <annotations-api.version>6.0.53</annotations-api.version>
         <junit-jupiter.version>5.13.4</junit-jupiter.version>
         <oauth2-oidc-sdk.version>11.31.1</oauth2-oidc-sdk.version>
+        <langchain4j.version>1.10.0</langchain4j.version>
+        <mockito.version>5.18.0</mockito.version>
     </properties>
 
     <dependencyManagement>

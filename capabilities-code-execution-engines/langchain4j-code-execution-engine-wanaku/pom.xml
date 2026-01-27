@@ -10,10 +10,6 @@
     <artifactId>langchain4j-code-execution-engine-wanaku</artifactId>
     <name>Wanaku Capabilities SDK :: Code Execution Engines :: LangChain4j</name>
 
-    <properties>
-        <langchain4j.version>1.0.0</langchain4j.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>dev.langchain4j</groupId>
@@ -27,10 +23,28 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>ai.wanaku.sdk</groupId>
+            <artifactId>capabilities-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
