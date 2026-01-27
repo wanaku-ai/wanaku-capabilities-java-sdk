@@ -66,6 +66,11 @@
                 <artifactId>capabilities-security</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>ai.wanaku.sdk</groupId>
+                <artifactId>langchain4j-code-execution-engine-wanaku</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

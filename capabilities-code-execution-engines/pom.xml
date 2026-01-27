@@ -12,4 +12,8 @@
     <artifactId>capabilities-code-execution-engines</artifactId>
     <name>Wanaku Capabilities SDK :: Code Execution Engines</name>
 
+    <modules>
+        <module>langchain4j-code-execution-engine-wanaku</module>
+    </modules>
+
 </project>
