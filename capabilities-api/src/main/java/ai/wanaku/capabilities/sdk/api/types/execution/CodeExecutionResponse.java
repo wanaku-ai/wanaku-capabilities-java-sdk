@@ -1,6 +1,5 @@
 package ai.wanaku.capabilities.sdk.api.types.execution;
 
-import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -16,32 +15,31 @@ import java.util.Objects;
  *   "taskId": "550e8400-e29b-41d4-a716-446655440000",
  *   "streamUrl": "http://host:8080/api/v2/code-execution-engine/jvm/java/550e8400-e29b-41d4-a716-446655440000",
  *   "status": "PENDING",
- *   "submittedAt": "2026-01-14T10:00:00Z"
+ *   "submittedAt": 1706620800000
  * }
  * }</pre>
  *
  * @param taskId the UUID identifying the execution task
  * @param streamUrl the full URL to the SSE stream endpoint
  * @param status the initial status of the task (typically PENDING)
- * @param submittedAt the timestamp when the task was submitted
+ * @param submittedAt the timestamp (epoch milliseconds) when the task was submitted
  * @since 1.0.0
  */
 public record CodeExecutionResponse(
         String taskId,
         String streamUrl,
         CodeExecutionStatus status,
-        Instant submittedAt) {
+        long submittedAt) {
 
     /**
      * Compact constructor with validation.
      *
-     * @throws IllegalArgumentException if any required field is null
+     * @throws IllegalArgumentException if any required field is null or empty
      */
     public CodeExecutionResponse {
         Objects.requireNonNull(taskId, "taskId must not be null");
         Objects.requireNonNull(streamUrl, "streamUrl must not be null");
         Objects.requireNonNull(status, "status must not be null");
-        Objects.requireNonNull(submittedAt, "submittedAt must not be null");
 
         if (taskId.trim().isEmpty()) {
             throw new IllegalArgumentException("taskId must not be empty");
@@ -60,7 +58,7 @@ public record CodeExecutionResponse(
      * @return a new CodeExecutionResponse with the current timestamp
      */
     public static CodeExecutionResponse create(String taskId, String streamUrl, CodeExecutionStatus status) {
-        return new CodeExecutionResponse(taskId, streamUrl, status, Instant.now());
+        return new CodeExecutionResponse(taskId, streamUrl, status, System.currentTimeMillis());
     }
 
     /**

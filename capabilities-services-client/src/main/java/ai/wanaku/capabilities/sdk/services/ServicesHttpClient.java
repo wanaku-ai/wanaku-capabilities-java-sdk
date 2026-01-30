@@ -10,6 +10,7 @@ import ai.wanaku.capabilities.sdk.api.types.ResourceReference;
 import ai.wanaku.capabilities.sdk.api.types.ToolReference;
 import ai.wanaku.capabilities.sdk.api.types.WanakuResponse;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionEvent;
+import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionEventType;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionRequest;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionResponse;
 import ai.wanaku.capabilities.sdk.api.types.io.ResourcePayload;
@@ -27,6 +28,10 @@ import java.io.InputStreamReader;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -479,19 +484,19 @@ public class ServicesHttpClient {
      * Example usage:
      * <pre>{@code
      * CodeExecutionRequest request = new CodeExecutionRequest("System.out.println(\"Hello\");");
-     * WanakuResponse<CodeExecutionResponse> response = client.executeCode("jvm", "java", request);
-     * String taskId = response.getData().taskId();
-     * String streamUrl = response.getData().streamUrl();
+     * CodeExecutionResponse response = client.executeCode("jvm", "java", request);
+     * String taskId = response.taskId();
+     * String streamUrl = response.streamUrl();
      * }</pre>
      *
      * @param engineType The type of execution engine (e.g., "jvm", "interpreted").
      * @param language The programming language (e.g., "java", "groovy", "xml").
      * @param request The code execution request containing the code and execution parameters.
-     * @return The response containing the task ID and stream URL wrapped in WanakuResponse.
+     * @return The response containing the task ID and stream URL.
      * @throws WanakuException If an error occurs during the request.
      * @since 1.0.0
      */
-    public WanakuResponse<CodeExecutionResponse> executeCode(
+    public CodeExecutionResponse executeCode(
             String engineType, String language, CodeExecutionRequest request) {
         // Validate the request before sending
         request.validate();
@@ -526,13 +531,16 @@ public class ServicesHttpClient {
      * @param engineType The type of execution engine (e.g., "jvm", "interpreted").
      * @param language The programming language (e.g., "java", "groovy", "xml").
      * @param taskId The UUID of the execution task.
+     * @param timeout The timeout for the task completion
      * @param eventConsumer The consumer callback to handle each event.
      * @throws WanakuException If an error occurs during streaming.
      * @since 1.0.0
      */
     public void streamCodeExecutionEvents(
-            String engineType, String language, String taskId, Consumer<CodeExecutionEvent> eventConsumer) {
+            String engineType, String language, String taskId, int timeout, Consumer<CodeExecutionEvent> eventConsumer) {
         String path = String.format("/api/v2/code-execution-engine/%s/%s/%s", engineType, language, taskId);
+        LOG.info("Reading from path {}/{}",  this.baseUrl, path);
+        System.out.println("Reading from path " + this.baseUrl + path);
         URI uri = URI.create(this.baseUrl + path);
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -546,7 +554,15 @@ public class ServicesHttpClient {
             HttpResponse<InputStream> response = httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
 
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                parseSSEStream(response.body(), eventConsumer);
+                final ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+                CountDownLatch latch = new CountDownLatch(1);
+                executorService.submit(() -> consumeCodeEventStream(eventConsumer, response, latch));
+
+                if (!latch.await(timeout, TimeUnit.SECONDS)) {
+                    throw new WanakuException("Timeout waiting for the task completion: unable to complete the request in " + timeout + " seconds");
+                }
+
             } else {
                 throw new WanakuWebException(
                         "Failed to connect to SSE stream: HTTP " + response.statusCode(),
@@ -560,6 +576,18 @@ public class ServicesHttpClient {
         }
     }
 
+    private void consumeCodeEventStream(
+            Consumer<CodeExecutionEvent> eventConsumer, HttpResponse<InputStream> response, CountDownLatch latch) {
+        try {
+            parseSSEStream(response.body(), eventConsumer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            latch.countDown();
+        }
+    }
+
     /**
      * Parses an SSE stream and invokes the consumer for each event.
      *
@@ -569,17 +597,20 @@ public class ServicesHttpClient {
      */
     private void parseSSEStream(InputStream inputStream, Consumer<CodeExecutionEvent> eventConsumer)
             throws IOException {
+
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             String line;
             StringBuilder dataBuilder = new StringBuilder();
 
             while ((line = reader.readLine()) != null) {
+                LOG.debug("{}", line);
+
                 // SSE format: lines starting with "data:" contain the JSON payload
                 if (line.startsWith("data:")) {
                     String data = line.substring(5).trim(); // Remove "data:" prefix
                     dataBuilder.append(data);
-                } else if (line.isEmpty() && dataBuilder.length() > 0) {
+                } else if (line.isEmpty() && !dataBuilder.isEmpty()) {
                     // Empty line signals end of an event
                     String jsonData = dataBuilder.toString();
                     dataBuilder.setLength(0); // Clear for next event

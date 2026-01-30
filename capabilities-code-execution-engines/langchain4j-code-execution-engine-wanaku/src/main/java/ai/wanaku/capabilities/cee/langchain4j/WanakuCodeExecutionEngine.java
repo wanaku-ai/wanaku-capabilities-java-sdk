@@ -1,6 +1,5 @@
 package ai.wanaku.capabilities.cee.langchain4j;
 
-import ai.wanaku.capabilities.sdk.api.types.WanakuResponse;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionEvent;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionEventType;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionRequest;
@@ -8,6 +7,10 @@ import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionResponse;
 import ai.wanaku.capabilities.sdk.common.config.ServiceConfig;
 import ai.wanaku.capabilities.sdk.services.ServicesHttpClient;
 import dev.langchain4j.code.CodeExecutionEngine;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,15 +43,18 @@ public class WanakuCodeExecutionEngine implements CodeExecutionEngine {
     private final ServicesHttpClient client;
     private final String engineType;
     private final String language;
+    private Map<String, List<CodeExecutionEvent>> codeEvents = new HashMap<>();
+    private final int taskTimeout;
 
     private WanakuCodeExecutionEngine(Builder builder) {
-        this(new ServicesHttpClient(builder.serviceConfig), builder.engineType, builder.language);
+        this(new ServicesHttpClient(builder.serviceConfig), builder.engineType, builder.language, builder().taskTimeout);
     }
 
-    WanakuCodeExecutionEngine(ServicesHttpClient client, String engineType, String language) {
+    WanakuCodeExecutionEngine(ServicesHttpClient client, String engineType, String language, int taskTimeout) {
         this.client = client;
         this.engineType = engineType;
         this.language = language;
+        this.taskTimeout = taskTimeout;
     }
 
     /**
@@ -66,87 +72,25 @@ public class WanakuCodeExecutionEngine implements CodeExecutionEngine {
                 engineType, language);
 
         CodeExecutionRequest request = new CodeExecutionRequest(code);
-        WanakuResponse<CodeExecutionResponse> response = client.executeCode(engineType, language, request);
+        CodeExecutionResponse response = client.executeCode(engineType, language, request);
 
-        CodeExecutionResponse executionResponse = response.data();
-        String taskId = executionResponse.taskId();
+        String taskId = response.taskId();
 
         LOG.debug("Code execution task submitted: taskId={}", taskId);
 
-        StringBuilder outputBuilder = new StringBuilder();
-        StringBuilder errorBuilder = new StringBuilder();
-        ExecutionResult result = new ExecutionResult();
+        List<CodeExecutionEvent> events = new ArrayList<>();
 
-        client.streamCodeExecutionEvents(engineType, language, taskId, event -> {
-            processEvent(event, outputBuilder, errorBuilder, result);
-        });
+        client.streamCodeExecutionEvents(engineType, language, taskId, taskTimeout, events::add);
+        events.forEach(System.out::println);
+        codeEvents.put(taskId, events);
 
-        if (result.failed) {
-            String errorMessage = errorBuilder.length() > 0
-                    ? errorBuilder.toString()
-                    : result.failureMessage;
-            throw new CodeExecutionException(
-                    "Code execution failed: " + errorMessage,
-                    result.exitCode);
-        }
-
-        if (result.timeout) {
-            throw new CodeExecutionException("Code execution timed out", null);
-        }
-
-        if (result.cancelled) {
-            throw new CodeExecutionException("Code execution was cancelled", null);
-        }
-
-        return outputBuilder.toString();
-    }
-
-    private void processEvent(CodeExecutionEvent event, StringBuilder outputBuilder,
-                              StringBuilder errorBuilder, ExecutionResult result) {
-        CodeExecutionEventType eventType = event.getEventType();
-        LOG.trace("Received event: type={}, taskId={}", eventType, event.getTaskId());
-
-        switch (eventType) {
-            case STARTED -> LOG.debug("Code execution started: taskId={}", event.getTaskId());
-            case OUTPUT -> {
-                if (event.getOutput() != null) {
-                    outputBuilder.append(event.getOutput());
-                }
-            }
-            case ERROR -> {
-                if (event.getError() != null) {
-                    errorBuilder.append(event.getError());
-                }
-            }
-            case COMPLETED -> {
-                result.exitCode = event.getExitCode();
-                LOG.debug("Code execution completed: taskId={}, exitCode={}",
-                        event.getTaskId(), event.getExitCode());
-            }
-            case FAILED -> {
-                result.failed = true;
-                result.exitCode = event.getExitCode();
-                result.failureMessage = event.getMessage();
-                LOG.warn("Code execution failed: taskId={}, exitCode={}, message={}",
-                        event.getTaskId(), event.getExitCode(), event.getMessage());
-            }
-            case TIMEOUT -> {
-                result.timeout = true;
-                LOG.warn("Code execution timed out: taskId={}", event.getTaskId());
-            }
-            case CANCELLED -> {
-                result.cancelled = true;
-                LOG.info("Code execution cancelled: taskId={}", event.getTaskId());
+        for (var event : events) {
+            if (event.getEventType() == CodeExecutionEventType.COMPLETED) {
+                return event.getOutput();
             }
         }
-    }
 
-    private static class ExecutionResult {
-        boolean failed = false;
-        boolean timeout = false;
-        boolean cancelled = false;
-        Integer exitCode = null;
-        String failureMessage = null;
+        return null;
     }
 
     /**
@@ -156,6 +100,7 @@ public class WanakuCodeExecutionEngine implements CodeExecutionEngine {
         private ServiceConfig serviceConfig;
         private String engineType = "camel";
         private String language = "java";
+        private int taskTimeout = 30;
 
         private Builder() {
         }
@@ -190,6 +135,11 @@ public class WanakuCodeExecutionEngine implements CodeExecutionEngine {
          */
         public Builder language(String language) {
             this.language = language;
+            return this;
+        }
+
+        public Builder taskTimeout(int taskTimeout) {
+            this.taskTimeout = taskTimeout;
             return this;
         }
 

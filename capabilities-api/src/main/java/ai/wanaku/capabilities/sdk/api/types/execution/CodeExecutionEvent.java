@@ -1,6 +1,5 @@
 package ai.wanaku.capabilities.sdk.api.types.execution;
 
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -27,7 +26,7 @@ import java.util.Objects;
  * event.setTaskId("550e8400-e29b-41d4-a716-446655440000");
  * event.setStatus(CodeExecutionStatus.RUNNING);
  * event.setOutput("Hello, World!\n");
- * event.setTimestamp(Instant.now());
+ * event.setTimestamp(System.currentTimeMillis());
  * }</pre>
  *
  * @since 1.0.0
@@ -35,7 +34,7 @@ import java.util.Objects;
 public class CodeExecutionEvent {
     private CodeExecutionEventType eventType;
     private String taskId;
-    private Instant timestamp;
+    private long timestamp;
     private CodeExecutionStatus status;
     private String output;
     private String error;
@@ -47,7 +46,7 @@ public class CodeExecutionEvent {
      * Default constructor for serialization frameworks.
      */
     public CodeExecutionEvent() {
-        this.timestamp = Instant.now();
+        this.timestamp = System.currentTimeMillis();
         this.metadata = new HashMap<>();
     }
 
@@ -102,20 +101,20 @@ public class CodeExecutionEvent {
     }
 
     /**
-     * Gets the timestamp when the event occurred.
+     * Gets the timestamp (epoch milliseconds) when the event occurred.
      *
-     * @return the event timestamp
+     * @return the event timestamp in epoch milliseconds
      */
-    public Instant getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 
     /**
-     * Sets the timestamp when the event occurred.
+     * Sets the timestamp (epoch milliseconds) when the event occurred.
      *
-     * @param timestamp the timestamp to set
+     * @param timestamp the timestamp in epoch milliseconds to set
      */
-    public void setTimestamp(Instant timestamp) {
+    public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
 
