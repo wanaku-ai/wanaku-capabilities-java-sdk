@@ -8,6 +8,7 @@ import ai.wanaku.capabilities.sdk.common.config.ServiceConfig;
 import ai.wanaku.capabilities.sdk.services.ServicesHttpClient;
 import dev.langchain4j.code.CodeExecutionEngine;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,7 @@ public class WanakuCodeExecutionEngine implements CodeExecutionEngine {
     private final ServicesHttpClient client;
     private final String engineType;
     private final String language;
-    private Map<String, List<CodeExecutionEvent>> codeEvents = new HashMap<>();
+    private List<List<CodeExecutionEvent>> codeEvents = new ArrayList<>();
     private final int taskTimeout;
 
     private WanakuCodeExecutionEngine(Builder builder) {
@@ -80,9 +81,12 @@ public class WanakuCodeExecutionEngine implements CodeExecutionEngine {
 
         List<CodeExecutionEvent> events = new ArrayList<>();
 
-        client.streamCodeExecutionEvents(engineType, language, taskId, taskTimeout, events::add);
-        events.forEach(System.out::println);
-        codeEvents.put(taskId, events);
+        try {
+            client.streamCodeExecutionEvents(engineType, language, taskId, taskTimeout, events::add);
+        } finally {
+            LOG.debug("Adding {} events to a new entry on the events list", events.size());
+            codeEvents.add(events);
+        }
 
         for (var event : events) {
             if (event.getEventType() == CodeExecutionEventType.COMPLETED) {
@@ -90,6 +94,7 @@ public class WanakuCodeExecutionEngine implements CodeExecutionEngine {
             }
         }
 
+        LOG.warn("There was no successful code execution event reported");
         return null;
     }
 
@@ -160,5 +165,9 @@ public class WanakuCodeExecutionEngine implements CodeExecutionEngine {
             }
             return new WanakuCodeExecutionEngine(this);
         }
+    }
+
+    public List<List<CodeExecutionEvent>> getCodeEvents() {
+        return Collections.unmodifiableList(codeEvents);
     }
 }
