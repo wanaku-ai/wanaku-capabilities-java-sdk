@@ -20,7 +20,8 @@
 import java.io.File
 
 // Verify that the project was generated correctly
-def projectDir = new File(basedir, "test-tool")
+// The archetype plugin generates projects in the 'project' subdirectory
+def projectDir = new File(basedir, "project/test-tool")
 
 // Check that the project directory exists
 assert projectDir.exists() : "Project directory was not created"
