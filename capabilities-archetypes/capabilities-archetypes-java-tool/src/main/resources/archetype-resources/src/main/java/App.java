@@ -1,17 +1,16 @@
 package ${package};
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.Callable;
 
-import ai.wanaku.api.discovery.RegistrationManager;
-import ai.wanaku.api.types.providers.ServiceTarget;
+import ai.wanaku.capabilities.sdk.api.discovery.RegistrationManager;
+import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
 import ai.wanaku.capabilities.sdk.common.ServicesHelper;
+import ai.wanaku.capabilities.sdk.common.config.DefaultServiceConfig;
+import ai.wanaku.capabilities.sdk.common.serializer.JacksonSerializer;
 import ai.wanaku.capabilities.sdk.discovery.DiscoveryServiceHttpClient;
 import ai.wanaku.capabilities.sdk.discovery.ZeroDepRegistrationManager;
 import ai.wanaku.capabilities.sdk.discovery.config.DefaultRegistrationConfig;
-import ai.wanaku.capabilities.sdk.discovery.config.DefaultServiceConfig;
 import ai.wanaku.capabilities.sdk.discovery.deserializer.JacksonDeserializer;
-import ai.wanaku.capabilities.sdk.discovery.serializer.JacksonSerializer;
 import ai.wanaku.capabilities.sdk.discovery.util.DiscoveryHelper;
 import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
@@ -21,8 +20,7 @@ import io.grpc.ServerBuilder;
 import picocli.CommandLine;
 
 /**
- * Hello world!
- *
+ * Main application class that handles service registration and gRPC server lifecycle.
  */
 public class App implements Callable<Integer> {
     @CommandLine.Option(names = { "-h", "--help" }, usageHelp = true, description = "display a help message")
