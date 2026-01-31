@@ -1,0 +1,23 @@
+- route:
+    id: route-3104
+    from:
+      id: from-1702
+      uri: direct
+      parameters:
+        name: start
+      steps:
+        - log:
+            id: log-2526
+            message: "Incoming request for tax calculation: ${body}"
+        # Setting the body/headers to be used by the Kamelet
+        - setBody:
+            simple: "100000"
+        - to:
+            id: call-tax-service
+            uri: "kamelet:salary-tax-calculator-sink"
+            parameters:
+              country: "CZ"
+              amount: "${body}"
+        - log:
+            id: log-result
+            message: "Tax Calculation Result: ${body}"
