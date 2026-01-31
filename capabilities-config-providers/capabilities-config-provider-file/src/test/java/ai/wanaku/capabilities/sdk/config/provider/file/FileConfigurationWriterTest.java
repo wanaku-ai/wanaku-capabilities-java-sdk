@@ -74,6 +74,26 @@ class FileConfigurationWriterTest {
     }
 
     @Test
+    void throwsConfigWriteExceptionForNonWritableDirectory() throws IOException {
+        Path readOnlyDir = Files.createTempDirectory("readOnlyDir");
+        File nonWritableDir = readOnlyDir.toFile();
+        boolean madeNonWritable = nonWritableDir.setWritable(false, false);
+
+        // Skip test if we cannot make the directory non-writable (e.g., running as root)
+        if (!madeNonWritable) {
+            return;
+        }
+
+        try {
+            FileConfigurationWriter writer = new FileConfigurationWriter(nonWritableDir);
+            assertThrows(ConfigWriteException.class, () -> writer.write("file.txt", "data"));
+        } finally {
+            nonWritableDir.setWritable(true, false);
+            Files.deleteIfExists(readOnlyDir);
+        }
+    }
+
+    @Test
     void writesMultilineContent() throws IOException {
         FileConfigurationWriter writer = new FileConfigurationWriter(tempDir.toFile());
         String multilineData = "line1\nline2\nline3\n";
@@ -93,5 +113,8 @@ class FileConfigurationWriterTest {
 
         Path writtenFile = Path.of(uri);
         assertTrue(Files.exists(writtenFile));
+        // Verify content is written correctly - note: default charset encoding applies
+        byte[] writtenBytes = Files.readAllBytes(writtenFile);
+        assertEquals(unicodeData.length(), new String(writtenBytes).length());
     }
 }
