@@ -83,7 +83,7 @@
         <profile>
             <id>coverage</id>
             <properties>
-                <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
+                <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
             </properties>
             <build>
                 <plugins>
