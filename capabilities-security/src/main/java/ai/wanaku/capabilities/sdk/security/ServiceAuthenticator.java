@@ -186,7 +186,7 @@ public class ServiceAuthenticator {
      *
      * @return A valid access token value.
      */
-    private String currentValidAccessToken() {
+    public String currentValidAccessToken() {
         final long elapsedSeconds = Duration.between(creationTime, Instant.now()).getSeconds();
 
         if (elapsedSeconds >= (accessToken.getLifetime() - 30)) {
