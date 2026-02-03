@@ -648,4 +648,12 @@ public class ServicesHttpClient {
             default -> false;
         };
     }
+
+    /**
+     * Get access to the service authenticator instance (use it to get access to the access token, if necessary)
+     * @return The ServiceAuthenticator instance
+     */
+    public ServiceAuthenticator getServiceAuthenticator() {
+        return serviceAuthenticator;
+    }
 }

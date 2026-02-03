@@ -98,6 +98,10 @@ public class WanakuCodeExecutionEngine implements CodeExecutionEngine {
         return null;
     }
 
+    public ServicesHttpClient getClient() {
+        return client;
+    }
+
     /**
      * Builder for constructing {@link WanakuCodeExecutionEngine} instances.
      */
