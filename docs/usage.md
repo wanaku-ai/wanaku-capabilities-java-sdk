@@ -69,3 +69,7 @@ public class AppTool extends ToolInvokerGrpc.ToolInvokerImplBase {
 Replace the `// TODO: Implement your tool's logic here` comment with your specific business logic. 
 
 The `ToolInvokeRequest` object provides access to various information and services relevant to the tool's execution request.
+
+# Learn More
+
+- **[Client Registration Flow](client-registration-flow.md)** - Client Registration Flow

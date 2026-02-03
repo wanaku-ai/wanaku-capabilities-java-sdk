@@ -9,6 +9,10 @@ For more information about the main Wanaku project, please visit the [Wanaku Git
 
 Please follow the [usage guide](docs/usage.md) to learn how to use the Wanaku Capabilities Java SDK.
 
+## Documentation
+
+- [Usage Guide](docs/usage.md) - Getting started with the SDK
+
 ## License
 
 This project is licensed under the Apache License, Version 2.0. See the [LICENSE](LICENSE) file for more details.
