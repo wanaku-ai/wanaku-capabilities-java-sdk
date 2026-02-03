@@ -11,7 +11,6 @@
  *   <li>{@link ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionEvent} - Events streamed during execution</li>
  *   <li>{@link ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionStatus} - Execution status enumeration</li>
  *   <li>{@link ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionEventType} - Event type enumeration</li>
- *   <li>{@link ai.wanaku.capabilities.sdk.api.types.execution.Language} - Supported programming languages</li>
  * </ul>
  *
  * @since 1.0.0
