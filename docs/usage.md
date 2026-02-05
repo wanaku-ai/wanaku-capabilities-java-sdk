@@ -202,6 +202,81 @@ Once running, the plugin:
 ### Example
 
 For a complete working example, see the [Cat Facts Example](https://github.com/wanaku-ai/wanaku-demos/tree/main/06-camel-integration-capability-existing-route/sample-routes/camel-core-examples/cat-facts-example) in the Wanaku Demos repository.
+=======
+## Accessing Request Data
+
+The `ToolInvokeRequest` provides several methods to access invocation data:
+
+| Method | Description |
+|--------|-------------|
+| `getArgumentsMap()` | Tool arguments passed by the caller |
+| `getHeadersMap()` | HTTP headers including metadata headers |
+| `getBody()` | Request body content (from `wanaku_body` argument) |
+| `getUri()` | The tool's configured URI |
+| `getConfigurationURI()` | URI for external configuration |
+| `getSecretsURI()` | URI for secrets/credentials |
+
+## Accessing Metadata Headers
+
+AI services can inject metadata into tool invocations using the `wanaku_meta_*` prefix convention. Arguments prefixed with `wanaku_meta_` are automatically:
+
+1. Extracted from regular arguments
+2. Prefix stripped to form the header name
+3. Made available via `request.getHeadersMap()`
+
+### Example: LangChain4j AI Service
+
+```java
+@RegisterAiService
+public interface MyAIService {
+    @McpToolBox("wanakutoolbox")
+    String callTool(
+        @Header("wanaku_meta_contextId") String contextId,
+        @Header("wanaku_meta_userId") String userId,
+        @UserMessage String message
+    );
+}
+```
+
+### Accessing Headers in Tool Implementation
+
+```java
+public void invokeTool(ToolInvokeRequest request, StreamObserver<ToolInvokeReply> responseObserver) {
+    // Access metadata headers (prefix is stripped)
+    Map<String, String> headers = request.getHeadersMap();
+    String contextId = headers.get("contextId");  // from wanaku_meta_contextId
+    String userId = headers.get("userId");        // from wanaku_meta_userId
+
+    // Use headers for context-aware processing
+    if (contextId != null) {
+        // Process with context...
+    }
+
+    // Regular arguments (metadata args are filtered out)
+    Map<String, String> args = request.getArgumentsMap();
+    // ...
+}
+```
+
+### Reserved Argument Names
+
+The SDK provides constants for reserved argument names:
+
+```java
+import ai.wanaku.capabilities.sdk.api.util.ReservedArgumentNames;
+
+// Body content argument
+String bodyArg = ReservedArgumentNames.BODY;  // "wanaku_body"
+
+// Metadata prefix for header injection
+String prefix = ReservedArgumentNames.METADATA_PREFIX;  // "wanaku_meta_"
+```
+
+| Constant | Value | Purpose |
+|----------|-------|---------|
+| `BODY` | `wanaku_body` | Argument containing request body content |
+| `METADATA_PREFIX` | `wanaku_meta_` | Prefix for arguments converted to headers |
+
 
 # Learn More
 
