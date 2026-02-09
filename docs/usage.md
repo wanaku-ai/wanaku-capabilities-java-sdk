@@ -70,6 +70,139 @@ Replace the `// TODO: Implement your tool's logic here` comment with your specif
 
 The `ToolInvokeRequest` object provides access to various information and services relevant to the tool's execution request.
 
+## Integrating Existing Camel Applications
+
+For applications already using Apache Camel (4.14.0+), you can expose existing routes as MCP tools using the Camel Integration Capability plugin. This approach requires no code changes to your routes.
+
+### Adding the Plugin Dependency
+
+Add the following dependency to your project:
+
+```xml
+<dependency>
+    <groupId>ai.wanaku.sdk</groupId>
+    <artifactId>capabilities-runtime-camel-plugin</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+</dependency>
+```
+
+The plugin is automatically discovered via Camel's SPI mechanism and activates during context startup.
+
+### Configuration
+
+Configuration is provided via environment variables (recommended) or a properties file. Environment variables take precedence.
+
+#### Required Configuration
+
+| Environment Variable | Description                                                                    |
+|----------------------|--------------------------------------------------------------------------------|
+| `REGISTRATION_URL`   | URL of the Wanaku router (e.g., `http://localhost:8080`)                       |
+| `CLIENT_ID`          | OAuth2 client identifier for authentication                                    |
+| `CLIENT_SECRET`      | OAuth2 client secret                                                           |
+| `ROUTES_RULES`       | Path to the rules file defining MCP tools (e.g., `file:///path/to/rules.yaml`) |
+
+#### Optional Configuration
+
+| Environment Variable            | Default | Description                                |
+|---------------------------------|---------|--------------------------------------------|
+| `GRPC_PORT`                     | `9190`  | Port for the gRPC server                   |
+| `SERVICE_NAME`                  | `camel` | Service name for registration              |
+| `REGISTRATION_ANNOUNCE_ADDRESS` | `auto`  | Address announced to the router            |
+| `ROUTES_PATH`                   | -       | Reference to additional routes file/URL    |
+| `DATA_DIR`                      | `/tmp`  | Directory for storing downloaded resources |
+| `INIT_FROM`                     | -       | Git repository URL to clone at startup     |
+
+#### Retry Configuration
+
+| Environment Variable | Default | Description                                       |
+|----------------------|---------|---------------------------------------------------|
+| `RETRIES`            | `12`    | Number of registration retry attempts             |
+| `RETRY_WAIT_SECONDS` | `5`     | Wait time between retries (seconds)               |
+| `INITIAL_DELAY`      | `5`     | Delay before first registration attempt (seconds) |
+| `PERIOD`             | `5`     | Registration ping period (seconds)                |
+
+#### Properties File Example
+
+As an alternative to environment variables, create a `camel-integration-capability.properties` file in your classpath:
+
+```properties
+# Registration (required)
+registration.url=http://localhost:8080
+registration.announce.address=localhost
+
+# gRPC Configuration
+grpc.port=9190
+
+# Service Identity
+service.name=my-camel-service
+
+# Routes Configuration
+rules.ref=file:///path/to/rules.yaml
+
+# Authentication (required)
+client.id=wanaku-service
+client.secret=your-secret-here
+
+# Optional: Additional routes
+routes.ref=
+
+# Optional: Data directory
+data.dir=/tmp
+
+# Optional: Retry settings
+retries=12
+retry.wait.seconds=5
+initial.delay=5
+period=5
+```
+
+Environment variables override properties file values when both are present.
+
+### Defining MCP Tools
+
+Create a YAML rules file to define which routes to expose as MCP tools:
+
+```yaml
+tools:
+  - name: my-tool-name
+    description: "Description of what this tool does"
+    route: direct:my-route
+    inputSchema:
+      type: object
+      properties:
+        param1:
+          type: string
+          description: "Parameter description"
+      required:
+        - param1
+```
+
+The `ROUTES_RULES` variable supports:
+- File paths: `file:///path/to/rules.yaml`
+- Datastore references: `datastore://rules.yaml`
+
+### Running the Application
+
+```bash
+REGISTRATION_URL=http://localhost:8080 \
+REGISTRATION_ANNOUNCE_ADDRESS=localhost \
+GRPC_PORT=9190 \
+SERVICE_NAME=my-camel-service \
+ROUTES_RULES=file://$PWD/config/rules.yaml \
+CLIENT_ID=wanaku-service \
+CLIENT_SECRET=<your-secret> \
+java -jar target/my-app.jar
+```
+
+Once running, the plugin:
+1. Registers with the Wanaku router
+2. Loads the MCP tool definitions from the rules file
+3. Starts a gRPC server exposing your routes as callable tools
+
+### Example
+
+For a complete working example, see the [Cat Facts Example](https://github.com/wanaku-ai/wanaku-demos/tree/main/06-camel-integration-capability-existing-route/sample-routes/camel-core-examples/cat-facts-example) in the Wanaku Demos repository.
+
 # Learn More
 
 - **[Client Registration Flow](client-registration-flow.md)** - Client Registration Flow
