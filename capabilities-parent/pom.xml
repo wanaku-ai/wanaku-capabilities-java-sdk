@@ -28,7 +28,7 @@
         <slf4j.version>2.0.17</slf4j.version>
         <log4j.version>2.25.2</log4j.version>
         <protoc-version>3.25.5</protoc-version>
-        <grpc.version>1.78.0</grpc.version>
+        <grpc.version>1.79.0</grpc.version>
         <protoc-gen-grpc-java>1.72.0</protoc-gen-grpc-java>
         <annotations-api.version>6.0.53</annotations-api.version>
         <junit-jupiter.version>5.13.4</junit-jupiter.version>
