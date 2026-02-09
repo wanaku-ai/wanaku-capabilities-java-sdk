@@ -35,7 +35,7 @@
         <protoc-gen-grpc-java>1.72.0</protoc-gen-grpc-java>
         <annotations-api.version>6.0.53</annotations-api.version>
         <junit-jupiter.version>5.13.4</junit-jupiter.version>
-        <oauth2-oidc-sdk.version>11.32</oauth2-oidc-sdk.version>
+        <oauth2-oidc-sdk.version>11.33</oauth2-oidc-sdk.version>
         <langchain4j.version>1.10.0</langchain4j.version>
         <mockito.version>5.18.0</mockito.version>
         <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
