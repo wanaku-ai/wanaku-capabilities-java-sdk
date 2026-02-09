@@ -53,7 +53,17 @@
             </dependency>
             <dependency>
                 <groupId>ai.wanaku.sdk</groupId>
-                <artifactId>capabilities-runtime</artifactId>
+                <artifactId>capabilities-runtimes-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ai.wanaku.sdk</groupId>
+                <artifactId>capabilities-runtime-camel-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ai.wanaku.sdk</groupId>
+                <artifactId>capabilities-runtime-camel-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

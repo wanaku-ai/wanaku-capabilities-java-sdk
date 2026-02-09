@@ -1,0 +1,14 @@
+mcp:
+  tools:
+    - cat-facts:
+        route:
+          id: "cat-facts-route"
+        description: "Fetches random cat facts from the meowfacts API."
+        properties:
+          - name: count
+            type: int
+            description: The number of cat facts to retrieve
+            required: true
+            mapping:
+              type: header
+              name: COUNT
