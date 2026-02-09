@@ -3,13 +3,13 @@
 
     <parent>
         <groupId>ai.wanaku.sdk</groupId>
-        <artifactId>capabilities-parent</artifactId>
+        <artifactId>capabilities-runtimes</artifactId>
         <version>0.1.0-SNAPSHOT</version>
-        <relativePath>../capabilities-parent/pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>capabilities-runtime</artifactId>
-    <name>Wanaku Capabilities SDK :: Runtime</name>
+    <artifactId>capabilities-runtimes-common</artifactId>
+    <name>Wanaku Capabilities SDK :: Runtimes :: Common</name>
 
     <dependencies>
         <dependency>

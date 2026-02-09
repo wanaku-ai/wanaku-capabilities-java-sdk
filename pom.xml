@@ -71,7 +71,7 @@
         <module>capabilities-data-files</module>
         <module>capabilities-config-providers</module>
         <module>capabilities-exchange</module>
-        <module>capabilities-runtime</module>
+        <module>capabilities-runtimes</module>
         <module>capabilities-services-client</module>
         <module>capabilities-code-execution-engines</module>
         <module>capabilities-bom</module>
