@@ -1,16 +1,19 @@
 package ai.wanaku.capabilities.sdk.config.provider.file;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
+import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PropertyFileProviderTest {
 
@@ -72,7 +75,8 @@ class PropertyFileProviderTest {
     @Test
     void handlesPropertiesWithWhitespaceInKeys() throws IOException {
         Path propsFile = tempDir.resolve("whitespace.properties");
-        // Java Properties trims leading whitespace from keys and values, but not trailing whitespace from values
+        // Java Properties trims leading whitespace from keys and values, but not
+        // trailing whitespace from values
         Files.writeString(propsFile, "  key1=value1\nkey2=value with spaces\n");
 
         PropertyFileProvider provider = new PropertyFileProvider(propsFile.toUri());

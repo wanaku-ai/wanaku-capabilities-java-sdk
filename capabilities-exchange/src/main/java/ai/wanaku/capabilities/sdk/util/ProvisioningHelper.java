@@ -1,11 +1,11 @@
 package ai.wanaku.capabilities.sdk.util;
 
+import java.net.URI;
 import ai.wanaku.capabilities.sdk.config.provider.api.ConfigProvisioner;
 import ai.wanaku.capabilities.sdk.config.provider.api.ProvisionedConfig;
 import ai.wanaku.core.exchange.Configuration;
 import ai.wanaku.core.exchange.ProvisionRequest;
 import ai.wanaku.core.exchange.Secret;
-import java.net.URI;
 
 /**
  * Helper class for provisioning configurations and secrets.

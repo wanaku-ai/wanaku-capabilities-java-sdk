@@ -1,12 +1,12 @@
 package ai.wanaku.capabilities.sdk.config.provider.file;
 
-import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
-import ai.wanaku.capabilities.sdk.config.provider.api.PropertyProvider;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Properties;
+import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
+import ai.wanaku.capabilities.sdk.config.provider.api.PropertyProvider;
 
 /**
  * A concrete implementation of {@link PropertyProvider} that loads properties from a file

@@ -1,13 +1,13 @@
 package ai.wanaku.capabilities.sdk.runtime.camel.spec.rules.tools;
 
+import java.util.ArrayList;
+import java.util.List;
 import ai.wanaku.capabilities.sdk.api.types.InputSchema;
 import ai.wanaku.capabilities.sdk.api.types.Property;
 import ai.wanaku.capabilities.sdk.api.types.ToolReference;
 import ai.wanaku.capabilities.sdk.runtime.camel.model.Definition;
 import ai.wanaku.capabilities.sdk.runtime.camel.spec.rules.RulesProcessor;
 import ai.wanaku.capabilities.sdk.runtime.camel.spec.rules.RulesTransformer;
-import java.util.ArrayList;
-import java.util.List;
 
 public class WanakuToolTransformer implements RulesTransformer {
     public static final String DEFAULT_INPUT_SCHEMA_TYPE = "object";
@@ -41,7 +41,8 @@ public class WanakuToolTransformer implements RulesTransformer {
         processor.eval(toolReference);
     }
 
-    private void parseProperties(List<ai.wanaku.capabilities.sdk.runtime.camel.model.Property> properties, InputSchema inputSchema) {
+    private void parseProperties(
+            List<ai.wanaku.capabilities.sdk.runtime.camel.model.Property> properties, InputSchema inputSchema) {
         if (properties == null) {
             return;
         }

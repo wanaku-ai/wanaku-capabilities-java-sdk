@@ -1,14 +1,14 @@
 package ai.wanaku.capabilities.sdk.runtime.camel.spec.rules.tools.mapping;
 
-import ai.wanaku.capabilities.sdk.runtime.camel.model.Definition;
-import ai.wanaku.capabilities.sdk.runtime.camel.model.Mapping;
-import ai.wanaku.capabilities.sdk.runtime.camel.model.Property;
-import ai.wanaku.core.exchange.ToolInvokeRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ai.wanaku.capabilities.sdk.runtime.camel.model.Definition;
+import ai.wanaku.capabilities.sdk.runtime.camel.model.Mapping;
+import ai.wanaku.capabilities.sdk.runtime.camel.model.Property;
+import ai.wanaku.core.exchange.ToolInvokeRequest;
 
 public class FilteredMapper implements HeaderMapper {
     private static final Logger LOG = LoggerFactory.getLogger(FilteredMapper.class);

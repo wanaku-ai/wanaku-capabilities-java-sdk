@@ -1,5 +1,19 @@
 package ai.wanaku.capabilities.sdk.runtime.camel.plugin;
 
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
+import org.apache.camel.CamelContext;
+import org.apache.camel.spi.ContextServicePlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import io.grpc.Grpc;
+import io.grpc.InsecureServerCredentials;
+import io.grpc.Server;
+import io.grpc.ServerBuilder;
 import ai.wanaku.capabilities.sdk.api.discovery.RegistrationManager;
 import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
 import ai.wanaku.capabilities.sdk.api.types.providers.ServiceType;
@@ -31,20 +45,6 @@ import ai.wanaku.capabilities.sdk.runtime.camel.spec.rules.tools.WanakuToolTrans
 import ai.wanaku.capabilities.sdk.runtime.camel.util.McpRulesManager;
 import ai.wanaku.capabilities.sdk.security.TokenEndpoint;
 import ai.wanaku.capabilities.sdk.services.ServicesHttpClient;
-import io.grpc.Grpc;
-import io.grpc.InsecureServerCredentials;
-import io.grpc.Server;
-import io.grpc.ServerBuilder;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
-import org.apache.camel.CamelContext;
-import org.apache.camel.spi.ContextServicePlugin;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Camel ContextServicePlugin implementation for integrating the Camel Integration Capability

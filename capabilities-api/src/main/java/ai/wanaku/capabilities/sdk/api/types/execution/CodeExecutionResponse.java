@@ -25,11 +25,7 @@ import java.util.Objects;
  * @param submittedAt the timestamp (epoch milliseconds) when the task was submitted
  * @since 1.0.0
  */
-public record CodeExecutionResponse(
-        String taskId,
-        String streamUrl,
-        CodeExecutionStatus status,
-        long submittedAt) {
+public record CodeExecutionResponse(String taskId, String streamUrl, CodeExecutionStatus status, long submittedAt) {
 
     /**
      * Compact constructor with validation.

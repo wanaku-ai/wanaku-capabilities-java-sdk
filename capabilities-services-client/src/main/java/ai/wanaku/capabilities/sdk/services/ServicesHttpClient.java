@@ -2,6 +2,23 @@ package ai.wanaku.capabilities.sdk.services;
 
 import jakarta.ws.rs.core.MediaType;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
 import ai.wanaku.capabilities.sdk.api.types.DataStore;
 import ai.wanaku.capabilities.sdk.api.types.ForwardReference;
@@ -10,7 +27,6 @@ import ai.wanaku.capabilities.sdk.api.types.ResourceReference;
 import ai.wanaku.capabilities.sdk.api.types.ToolReference;
 import ai.wanaku.capabilities.sdk.api.types.WanakuResponse;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionEvent;
-import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionEventType;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionRequest;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionResponse;
 import ai.wanaku.capabilities.sdk.api.types.io.ResourcePayload;
@@ -22,23 +38,6 @@ import ai.wanaku.capabilities.sdk.security.ServiceAuthenticator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A client for interacting with the Wanaku Services API.
@@ -73,8 +72,9 @@ public class ServicesHttpClient {
      * @return The sanitized base URL.
      */
     private static String sanitize(ServiceConfig config) {
-        return config.getBaseUrl() != null && config.getBaseUrl().endsWith("/") ?
-                config.getBaseUrl().substring(0, config.getBaseUrl().length() - 1) : config.getBaseUrl();
+        return config.getBaseUrl() != null && config.getBaseUrl().endsWith("/")
+                ? config.getBaseUrl().substring(0, config.getBaseUrl().length() - 1)
+                : config.getBaseUrl();
     }
 
     /**
@@ -106,7 +106,8 @@ public class ServicesHttpClient {
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
                 return objectMapper.readValue(response.body(), typeReference);
             } else {
-                throw new WanakuWebException("HTTP error: " + response.statusCode() + " - " + response.body(), response.statusCode());
+                throw new WanakuWebException(
+                        "HTTP error: " + response.statusCode() + " - " + response.body(), response.statusCode());
             }
         } catch (JsonProcessingException e) {
             throw new WanakuException("JSON processing error", e);
@@ -142,7 +143,8 @@ public class ServicesHttpClient {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() < 200 || response.statusCode() >= 300) {
-                throw new WanakuWebException("HTTP error: " + response.statusCode() + " - " + response.body(), response.statusCode());
+                throw new WanakuWebException(
+                        "HTTP error: " + response.statusCode() + " - " + response.body(), response.statusCode());
             }
         } catch (JsonProcessingException e) {
             throw new WanakuException("JSON processing error", e);
@@ -179,7 +181,8 @@ public class ServicesHttpClient {
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
                 return objectMapper.readValue(response.body(), typeReference);
             } else {
-                throw new WanakuWebException("HTTP error: " + response.statusCode() + " - " + response.body(), response.statusCode());
+                throw new WanakuWebException(
+                        "HTTP error: " + response.statusCode() + " - " + response.body(), response.statusCode());
             }
         } catch (JsonProcessingException e) {
             throw new WanakuException("JSON processing error", e);
@@ -231,8 +234,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<ToolReference> addTool(ToolReference toolReference) {
-        return executePost("/api/v1/tools/add", toolReference, new TypeReference<>() {
-        });
+        return executePost("/api/v1/tools/add", toolReference, new TypeReference<>() {});
     }
 
     /**
@@ -243,8 +245,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<ToolReference> addToolWithPayload(ToolPayload toolPayload) {
-        return executePost("/api/v1/tools/addWithPayload", toolPayload, new TypeReference<>() {
-        });
+        return executePost("/api/v1/tools/addWithPayload", toolPayload, new TypeReference<>() {});
     }
 
     /**
@@ -254,8 +255,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<List<ToolReference>> listTools() {
-        return executeGet("/api/v1/tools/list", new TypeReference<>() {
-        });
+        return executeGet("/api/v1/tools/list", new TypeReference<>() {});
     }
 
     /**
@@ -266,8 +266,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<ToolReference> getToolByName(String name) {
-        return executePost("/api/v1/tools?name=" + name, "", new TypeReference<>() {
-        });
+        return executePost("/api/v1/tools?name=" + name, "", new TypeReference<>() {});
     }
 
     /**
@@ -300,8 +299,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<ResourceReference> exposeResource(ResourceReference resourceReference) {
-        return executePost("/api/v1/resources/expose", resourceReference, new TypeReference<>() {
-        });
+        return executePost("/api/v1/resources/expose", resourceReference, new TypeReference<>() {});
     }
 
     /**
@@ -312,8 +310,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<ResourceReference> exposeResourceWithPayload(ResourcePayload resourcePayload) {
-        return executePost("/api/v1/resources/exposeWithPayload", resourcePayload, new TypeReference<>() {
-        });
+        return executePost("/api/v1/resources/exposeWithPayload", resourcePayload, new TypeReference<>() {});
     }
 
     /**
@@ -323,8 +320,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<List<ResourceReference>> listResources() {
-        return executeGet("/api/v1/resources/list", new TypeReference<>() {
-        });
+        return executeGet("/api/v1/resources/list", new TypeReference<>() {});
     }
 
     /**
@@ -366,8 +362,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<List<ForwardReference>> listForwards() {
-        return executeGet("/api/v1/forwards/list", new TypeReference<>() {
-        });
+        return executeGet("/api/v1/forwards/list", new TypeReference<>() {});
     }
 
     /**
@@ -399,8 +394,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<List<Namespace>> listNamespaces() {
-        return executeGet("/api/v1/namespaces/list", new TypeReference<>() {
-        });
+        return executeGet("/api/v1/namespaces/list", new TypeReference<>() {});
     }
 
     // ==================== DataStores API Methods ====================
@@ -413,8 +407,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<DataStore> addDataStore(DataStore dataStore) {
-        return executePost("/api/v1/data-store/add", dataStore, new TypeReference<>() {
-        });
+        return executePost("/api/v1/data-store/add", dataStore, new TypeReference<>() {});
     }
 
     /**
@@ -424,8 +417,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<List<DataStore>> listDataStores() {
-        return executeGet("/api/v1/data-store/list", new TypeReference<>() {
-        });
+        return executeGet("/api/v1/data-store/list", new TypeReference<>() {});
     }
 
     /**
@@ -436,8 +428,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<DataStore> getDataStoreById(String id) {
-        return executeGet("/api/v1/data-store/get?id=" + id, new TypeReference<>() {
-        });
+        return executeGet("/api/v1/data-store/get?id=" + id, new TypeReference<>() {});
     }
 
     /**
@@ -448,8 +439,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<List<DataStore>> getDataStoresByName(String name) {
-        return executeGet("/api/v1/data-store/get?name=" + name, new TypeReference<>() {
-        });
+        return executeGet("/api/v1/data-store/get?name=" + name, new TypeReference<>() {});
     }
 
     /**
@@ -496,8 +486,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      * @since 1.0.0
      */
-    public CodeExecutionResponse executeCode(
-            String engineType, String language, CodeExecutionRequest request) {
+    public CodeExecutionResponse executeCode(String engineType, String language, CodeExecutionRequest request) {
         // Validate the request before sending
         request.validate();
 
@@ -537,9 +526,13 @@ public class ServicesHttpClient {
      * @since 1.0.0
      */
     public void streamCodeExecutionEvents(
-            String engineType, String language, String taskId, int timeout, Consumer<CodeExecutionEvent> eventConsumer) {
+            String engineType,
+            String language,
+            String taskId,
+            int timeout,
+            Consumer<CodeExecutionEvent> eventConsumer) {
         String path = String.format("/api/v2/code-execution-engine/%s/%s/%s", engineType, language, taskId);
-        LOG.info("Reading from path {}/{}",  this.baseUrl, path);
+        LOG.info("Reading from path {}/{}", this.baseUrl, path);
         System.out.println("Reading from path " + this.baseUrl + path);
         URI uri = URI.create(this.baseUrl + path);
 
@@ -560,13 +553,14 @@ public class ServicesHttpClient {
                 executorService.submit(() -> consumeCodeEventStream(eventConsumer, response, latch));
 
                 if (!latch.await(timeout, TimeUnit.SECONDS)) {
-                    throw new WanakuException("Timeout waiting for the task completion: unable to complete the request in " + timeout + " seconds");
+                    throw new WanakuException(
+                            "Timeout waiting for the task completion: unable to complete the request in " + timeout
+                                    + " seconds");
                 }
 
             } else {
                 throw new WanakuWebException(
-                        "Failed to connect to SSE stream: HTTP " + response.statusCode(),
-                        response.statusCode());
+                        "Failed to connect to SSE stream: HTTP " + response.statusCode(), response.statusCode());
             }
         } catch (IOException e) {
             throw new WanakuException("I/O error while streaming events", e);
@@ -582,8 +576,7 @@ public class ServicesHttpClient {
             parseSSEStream(response.body(), eventConsumer);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             latch.countDown();
         }
     }
@@ -598,8 +591,7 @@ public class ServicesHttpClient {
     private void parseSSEStream(InputStream inputStream, Consumer<CodeExecutionEvent> eventConsumer)
             throws IOException {
 
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             String line;
             StringBuilder dataBuilder = new StringBuilder();
 

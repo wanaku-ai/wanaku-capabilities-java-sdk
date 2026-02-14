@@ -47,7 +47,6 @@ public class InstanceDataWriter implements AutoCloseable {
         byteBuffer.clear();
     }
 
-
     /**
      * Writes the provided {@link FileHeader} to the file.
      * @param header The {@link FileHeader} to write.
@@ -62,7 +61,6 @@ public class InstanceDataWriter implements AutoCloseable {
         write();
     }
 
-
     /**
      * Writes a {@link ServiceEntry} to the file.
      * @param entry The {@link ServiceEntry} to write.
@@ -76,7 +74,8 @@ public class InstanceDataWriter implements AutoCloseable {
         }
 
         if (entry.getId().length() != ServiceEntry.ID_LENGTH) {
-            throw new IOException("Service entry id too long (it must not exceed the length of " + ServiceEntry.BYTES + ")" );
+            throw new IOException(
+                    "Service entry id too long (it must not exceed the length of " + ServiceEntry.BYTES + ")");
         }
 
         byteBuffer.put(entry.getId().getBytes());

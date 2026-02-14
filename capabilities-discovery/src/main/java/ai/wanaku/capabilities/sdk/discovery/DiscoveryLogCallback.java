@@ -1,10 +1,10 @@
 package ai.wanaku.capabilities.sdk.discovery;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ai.wanaku.capabilities.sdk.api.discovery.DiscoveryCallback;
 import ai.wanaku.capabilities.sdk.api.discovery.RegistrationManager;
 import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 class DiscoveryLogCallback implements DiscoveryCallback {
     private static final Logger LOG = LoggerFactory.getLogger(DiscoveryLogCallback.class);

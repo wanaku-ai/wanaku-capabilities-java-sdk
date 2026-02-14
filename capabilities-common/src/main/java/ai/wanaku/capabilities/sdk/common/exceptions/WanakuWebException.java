@@ -66,7 +66,8 @@ public class WanakuWebException extends WanakuException {
      * @param writableStackTrace whether or not the stack trace should be writable
      * @param statusCode the HTTP status code associated with this exception
      */
-    public WanakuWebException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, int statusCode) {
+    public WanakuWebException(
+            String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, int statusCode) {
         super(message, cause, enableSuppression, writableStackTrace);
         this.statusCode = statusCode;
     }

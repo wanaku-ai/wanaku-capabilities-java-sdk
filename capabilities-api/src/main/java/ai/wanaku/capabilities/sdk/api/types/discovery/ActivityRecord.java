@@ -1,10 +1,10 @@
 package ai.wanaku.capabilities.sdk.api.types.discovery;
 
-import ai.wanaku.capabilities.sdk.api.types.WanakuEntity;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import ai.wanaku.capabilities.sdk.api.types.WanakuEntity;
 
 /**
  * Records the activity and health status of a service in the Wanaku system.

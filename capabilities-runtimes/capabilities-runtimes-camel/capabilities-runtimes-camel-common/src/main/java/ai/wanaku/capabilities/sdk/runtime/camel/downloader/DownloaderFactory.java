@@ -1,10 +1,10 @@
 package ai.wanaku.capabilities.sdk.runtime.camel.downloader;
 
-import ai.wanaku.capabilities.sdk.services.ServicesHttpClient;
 import java.net.URI;
 import java.nio.file.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ai.wanaku.capabilities.sdk.services.ServicesHttpClient;
 
 public class DownloaderFactory {
     private static final Logger LOG = LoggerFactory.getLogger(DownloaderFactory.class);

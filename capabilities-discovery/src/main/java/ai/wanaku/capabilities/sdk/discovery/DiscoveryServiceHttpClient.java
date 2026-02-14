@@ -2,14 +2,6 @@ package ai.wanaku.capabilities.sdk.discovery;
 
 import jakarta.ws.rs.core.MediaType;
 
-import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
-import ai.wanaku.capabilities.sdk.api.types.discovery.ServiceState;
-import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
-import ai.wanaku.capabilities.sdk.common.config.ServiceConfig;
-import ai.wanaku.capabilities.sdk.discovery.exceptions.InvalidResponseDataException;
-import ai.wanaku.capabilities.sdk.common.serializer.Serializer;
-import ai.wanaku.capabilities.sdk.security.ServiceAuthenticator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -17,6 +9,14 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
+import ai.wanaku.capabilities.sdk.api.types.discovery.ServiceState;
+import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
+import ai.wanaku.capabilities.sdk.common.config.ServiceConfig;
+import ai.wanaku.capabilities.sdk.common.serializer.Serializer;
+import ai.wanaku.capabilities.sdk.discovery.exceptions.InvalidResponseDataException;
+import ai.wanaku.capabilities.sdk.security.ServiceAuthenticator;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * A client for interacting with the Wanaku Discovery and Registration API.
@@ -55,8 +55,9 @@ public class DiscoveryServiceHttpClient {
      */
     private static String sanitize(ServiceConfig config) {
         // Ensure baseUrl doesn't have a trailing slash to prevent double slashes
-        return config.getBaseUrl() != null && config.getBaseUrl().endsWith("/") ?
-                config.getBaseUrl().substring(0, config.getBaseUrl().length() - 1) : config.getBaseUrl();
+        return config.getBaseUrl() != null && config.getBaseUrl().endsWith("/")
+                ? config.getBaseUrl().substring(0, config.getBaseUrl().length() - 1)
+                : config.getBaseUrl();
     }
 
     /**

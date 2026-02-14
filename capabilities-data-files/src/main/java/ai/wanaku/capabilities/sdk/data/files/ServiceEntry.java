@@ -13,13 +13,13 @@ public class ServiceEntry {
      * This includes the ID length and an additional 4 bytes (likely for an integer field).
      */
     public static final int BYTES = ID_LENGTH + 4;
+
     private String id;
 
     /**
      * Default constructor for {@code ServiceEntry}.
      */
-    ServiceEntry() {
-    }
+    ServiceEntry() {}
 
     /**
      * Constructs a {@code ServiceEntry} with the specified service ID.

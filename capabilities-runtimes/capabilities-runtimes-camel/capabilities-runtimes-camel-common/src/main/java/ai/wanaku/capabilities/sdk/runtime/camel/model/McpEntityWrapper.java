@@ -1,14 +1,14 @@
 package ai.wanaku.capabilities.sdk.runtime.camel.model;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @JsonDeserialize(using = McpEntityWrapper.McpEntityDeserializer.class)
 public class McpEntityWrapper {

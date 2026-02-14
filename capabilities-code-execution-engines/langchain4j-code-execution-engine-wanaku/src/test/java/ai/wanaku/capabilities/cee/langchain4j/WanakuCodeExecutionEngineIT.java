@@ -1,16 +1,15 @@
 package ai.wanaku.capabilities.cee.langchain4j;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import ai.wanaku.capabilities.sdk.common.config.DefaultServiceConfig;
 import ai.wanaku.capabilities.sdk.common.config.ServiceConfig;
 import ai.wanaku.capabilities.sdk.common.serializer.JacksonSerializer;
 import ai.wanaku.capabilities.sdk.security.TokenEndpoint;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**

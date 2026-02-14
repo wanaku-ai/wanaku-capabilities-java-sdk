@@ -1,8 +1,11 @@
 package ai.wanaku.capabilities.sdk.discovery.util;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class DiscoveryHelperTest {
 
@@ -30,7 +33,8 @@ class DiscoveryHelperTest {
 
         assertNotNull(result);
         assertNotEquals("auto", result);
-        // Should return a non-empty address (could be IP or hostname depending on environment)
+        // Should return a non-empty address (could be IP or hostname depending on
+        // environment)
         assertFalse(result.isEmpty(), "Expected non-empty address");
     }
 

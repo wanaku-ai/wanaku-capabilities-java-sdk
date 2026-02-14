@@ -1,8 +1,5 @@
 package ai.wanaku.capabilities.sdk.runtime.camel.downloader;
 
-import ai.wanaku.capabilities.sdk.api.types.DataStore;
-import ai.wanaku.capabilities.sdk.api.types.WanakuResponse;
-import ai.wanaku.capabilities.sdk.services.ServicesHttpClient;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ai.wanaku.capabilities.sdk.api.types.DataStore;
+import ai.wanaku.capabilities.sdk.api.types.WanakuResponse;
+import ai.wanaku.capabilities.sdk.services.ServicesHttpClient;
 
 public class DataStoreDownloader implements Downloader {
     private static final Logger LOG = LoggerFactory.getLogger(DataStoreDownloader.class);

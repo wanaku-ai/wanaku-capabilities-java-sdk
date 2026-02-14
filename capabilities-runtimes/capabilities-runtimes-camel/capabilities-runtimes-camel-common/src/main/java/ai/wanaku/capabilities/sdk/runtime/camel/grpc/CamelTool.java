@@ -1,13 +1,5 @@
 package ai.wanaku.capabilities.sdk.runtime.camel.grpc;
 
-import ai.wanaku.capabilities.sdk.runtime.camel.model.Definition;
-import ai.wanaku.capabilities.sdk.runtime.camel.model.McpSpec;
-import ai.wanaku.capabilities.sdk.runtime.camel.spec.rules.tools.mapping.HeaderMapper;
-import ai.wanaku.capabilities.sdk.runtime.camel.spec.rules.tools.mapping.HeaderMapperFactory;
-import ai.wanaku.core.exchange.ToolInvokeReply;
-import ai.wanaku.core.exchange.ToolInvokeRequest;
-import ai.wanaku.core.exchange.ToolInvokerGrpc;
-import io.grpc.stub.StreamObserver;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
@@ -17,6 +9,14 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.Route;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import io.grpc.stub.StreamObserver;
+import ai.wanaku.capabilities.sdk.runtime.camel.model.Definition;
+import ai.wanaku.capabilities.sdk.runtime.camel.model.McpSpec;
+import ai.wanaku.capabilities.sdk.runtime.camel.spec.rules.tools.mapping.HeaderMapper;
+import ai.wanaku.capabilities.sdk.runtime.camel.spec.rules.tools.mapping.HeaderMapperFactory;
+import ai.wanaku.core.exchange.ToolInvokeReply;
+import ai.wanaku.core.exchange.ToolInvokeRequest;
+import ai.wanaku.core.exchange.ToolInvokerGrpc;
 
 public class CamelTool extends ToolInvokerGrpc.ToolInvokerImplBase {
     private static final Logger LOG = LoggerFactory.getLogger(CamelTool.class);

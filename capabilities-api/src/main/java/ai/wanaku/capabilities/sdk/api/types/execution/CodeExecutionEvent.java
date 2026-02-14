@@ -239,8 +239,8 @@ public class CodeExecutionEvent {
      * @return a new STARTED event
      */
     public static CodeExecutionEvent started(String taskId) {
-        CodeExecutionEvent event = new CodeExecutionEvent(
-                CodeExecutionEventType.STARTED, taskId, CodeExecutionStatus.RUNNING);
+        CodeExecutionEvent event =
+                new CodeExecutionEvent(CodeExecutionEventType.STARTED, taskId, CodeExecutionStatus.RUNNING);
         event.setMessage("Code execution started");
         return event;
     }
@@ -253,8 +253,8 @@ public class CodeExecutionEvent {
      * @return a new OUTPUT event
      */
     public static CodeExecutionEvent output(String taskId, String output) {
-        CodeExecutionEvent event = new CodeExecutionEvent(
-                CodeExecutionEventType.OUTPUT, taskId, CodeExecutionStatus.RUNNING);
+        CodeExecutionEvent event =
+                new CodeExecutionEvent(CodeExecutionEventType.OUTPUT, taskId, CodeExecutionStatus.RUNNING);
         event.setOutput(output);
         return event;
     }
@@ -267,8 +267,8 @@ public class CodeExecutionEvent {
      * @return a new ERROR event
      */
     public static CodeExecutionEvent error(String taskId, String error) {
-        CodeExecutionEvent event = new CodeExecutionEvent(
-                CodeExecutionEventType.ERROR, taskId, CodeExecutionStatus.RUNNING);
+        CodeExecutionEvent event =
+                new CodeExecutionEvent(CodeExecutionEventType.ERROR, taskId, CodeExecutionStatus.RUNNING);
         event.setError(error);
         return event;
     }
@@ -281,8 +281,8 @@ public class CodeExecutionEvent {
      * @return a new COMPLETED event
      */
     public static CodeExecutionEvent completed(String taskId, int exitCode) {
-        CodeExecutionEvent event = new CodeExecutionEvent(
-                CodeExecutionEventType.COMPLETED, taskId, CodeExecutionStatus.COMPLETED);
+        CodeExecutionEvent event =
+                new CodeExecutionEvent(CodeExecutionEventType.COMPLETED, taskId, CodeExecutionStatus.COMPLETED);
         event.setExitCode(exitCode);
         event.setMessage("Code execution completed successfully");
         return event;
@@ -297,8 +297,8 @@ public class CodeExecutionEvent {
      * @return a new FAILED event
      */
     public static CodeExecutionEvent failed(String taskId, int exitCode, String errorMessage) {
-        CodeExecutionEvent event = new CodeExecutionEvent(
-                CodeExecutionEventType.FAILED, taskId, CodeExecutionStatus.FAILED);
+        CodeExecutionEvent event =
+                new CodeExecutionEvent(CodeExecutionEventType.FAILED, taskId, CodeExecutionStatus.FAILED);
         event.setExitCode(exitCode);
         event.setMessage(errorMessage);
         return event;
@@ -311,8 +311,8 @@ public class CodeExecutionEvent {
      * @return a new TIMEOUT event
      */
     public static CodeExecutionEvent timeout(String taskId) {
-        CodeExecutionEvent event = new CodeExecutionEvent(
-                CodeExecutionEventType.TIMEOUT, taskId, CodeExecutionStatus.TIMEOUT);
+        CodeExecutionEvent event =
+                new CodeExecutionEvent(CodeExecutionEventType.TIMEOUT, taskId, CodeExecutionStatus.TIMEOUT);
         event.setMessage("Code execution exceeded timeout limit");
         return event;
     }
@@ -324,8 +324,8 @@ public class CodeExecutionEvent {
      * @return a new CANCELLED event
      */
     public static CodeExecutionEvent cancelled(String taskId) {
-        CodeExecutionEvent event = new CodeExecutionEvent(
-                CodeExecutionEventType.CANCELLED, taskId, CodeExecutionStatus.CANCELLED);
+        CodeExecutionEvent event =
+                new CodeExecutionEvent(CodeExecutionEventType.CANCELLED, taskId, CodeExecutionStatus.CANCELLED);
         event.setMessage("Code execution was cancelled");
         return event;
     }
@@ -362,7 +362,8 @@ public class CodeExecutionEvent {
                 + ", taskId='" + taskId + '\''
                 + ", timestamp=" + timestamp
                 + ", status=" + status
-                + ", output='" + (output != null ? output.substring(0, Math.min(50, output.length())) + "..." : null) + '\''
+                + ", output='" + (output != null ? output.substring(0, Math.min(50, output.length())) + "..." : null)
+                + '\''
                 + ", error='" + (error != null ? error.substring(0, Math.min(50, error.length())) + "..." : null) + '\''
                 + ", exitCode=" + exitCode
                 + ", message='" + message + '\''
