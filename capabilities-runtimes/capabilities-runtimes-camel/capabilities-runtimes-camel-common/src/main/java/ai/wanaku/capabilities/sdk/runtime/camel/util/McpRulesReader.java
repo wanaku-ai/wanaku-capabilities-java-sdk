@@ -17,13 +17,13 @@
 
 package ai.wanaku.capabilities.sdk.runtime.camel.util;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import ai.wanaku.capabilities.sdk.runtime.camel.model.McpSpec;
 import ai.wanaku.capabilities.sdk.runtime.camel.model.Tool;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class McpRulesReader {
     private static final ObjectMapper YAML_MAPPER = new ObjectMapper(new YAMLFactory());

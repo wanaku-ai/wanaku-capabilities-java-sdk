@@ -1,8 +1,8 @@
 package ai.wanaku.capabilities.sdk.discovery.util;
 
-import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
 
 /**
  * Utility class providing helper methods related to service discovery, particularly for resolving network addresses.

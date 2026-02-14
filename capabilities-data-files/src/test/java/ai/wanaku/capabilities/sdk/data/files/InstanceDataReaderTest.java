@@ -5,12 +5,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -72,7 +72,8 @@ class InstanceDataReaderTest {
 
         InstanceDataReader reader = new InstanceDataReader(testFile);
         reader.close();
-        // Attempting to read after close should ideally throw an exception, but FileChannel doesn't always immediately reflect this.
+        // Attempting to read after close should ideally throw an exception, but FileChannel doesn't always immediately
+        // reflect this.
         // For now, we rely on no exception being thrown during close and the AutoCloseable contract.
     }
 }

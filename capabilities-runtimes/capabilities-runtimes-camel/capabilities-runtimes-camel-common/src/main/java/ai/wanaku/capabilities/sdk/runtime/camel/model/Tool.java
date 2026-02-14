@@ -1,7 +1,7 @@
 package ai.wanaku.capabilities.sdk.runtime.camel.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Tool {
     @JsonProperty("tools")

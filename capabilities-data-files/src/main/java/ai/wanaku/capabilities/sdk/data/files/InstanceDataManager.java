@@ -1,13 +1,12 @@
 package ai.wanaku.capabilities.sdk.data.files;
 
-import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
-import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
+import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
 
 /**
  * Manages persistent storage of service instance data for capability provider services.
@@ -76,7 +75,7 @@ public class InstanceDataManager {
             return null;
         }
 
-        try (InstanceDataReader reader = new InstanceDataReader(file))  {
+        try (InstanceDataReader reader = new InstanceDataReader(file)) {
             final FileHeader header = reader.getHeader();
             if (header == null) {
                 throw new WanakuException("Invalid data file");
@@ -135,7 +134,7 @@ public class InstanceDataManager {
         if (serviceType == null) {
             throw new IllegalArgumentException("Service type cannot be null");
         }
-        
+
         return switch (serviceType) {
             case "tool-invoker" -> FileHeader.TOOL_INVOKER;
             case "resource-provider" -> FileHeader.RESOURCE_PROVIDER;

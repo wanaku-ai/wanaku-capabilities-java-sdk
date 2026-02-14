@@ -1,6 +1,5 @@
 package ai.wanaku.capabilities.sdk.data.files;
 
-import ai.wanaku.capabilities.sdk.api.types.providers.ServiceType;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -8,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ai.wanaku.capabilities.sdk.api.types.providers.ServiceType;
 
 /**
  * Reads instance data from a file, including file headers and service entries.
@@ -22,10 +22,9 @@ public class InstanceDataReader implements AutoCloseable {
     private final FileHeader fileHeader;
 
     static {
-        assert (((FileHeader.BYTES + ServiceEntry.BYTES) % 20) == 0):
-                "File header and the file entries must be aligned on a 20 bytes boundary";
+        assert (((FileHeader.BYTES + ServiceEntry.BYTES) % 20) == 0)
+                : "File header and the file entries must be aligned on a 20 bytes boundary";
     }
-
 
     /**
      * Constructs an {@code InstanceDataReader}.

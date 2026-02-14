@@ -1,5 +1,11 @@
 package ai.wanaku.capabilities.cee.langchain4j;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionEvent;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionEventType;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionRequest;
@@ -7,15 +13,6 @@ import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionResponse;
 import ai.wanaku.capabilities.sdk.common.config.ServiceConfig;
 import ai.wanaku.capabilities.sdk.services.ServicesHttpClient;
 import dev.langchain4j.code.CodeExecutionEngine;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Objects;
 
 /**
  * LangChain4j {@link CodeExecutionEngine} implementation that executes code via the Wanaku
@@ -48,7 +45,11 @@ public class WanakuCodeExecutionEngine implements CodeExecutionEngine {
     private final int taskTimeout;
 
     private WanakuCodeExecutionEngine(Builder builder) {
-        this(new ServicesHttpClient(builder.serviceConfig), builder.engineType, builder.language, builder().taskTimeout);
+        this(
+                new ServicesHttpClient(builder.serviceConfig),
+                builder.engineType,
+                builder.language,
+                builder().taskTimeout);
     }
 
     WanakuCodeExecutionEngine(ServicesHttpClient client, String engineType, String language, int taskTimeout) {
@@ -69,8 +70,7 @@ public class WanakuCodeExecutionEngine implements CodeExecutionEngine {
 
     @Override
     public String execute(String code) {
-        LOG.debug("Executing code via Wanaku Code Execution Engine: engineType={}, language={}",
-                engineType, language);
+        LOG.debug("Executing code via Wanaku Code Execution Engine: engineType={}, language={}", engineType, language);
 
         CodeExecutionRequest request = new CodeExecutionRequest(code);
         CodeExecutionResponse response = client.executeCode(engineType, language, request);
@@ -111,8 +111,7 @@ public class WanakuCodeExecutionEngine implements CodeExecutionEngine {
         private String language = "java";
         private int taskTimeout = 30;
 
-        private Builder() {
-        }
+        private Builder() {}
 
         /**
          * Sets the service configuration for connecting to the Wanaku service.

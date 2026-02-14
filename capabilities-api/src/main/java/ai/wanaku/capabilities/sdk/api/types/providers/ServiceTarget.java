@@ -1,7 +1,7 @@
 package ai.wanaku.capabilities.sdk.api.types.providers;
 
-import ai.wanaku.capabilities.sdk.api.types.WanakuEntity;
 import java.util.Objects;
+import ai.wanaku.capabilities.sdk.api.types.WanakuEntity;
 
 /**
  * Represents a target service endpoint that can be either a resource provider or a tool invoker.
@@ -38,8 +38,16 @@ public class ServiceTarget implements WanakuEntity<String> {
      * @param languageType      The type of the language (e.g., "compiled", "interpreted").
      * @param languageSubType   The subtype of the language (e.g., "jvm", "cpython").
      */
-    public ServiceTarget(String id, String serviceName, String host, int port, String serviceType, String serviceSubType, 
-                        String languageName, String languageType, String languageSubType) {
+    public ServiceTarget(
+            String id,
+            String serviceName,
+            String host,
+            int port,
+            String serviceType,
+            String serviceSubType,
+            String languageName,
+            String languageType,
+            String languageSubType) {
         this.id = id;
         this.serviceName = serviceName;
         this.host = host;
@@ -215,8 +223,8 @@ public class ServiceTarget implements WanakuEntity<String> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, serviceName, host, port, serviceType, serviceSubType, 
-                          languageName, languageType, languageSubType);
+        return Objects.hash(
+                id, serviceName, host, port, serviceType, serviceSubType, languageName, languageType, languageSubType);
     }
 
     @Override
@@ -246,10 +254,25 @@ public class ServiceTarget implements WanakuEntity<String> {
      * @param languageSubType   The subtype of the language, or null if not applicable.
      * @return A new instance of {@link ServiceTarget}.
      */
-    public static ServiceTarget newEmptyTarget(String serviceName, String address, int port, String serviceType, String serviceSubType,
-                                              String languageName, String languageType, String languageSubType) {
-        return new ServiceTarget(null, serviceName, address, port, serviceType, serviceSubType, 
-                               languageName, languageType, languageSubType);
+    public static ServiceTarget newEmptyTarget(
+            String serviceName,
+            String address,
+            int port,
+            String serviceType,
+            String serviceSubType,
+            String languageName,
+            String languageType,
+            String languageSubType) {
+        return new ServiceTarget(
+                null,
+                serviceName,
+                address,
+                port,
+                serviceType,
+                serviceSubType,
+                languageName,
+                languageType,
+                languageSubType);
     }
 
     /**

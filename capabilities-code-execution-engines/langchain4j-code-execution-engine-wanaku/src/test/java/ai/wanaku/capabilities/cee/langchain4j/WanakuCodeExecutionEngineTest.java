@@ -1,5 +1,6 @@
 package ai.wanaku.capabilities.cee.langchain4j;
 
+import java.util.function.Consumer;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionEvent;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionRequest;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionResponse;
@@ -7,10 +8,8 @@ import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionStatus;
 import ai.wanaku.capabilities.sdk.common.config.ServiceConfig;
 import ai.wanaku.capabilities.sdk.common.serializer.Serializer;
 import ai.wanaku.capabilities.sdk.services.ServicesHttpClient;
+
 import org.junit.jupiter.api.Test;
-
-import java.util.function.Consumer;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -25,12 +24,11 @@ class WanakuCodeExecutionEngineTest {
 
     @Test
     void builderRequiresServiceConfig() {
-        NullPointerException exception = assertThrows(NullPointerException.class, () ->
-                WanakuCodeExecutionEngine.builder()
+        NullPointerException exception =
+                assertThrows(NullPointerException.class, () -> WanakuCodeExecutionEngine.builder()
                         .engineType("jvm")
                         .language("java")
-                        .build()
-        );
+                        .build());
         assertEquals("serviceConfig must not be null", exception.getMessage());
     }
 
@@ -38,13 +36,12 @@ class WanakuCodeExecutionEngineTest {
     void builderRequiresNonEmptyEngineType() {
         ServiceConfig config = createMockConfig();
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
-                WanakuCodeExecutionEngine.builder()
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class, () -> WanakuCodeExecutionEngine.builder()
                         .serviceConfig(config)
                         .engineType("")
                         .language("java")
-                        .build()
-        );
+                        .build());
         assertEquals("engineType must not be null or empty", exception.getMessage());
     }
 
@@ -52,13 +49,12 @@ class WanakuCodeExecutionEngineTest {
     void builderRequiresNonNullEngineType() {
         ServiceConfig config = createMockConfig();
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
-                WanakuCodeExecutionEngine.builder()
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class, () -> WanakuCodeExecutionEngine.builder()
                         .serviceConfig(config)
                         .engineType(null)
                         .language("java")
-                        .build()
-        );
+                        .build());
         assertEquals("engineType must not be null or empty", exception.getMessage());
     }
 
@@ -66,13 +62,12 @@ class WanakuCodeExecutionEngineTest {
     void builderRequiresNonEmptyLanguage() {
         ServiceConfig config = createMockConfig();
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
-                WanakuCodeExecutionEngine.builder()
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class, () -> WanakuCodeExecutionEngine.builder()
                         .serviceConfig(config)
                         .engineType("jvm")
                         .language("")
-                        .build()
-        );
+                        .build());
         assertEquals("language must not be null or empty", exception.getMessage());
     }
 
@@ -80,13 +75,12 @@ class WanakuCodeExecutionEngineTest {
     void builderRequiresNonNullLanguage() {
         ServiceConfig config = createMockConfig();
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
-                WanakuCodeExecutionEngine.builder()
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class, () -> WanakuCodeExecutionEngine.builder()
                         .serviceConfig(config)
                         .engineType("jvm")
                         .language(null)
-                        .build()
-        );
+                        .build());
         assertEquals("language must not be null or empty", exception.getMessage());
     }
 
@@ -110,11 +104,13 @@ class WanakuCodeExecutionEngineTest {
                 .thenReturn(execResponse);
 
         doAnswer(invocation -> {
-            Consumer<CodeExecutionEvent> consumer = invocation.getArgument(4);
-            consumer.accept(CodeExecutionEvent.started(taskId));
-            consumer.accept(completedWithOutput(taskId, 0, "Hello, World!"));
-            return null;
-        }).when(mockClient).streamCodeExecutionEvents(eq("jvm"), eq("java"), eq(taskId), eq(10), any());
+                    Consumer<CodeExecutionEvent> consumer = invocation.getArgument(4);
+                    consumer.accept(CodeExecutionEvent.started(taskId));
+                    consumer.accept(completedWithOutput(taskId, 0, "Hello, World!"));
+                    return null;
+                })
+                .when(mockClient)
+                .streamCodeExecutionEvents(eq("jvm"), eq("java"), eq(taskId), eq(10), any());
 
         WanakuCodeExecutionEngine engine = new WanakuCodeExecutionEngine(mockClient, "jvm", "java", 10);
         String result = engine.execute("System.out.println(\"Hello, World!\");");
@@ -133,11 +129,13 @@ class WanakuCodeExecutionEngineTest {
                 .thenReturn(execResponse);
 
         doAnswer(invocation -> {
-            Consumer<CodeExecutionEvent> consumer = invocation.getArgument(4);
-            consumer.accept(CodeExecutionEvent.started(taskId));
-            consumer.accept(CodeExecutionEvent.failed(taskId, 1, "Compilation error"));
-            return null;
-        }).when(mockClient).streamCodeExecutionEvents(eq("jvm"), eq("java"), eq(taskId), eq(10), any());
+                    Consumer<CodeExecutionEvent> consumer = invocation.getArgument(4);
+                    consumer.accept(CodeExecutionEvent.started(taskId));
+                    consumer.accept(CodeExecutionEvent.failed(taskId, 1, "Compilation error"));
+                    return null;
+                })
+                .when(mockClient)
+                .streamCodeExecutionEvents(eq("jvm"), eq("java"), eq(taskId), eq(10), any());
 
         WanakuCodeExecutionEngine engine = new WanakuCodeExecutionEngine(mockClient, "jvm", "java", 10);
         String result = engine.execute("invalid code");
@@ -156,11 +154,13 @@ class WanakuCodeExecutionEngineTest {
                 .thenReturn(execResponse);
 
         doAnswer(invocation -> {
-            Consumer<CodeExecutionEvent> consumer = invocation.getArgument(4);
-            consumer.accept(CodeExecutionEvent.started(taskId));
-            consumer.accept(CodeExecutionEvent.timeout(taskId));
-            return null;
-        }).when(mockClient).streamCodeExecutionEvents(eq("jvm"), eq("java"), eq(taskId), eq(10), any());
+                    Consumer<CodeExecutionEvent> consumer = invocation.getArgument(4);
+                    consumer.accept(CodeExecutionEvent.started(taskId));
+                    consumer.accept(CodeExecutionEvent.timeout(taskId));
+                    return null;
+                })
+                .when(mockClient)
+                .streamCodeExecutionEvents(eq("jvm"), eq("java"), eq(taskId), eq(10), any());
 
         WanakuCodeExecutionEngine engine = new WanakuCodeExecutionEngine(mockClient, "jvm", "java", 10);
         String result = engine.execute("while(true) {}");
@@ -179,11 +179,13 @@ class WanakuCodeExecutionEngineTest {
                 .thenReturn(execResponse);
 
         doAnswer(invocation -> {
-            Consumer<CodeExecutionEvent> consumer = invocation.getArgument(4);
-            consumer.accept(CodeExecutionEvent.started(taskId));
-            consumer.accept(completedWithOutput(taskId, 0, "Line 1\nLine 2\nLine 3\n"));
-            return null;
-        }).when(mockClient).streamCodeExecutionEvents(eq("jvm"), eq("java"), eq(taskId), eq(10), any());
+                    Consumer<CodeExecutionEvent> consumer = invocation.getArgument(4);
+                    consumer.accept(CodeExecutionEvent.started(taskId));
+                    consumer.accept(completedWithOutput(taskId, 0, "Line 1\nLine 2\nLine 3\n"));
+                    return null;
+                })
+                .when(mockClient)
+                .streamCodeExecutionEvents(eq("jvm"), eq("java"), eq(taskId), eq(10), any());
 
         WanakuCodeExecutionEngine engine = new WanakuCodeExecutionEngine(mockClient, "jvm", "java", 10);
         String result = engine.execute("print lines");
@@ -230,5 +232,4 @@ class WanakuCodeExecutionEngineTest {
         event.setOutput(output);
         return event;
     }
-
 }

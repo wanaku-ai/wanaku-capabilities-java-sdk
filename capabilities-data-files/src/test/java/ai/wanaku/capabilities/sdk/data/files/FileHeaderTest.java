@@ -1,9 +1,9 @@
 package ai.wanaku.capabilities.sdk.data.files;
 
 import ai.wanaku.capabilities.sdk.api.types.providers.ServiceType;
-import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FileHeaderTest {
 
@@ -12,7 +12,8 @@ class FileHeaderTest {
         assertEquals("wanaku", FileHeader.FORMAT_NAME);
         assertEquals(6, FileHeader.FORMAT_NAME_SIZE);
         assertEquals(1, FileHeader.CURRENT_FILE_VERSION);
-        // BYTES calculation: FORMAT_NAME_SIZE (6) + Integer.BYTES (4) + Integer.BYTES (4) + Integer.BYTES (4) + 2 = 20
+        // BYTES calculation: FORMAT_NAME_SIZE (6) + Integer.BYTES (4) + Integer.BYTES
+        // (4) + Integer.BYTES (4) + 2 = 20
         assertEquals(20, FileHeader.BYTES);
     }
 

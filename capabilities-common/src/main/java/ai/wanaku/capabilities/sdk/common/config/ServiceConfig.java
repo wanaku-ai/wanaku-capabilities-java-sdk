@@ -1,7 +1,7 @@
 package ai.wanaku.capabilities.sdk.common.config;
 
-import ai.wanaku.capabilities.sdk.common.serializer.Serializer;
 import ai.wanaku.capabilities.sdk.common.security.SecurityServiceConfig;
+import ai.wanaku.capabilities.sdk.common.serializer.Serializer;
 
 /**
  * Configuration interface for the Discovery Service, defining essential parameters

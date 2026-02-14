@@ -1,11 +1,5 @@
 package ai.wanaku.capabilities.sdk.runtime.camel.grpc;
 
-import ai.wanaku.capabilities.sdk.runtime.camel.model.Definition;
-import ai.wanaku.capabilities.sdk.runtime.camel.model.McpSpec;
-import ai.wanaku.core.exchange.ResourceAcquirerGrpc;
-import ai.wanaku.core.exchange.ResourceReply;
-import ai.wanaku.core.exchange.ResourceRequest;
-import io.grpc.stub.StreamObserver;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
@@ -15,6 +9,12 @@ import org.apache.camel.ConsumerTemplate;
 import org.apache.camel.Route;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import io.grpc.stub.StreamObserver;
+import ai.wanaku.capabilities.sdk.runtime.camel.model.Definition;
+import ai.wanaku.capabilities.sdk.runtime.camel.model.McpSpec;
+import ai.wanaku.core.exchange.ResourceAcquirerGrpc;
+import ai.wanaku.core.exchange.ResourceReply;
+import ai.wanaku.core.exchange.ResourceRequest;
 
 public class CamelResource extends ResourceAcquirerGrpc.ResourceAcquirerImplBase {
     private static final Logger LOG = LoggerFactory.getLogger(CamelResource.class);

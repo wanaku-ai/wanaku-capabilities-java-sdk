@@ -1,15 +1,14 @@
 package ai.wanaku.capabilities.sdk.data.files;
 
-import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
-import java.util.UUID;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.UUID;
+import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -48,8 +47,7 @@ class InstanceDataManagerTest {
         instanceDataManager.createDataDirectory();
 
         final String expectedID = UUID.randomUUID().toString();
-        ServiceTarget serviceTarget = ServiceTarget
-                .newEmptyTarget("testService", "localhost", 9190, "tool-invoker");
+        ServiceTarget serviceTarget = ServiceTarget.newEmptyTarget("testService", "localhost", 9190, "tool-invoker");
         serviceTarget.setId(expectedID);
 
         instanceDataManager.writeEntry(serviceTarget);

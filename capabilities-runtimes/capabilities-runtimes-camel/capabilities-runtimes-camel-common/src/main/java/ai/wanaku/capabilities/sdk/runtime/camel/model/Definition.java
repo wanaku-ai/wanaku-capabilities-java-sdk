@@ -1,7 +1,7 @@
 package ai.wanaku.capabilities.sdk.runtime.camel.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Definition {
     @JsonProperty("route")

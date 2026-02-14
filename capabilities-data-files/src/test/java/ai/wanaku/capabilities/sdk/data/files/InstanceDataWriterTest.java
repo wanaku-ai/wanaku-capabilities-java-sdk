@@ -1,14 +1,13 @@
 package ai.wanaku.capabilities.sdk.data.files;
 
-import java.util.UUID;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.UUID;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -95,7 +94,8 @@ class InstanceDataWriterTest {
         try (InstanceDataWriter writer = new InstanceDataWriter(testFile, header)) {
             writer.write(entry);
             // Data is buffered, not yet written to disk until flush or close
-            assertTrue(testFile.length() < FileHeader.BYTES + ServiceEntry.BYTES); // Should be only header size initially
+            assertTrue(
+                    testFile.length() < FileHeader.BYTES + ServiceEntry.BYTES); // Should be only header size initially
             writer.flush();
         }
     }

@@ -42,8 +42,7 @@ public class CodeExecutionTask {
      * @param engineType the engine type to use for execution (e.g., "jvm", "interpreted")
      * @param language the programming language of the code
      */
-    public CodeExecutionTask(String taskId, CodeExecutionRequest request, 
-                            String engineType, String language) {
+    public CodeExecutionTask(String taskId, CodeExecutionRequest request, String engineType, String language) {
         this();
         this.taskId = taskId;
         this.request = request;
@@ -302,8 +301,8 @@ public class CodeExecutionTask {
 
     @Override
     public int hashCode() {
-        return Objects.hash(taskId, request, engineType, language, status, 
-                          submittedAt, startedAt, completedAt, exitCode);
+        return Objects.hash(
+                taskId, request, engineType, language, status, submittedAt, startedAt, completedAt, exitCode);
     }
 
     @Override

@@ -19,7 +19,7 @@ public class JacksonDeserializer implements Deserializer {
      * @throws JsonProcessingException If an error occurs during JSON deserialization.
      */
     @Override
-    public  <T> T deserialize(String content, TypeReference<T> typeRef) throws JsonProcessingException {
+    public <T> T deserialize(String content, TypeReference<T> typeRef) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(content, typeRef);
     }

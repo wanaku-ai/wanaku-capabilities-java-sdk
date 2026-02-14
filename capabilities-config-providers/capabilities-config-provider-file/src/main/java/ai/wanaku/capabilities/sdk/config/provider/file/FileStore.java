@@ -1,7 +1,7 @@
 package ai.wanaku.capabilities.sdk.config.provider.file;
 
-import ai.wanaku.capabilities.sdk.config.provider.api.PropertyBasedStore;
 import java.net.URI;
+import ai.wanaku.capabilities.sdk.config.provider.api.PropertyBasedStore;
 
 /**
  * An abstract base class for {@link PropertyBasedStore} implementations that source their properties

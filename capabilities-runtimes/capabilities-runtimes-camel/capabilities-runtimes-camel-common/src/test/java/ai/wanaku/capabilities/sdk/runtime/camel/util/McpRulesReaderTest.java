@@ -17,15 +17,17 @@
 
 package ai.wanaku.capabilities.sdk.runtime.camel.util;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import java.io.InputStream;
+import java.util.Map;
 import ai.wanaku.capabilities.sdk.runtime.camel.model.Definition;
 import ai.wanaku.capabilities.sdk.runtime.camel.model.Mapping;
 import ai.wanaku.capabilities.sdk.runtime.camel.model.McpSpec;
 import ai.wanaku.capabilities.sdk.runtime.camel.model.Property;
-import java.io.InputStream;
-import java.util.Map;
+
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class McpRulesReaderTest {
 

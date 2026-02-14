@@ -1,5 +1,12 @@
 package ai.wanaku.capabilities.sdk.security;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import java.time.Duration;
+import java.time.Instant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ai.wanaku.capabilities.sdk.common.security.SecurityServiceConfig;
 import ai.wanaku.capabilities.sdk.security.exceptions.ServiceAuthException;
 import com.nimbusds.oauth2.sdk.AccessTokenResponse;
@@ -21,14 +28,7 @@ import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.RefreshToken;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
-import java.time.Duration;
-import java.time.Instant;
 import net.minidev.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Handles OAuth2 authentication with the Wanaku.
@@ -169,7 +169,9 @@ public class ServiceAuthenticator {
         if (!response.indicatesSuccess()) {
             // We got an error response...
             TokenErrorResponse errorResponse = response.toErrorResponse();
-            LOG.error("Unable to authenticate with service: {}", errorResponse.getErrorObject().getDescription());
+            LOG.error(
+                    "Unable to authenticate with service: {}",
+                    errorResponse.getErrorObject().getDescription());
             throw new ServiceAuthException(errorResponse.getErrorObject().getDescription());
         }
 
@@ -187,7 +189,8 @@ public class ServiceAuthenticator {
      * @return A valid access token value.
      */
     public String currentValidAccessToken() {
-        final long elapsedSeconds = Duration.between(creationTime, Instant.now()).getSeconds();
+        final long elapsedSeconds =
+                Duration.between(creationTime, Instant.now()).getSeconds();
 
         if (elapsedSeconds >= (accessToken.getLifetime() - 30)) {
             LOG.info("The token is about to expire. Renewing token to prevent that from happening ...");
@@ -205,5 +208,4 @@ public class ServiceAuthenticator {
     public String toHeaderValue() {
         return String.format("Bearer %s", currentValidAccessToken());
     }
-
 }

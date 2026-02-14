@@ -15,8 +15,8 @@
  */
 package ai.wanaku.capabilities.sdk.api.types.execution;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Error response DTO for code execution failures.

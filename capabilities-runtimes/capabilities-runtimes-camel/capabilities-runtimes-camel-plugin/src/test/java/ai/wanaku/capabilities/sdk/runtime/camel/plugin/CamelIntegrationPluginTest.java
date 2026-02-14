@@ -1,11 +1,14 @@
 package ai.wanaku.capabilities.sdk.runtime.camel.plugin;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.ServiceLoader;
 import org.apache.camel.spi.ContextServicePlugin;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for {@link CamelIntegrationPlugin}.
