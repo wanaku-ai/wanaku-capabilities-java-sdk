@@ -9,6 +9,7 @@ import java.util.Objects;
 public class ServiceState {
     private Instant timestamp;
     private boolean healthy;
+    private HealthStatus healthStatus;
     private String reason;
 
     /**
@@ -25,6 +26,21 @@ public class ServiceState {
     public ServiceState(Instant timestamp, boolean healthy, String reason) {
         this.timestamp = timestamp;
         this.healthy = healthy;
+        this.healthStatus = healthy ? HealthStatus.HEALTHY : HealthStatus.UNHEALTHY;
+        this.reason = reason;
+    }
+
+    /**
+     * Saves the current state of the service with an explicit health status
+     * @param timestamp the current timestamp
+     * @param healthy whether it is healthy (true for healthy, false otherwise)
+     * @param healthStatus the detailed health status
+     * @param reason Optional state message (ignored if healthy)
+     */
+    public ServiceState(Instant timestamp, boolean healthy, HealthStatus healthStatus, String reason) {
+        this.timestamp = timestamp;
+        this.healthy = healthy;
+        this.healthStatus = healthStatus;
         this.reason = reason;
     }
 
@@ -65,6 +81,24 @@ public class ServiceState {
     }
 
     /**
+     * Gets the detailed health status.
+     *
+     * @return the health status enum value
+     */
+    public HealthStatus getHealthStatus() {
+        return healthStatus;
+    }
+
+    /**
+     * Sets the detailed health status.
+     *
+     * @param healthStatus the health status to set
+     */
+    public void setHealthStatus(HealthStatus healthStatus) {
+        this.healthStatus = healthStatus;
+    }
+
+    /**
      * Gets the reason for the current service state.
      *
      * @return the reason message, or {@code null} if not set
@@ -89,18 +123,20 @@ public class ServiceState {
         }
         ServiceState that = (ServiceState) o;
         return healthy == that.healthy
+                && healthStatus == that.healthStatus
                 && Objects.equals(timestamp, that.timestamp)
                 && Objects.equals(reason, that.reason);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timestamp, healthy, reason);
+        return Objects.hash(timestamp, healthy, healthStatus, reason);
     }
 
     @Override
     public String toString() {
-        return "ServiceState{" + "timestamp=" + timestamp + ", healthy=" + healthy + ", reason='" + reason + '\'' + '}';
+        return "ServiceState{" + "timestamp=" + timestamp + ", healthy=" + healthy + ", healthStatus=" + healthStatus
+                + ", reason='" + reason + '\'' + '}';
     }
 
     /**
@@ -109,7 +145,7 @@ public class ServiceState {
      * @return a new healthy ServiceState instance
      */
     public static ServiceState newHealthy() {
-        return new ServiceState(Instant.now(), true, StandardMessages.HEALTHY);
+        return new ServiceState(Instant.now(), true, HealthStatus.HEALTHY, StandardMessages.HEALTHY);
     }
 
     /**
@@ -119,7 +155,7 @@ public class ServiceState {
      * @return a new unhealthy ServiceState instance
      */
     public static ServiceState newUnhealthy(String reason) {
-        return new ServiceState(Instant.now(), false, reason);
+        return new ServiceState(Instant.now(), false, HealthStatus.UNHEALTHY, reason);
     }
 
     /**
@@ -128,7 +164,7 @@ public class ServiceState {
      * @return a new ServiceState instance with missing-in-action status
      */
     public static ServiceState newMissingInAction() {
-        return new ServiceState(Instant.now(), false, StandardMessages.MISSING_IN_ACTION);
+        return new ServiceState(Instant.now(), false, HealthStatus.DOWN, StandardMessages.MISSING_IN_ACTION);
     }
 
     /**
@@ -137,6 +173,25 @@ public class ServiceState {
      * @return a new inactive ServiceState instance
      */
     public static ServiceState newInactive() {
-        return new ServiceState(Instant.now(), true, StandardMessages.AUTO_DEREGISTRATION);
+        return new ServiceState(Instant.now(), false, HealthStatus.DOWN, StandardMessages.AUTO_DEREGISTRATION);
+    }
+
+    /**
+     * Creates a new pending service state with the current timestamp.
+     *
+     * @return a new pending ServiceState instance
+     */
+    public static ServiceState newPending() {
+        return new ServiceState(Instant.now(), false, HealthStatus.PENDING, "pending health check");
+    }
+
+    /**
+     * Creates a new down service state with the current timestamp and the specified reason.
+     *
+     * @param reason the reason the service is down
+     * @return a new down ServiceState instance
+     */
+    public static ServiceState newDown(String reason) {
+        return new ServiceState(Instant.now(), false, HealthStatus.DOWN, reason);
     }
 }

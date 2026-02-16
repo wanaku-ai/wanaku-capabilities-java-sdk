@@ -14,7 +14,6 @@ import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
-import ai.wanaku.capabilities.sdk.api.discovery.RegistrationManager;
 import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
 import ai.wanaku.capabilities.sdk.api.types.providers.ServiceType;
 import ai.wanaku.capabilities.sdk.common.ServicesHelper;
@@ -32,6 +31,7 @@ import ai.wanaku.capabilities.sdk.runtime.camel.downloader.ResourceDownloaderCal
 import ai.wanaku.capabilities.sdk.runtime.camel.downloader.ResourceListBuilder;
 import ai.wanaku.capabilities.sdk.runtime.camel.downloader.ResourceRefs;
 import ai.wanaku.capabilities.sdk.runtime.camel.downloader.ResourceType;
+import ai.wanaku.capabilities.sdk.runtime.camel.grpc.CamelHealthProbe;
 import ai.wanaku.capabilities.sdk.runtime.camel.grpc.CamelResource;
 import ai.wanaku.capabilities.sdk.runtime.camel.grpc.CamelTool;
 import ai.wanaku.capabilities.sdk.runtime.camel.grpc.ProvisionBase;
@@ -57,7 +57,7 @@ public class CamelIntegrationPlugin implements ContextServicePlugin {
     private static final Logger LOG = LoggerFactory.getLogger(CamelIntegrationPlugin.class);
 
     private Server grpcServer;
-    private RegistrationManager registrationManager;
+    private ZeroDepRegistrationManager registrationManager;
     private PluginConfiguration config;
 
     @Override
@@ -117,6 +117,7 @@ public class CamelIntegrationPlugin implements ContextServicePlugin {
                     .addService(new CamelTool(camelContext, mcpSpec))
                     .addService(new CamelResource(camelContext, mcpSpec))
                     .addService(new ProvisionBase(config.getServiceName()))
+                    .addService(new CamelHealthProbe(camelContext, registrationManager.getTarget()))
                     .build();
 
             grpcServer.start();
@@ -156,7 +157,7 @@ public class CamelIntegrationPlugin implements ContextServicePlugin {
                 config.getServiceName(), address, config.getGrpcPort(), ServiceType.MULTI_CAPABILITY.asValue());
     }
 
-    private RegistrationManager newRegistrationManager(
+    private ZeroDepRegistrationManager newRegistrationManager(
             ServiceTarget serviceTarget,
             ResourceDownloaderCallback resourcesDownloaderCallback,
             ServiceConfig serviceConfig) {

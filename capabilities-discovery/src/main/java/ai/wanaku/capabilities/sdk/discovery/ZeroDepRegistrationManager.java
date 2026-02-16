@@ -330,4 +330,8 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
     public void addCallBack(DiscoveryCallback callback) {
         callbacks.add(callback);
     }
+
+    public ServiceTarget getTarget() {
+        return target;
+    }
 }
