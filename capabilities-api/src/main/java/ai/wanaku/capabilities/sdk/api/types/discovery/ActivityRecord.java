@@ -16,7 +16,7 @@ import ai.wanaku.capabilities.sdk.api.types.WanakuEntity;
 public class ActivityRecord implements WanakuEntity<String> {
     private String id;
     private Instant lastSeen;
-    private boolean active;
+    private HealthStatus healthStatus = HealthStatus.PENDING;
     private List<ServiceState> states = new ArrayList<>();
 
     /**
@@ -64,20 +64,32 @@ public class ActivityRecord implements WanakuEntity<String> {
 
     /**
      * Checks whether the service is currently active.
+     * <p>
+     * A service is considered active if its health status is {@link HealthStatus#HEALTHY}
+     * or {@link HealthStatus#PENDING}.
      *
      * @return {@code true} if the service is active, {@code false} otherwise
      */
     public boolean isActive() {
-        return active;
+        return healthStatus == HealthStatus.HEALTHY || healthStatus == HealthStatus.PENDING;
     }
 
     /**
-     * Sets the active status of the service.
+     * Gets the health status of this service.
      *
-     * @param active {@code true} to mark the service as active, {@code false} otherwise
+     * @return the current health status
      */
-    public void setActive(boolean active) {
-        this.active = active;
+    public HealthStatus getHealthStatus() {
+        return healthStatus;
+    }
+
+    /**
+     * Sets the health status of this service.
+     *
+     * @param healthStatus the health status to set
+     */
+    public void setHealthStatus(HealthStatus healthStatus) {
+        this.healthStatus = healthStatus;
     }
 
     /**
@@ -107,7 +119,7 @@ public class ActivityRecord implements WanakuEntity<String> {
             return false;
         }
         ActivityRecord that = (ActivityRecord) o;
-        return active == that.active
+        return healthStatus == that.healthStatus
                 && Objects.equals(id, that.id)
                 && Objects.equals(lastSeen, that.lastSeen)
                 && Objects.equals(states, that.states);
@@ -115,15 +127,15 @@ public class ActivityRecord implements WanakuEntity<String> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, lastSeen, active, states);
+        return Objects.hash(id, lastSeen, healthStatus, states);
     }
 
     @Override
     public String toString() {
         return "ActivityRecord{" + "id='"
                 + id + '\'' + ", lastSeen="
-                + lastSeen + ", active="
-                + active + ", states="
+                + lastSeen + ", healthStatus="
+                + healthStatus + ", states="
                 + states + '}';
     }
 }
