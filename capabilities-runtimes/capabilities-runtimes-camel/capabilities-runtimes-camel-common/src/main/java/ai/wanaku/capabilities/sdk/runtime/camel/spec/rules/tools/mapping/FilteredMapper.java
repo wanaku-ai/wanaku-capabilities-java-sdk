@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import ai.wanaku.capabilities.sdk.runtime.camel.model.Definition;
 import ai.wanaku.capabilities.sdk.runtime.camel.model.Mapping;
 import ai.wanaku.capabilities.sdk.runtime.camel.model.Property;
-import ai.wanaku.core.exchange.ToolInvokeRequest;
+import ai.wanaku.core.exchange.v1.ToolInvokeRequest;
 
 public class FilteredMapper implements HeaderMapper {
     private static final Logger LOG = LoggerFactory.getLogger(FilteredMapper.class);

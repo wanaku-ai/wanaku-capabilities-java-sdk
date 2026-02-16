@@ -9,10 +9,10 @@ import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
 import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
-import ai.wanaku.core.exchange.HealthProbeGrpc;
-import ai.wanaku.core.exchange.HealthProbeReply;
-import ai.wanaku.core.exchange.HealthProbeRequest;
-import ai.wanaku.core.exchange.RuntimeStatus;
+import ai.wanaku.core.exchange.v1.HealthProbeGrpc;
+import ai.wanaku.core.exchange.v1.HealthProbeReply;
+import ai.wanaku.core.exchange.v1.HealthProbeRequest;
+import ai.wanaku.core.exchange.v1.RuntimeStatus;
 
 public class CamelHealthProbe extends HealthProbeGrpc.HealthProbeImplBase {
     private static final Logger LOG = LoggerFactory.getLogger(CamelHealthProbe.class);
@@ -32,13 +32,13 @@ public class CamelHealthProbe extends HealthProbeGrpc.HealthProbeImplBase {
     public RuntimeStatus getStatus(ServiceStatus serviceStatus) {
         switch (serviceStatus) {
             case Initializing, Initialized, Starting -> {
-                return RuntimeStatus.STARTING;
+                return RuntimeStatus.RUNTIME_STATUS_STARTING;
             }
             case Started -> {
-                return RuntimeStatus.STARTED;
+                return RuntimeStatus.RUNTIME_STATUS_STARTED;
             }
             default -> {
-                return RuntimeStatus.STOPPED;
+                return RuntimeStatus.RUNTIME_STATUS_STOPPED;
             }
         }
     }

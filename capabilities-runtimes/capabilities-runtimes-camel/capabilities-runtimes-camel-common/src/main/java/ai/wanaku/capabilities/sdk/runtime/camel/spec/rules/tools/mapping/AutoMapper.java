@@ -5,7 +5,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ai.wanaku.capabilities.sdk.runtime.camel.model.Definition;
-import ai.wanaku.core.exchange.ToolInvokeRequest;
+import ai.wanaku.core.exchange.v1.ToolInvokeRequest;
 
 public class AutoMapper implements HeaderMapper {
     private static final Logger LOG = LoggerFactory.getLogger(AutoMapper.class);

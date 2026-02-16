@@ -8,10 +8,10 @@ import ai.wanaku.capabilities.sdk.config.provider.api.DefaultConfigProvisioner;
 import ai.wanaku.capabilities.sdk.config.provider.api.SecretWriter;
 import ai.wanaku.capabilities.sdk.config.provider.file.FileConfigurationWriter;
 import ai.wanaku.capabilities.sdk.config.provider.file.FileSecretWriter;
-import ai.wanaku.core.exchange.Configuration;
-import ai.wanaku.core.exchange.PayloadType;
-import ai.wanaku.core.exchange.ProvisionRequest;
-import ai.wanaku.core.exchange.Secret;
+import ai.wanaku.core.exchange.v1.Configuration;
+import ai.wanaku.core.exchange.v1.PayloadType;
+import ai.wanaku.core.exchange.v1.ProvisionRequest;
+import ai.wanaku.core.exchange.v1.Secret;
 
 import static ai.wanaku.capabilities.sdk.data.files.util.DataFileHelper.newRandomizedDataFile;
 
@@ -42,7 +42,7 @@ public final class FileProvisionerLoader {
 
         final String serviceHome = ServicesHelper.getCanonicalServiceHome(name);
 
-        if (configuration.getType() == PayloadType.BUILTIN) {
+        if (configuration.getType() == PayloadType.PAYLOAD_TYPE_BUILTIN) {
             final File dataFile = newRandomizedDataFile(serviceHome);
 
             configurationWriter = new FileConfigurationWriter(dataFile);
@@ -50,7 +50,7 @@ public final class FileProvisionerLoader {
             throw new UnsupportedOperationException("Provisioner not supported yet.");
         }
 
-        if (secret.getType() == PayloadType.BUILTIN) {
+        if (secret.getType() == PayloadType.PAYLOAD_TYPE_BUILTIN) {
             final File dataFile = newRandomizedDataFile(serviceHome);
 
             secretWriter = new FileSecretWriter(dataFile);
