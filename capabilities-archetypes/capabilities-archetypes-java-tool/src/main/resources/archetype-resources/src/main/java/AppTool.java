@@ -1,8 +1,9 @@
 package ${package};
 
-import ai.wanaku.core.exchange.ToolInvokeReply;
-import ai.wanaku.core.exchange.ToolInvokeRequest;
-import ai.wanaku.core.exchange.ToolInvokerGrpc;
+import ai.wanaku.core.exchange.v1.ToolInvokeReply;
+import ai.wanaku.core.exchange.v1.ToolInvokeRequest;
+import ai.wanaku.core.exchange.v1.ToolInvokerGrpc;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import java.util.List;
 import java.util.Map;
@@ -29,12 +30,13 @@ public class AppTool extends ToolInvokerGrpc.ToolInvokerImplBase {
             // Build the response
             responseObserver.onNext(
                     ToolInvokeReply.newBuilder()
-                            .setIsError(false)
                             .addAllContent(List.of(response.toString())).build());
 
             responseObserver.onCompleted();
-        } finally {
-            // cleanup
+        } catch (Exception e) {
+            responseObserver.onError(Status.INTERNAL
+                    .withDescription(String.format("Unable to invoke tool: %s", e.getMessage()))
+                    .asRuntimeException());
         }
     }
 }

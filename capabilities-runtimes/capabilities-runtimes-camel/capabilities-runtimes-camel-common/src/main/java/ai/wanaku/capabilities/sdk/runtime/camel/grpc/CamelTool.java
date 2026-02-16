@@ -9,14 +9,15 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.Route;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import ai.wanaku.capabilities.sdk.runtime.camel.model.Definition;
 import ai.wanaku.capabilities.sdk.runtime.camel.model.McpSpec;
 import ai.wanaku.capabilities.sdk.runtime.camel.spec.rules.tools.mapping.HeaderMapper;
 import ai.wanaku.capabilities.sdk.runtime.camel.spec.rules.tools.mapping.HeaderMapperFactory;
-import ai.wanaku.core.exchange.ToolInvokeReply;
-import ai.wanaku.core.exchange.ToolInvokeRequest;
-import ai.wanaku.core.exchange.ToolInvokerGrpc;
+import ai.wanaku.core.exchange.v1.ToolInvokeReply;
+import ai.wanaku.core.exchange.v1.ToolInvokeRequest;
+import ai.wanaku.core.exchange.v1.ToolInvokerGrpc;
 
 public class CamelTool extends ToolInvokerGrpc.ToolInvokerImplBase {
     private static final Logger LOG = LoggerFactory.getLogger(CamelTool.class);
@@ -50,11 +51,9 @@ public class CamelTool extends ToolInvokerGrpc.ToolInvokerImplBase {
 
         if (toolDefinition == null) {
             LOG.error("No tool definition found for: {}", host);
-            responseObserver.onNext(ToolInvokeReply.newBuilder()
-                    .setIsError(true)
-                    .addAllContent(List.of("No tool or resource definition found for: " + host))
-                    .build());
-            responseObserver.onCompleted();
+            responseObserver.onError(Status.NOT_FOUND
+                    .withDescription("No tool or resource definition found for: " + host)
+                    .asRuntimeException());
             return;
         }
 
@@ -72,13 +71,11 @@ public class CamelTool extends ToolInvokerGrpc.ToolInvokerImplBase {
             }
 
             responseObserver.onNext(ToolInvokeReply.newBuilder()
-                    .setIsError(false)
                     .addAllContent(List.of(reply.toString()))
                     .build());
+            responseObserver.onCompleted();
         } catch (Exception e) {
             reportRouteFailure(responseObserver, e, toolDefinition);
-        } finally {
-            responseObserver.onCompleted();
         }
     }
 
@@ -92,10 +89,9 @@ public class CamelTool extends ToolInvokerGrpc.ToolInvokerImplBase {
             LOG.error("Camel route {} could not be invoked: {}", routeId, e.getMessage());
         }
 
-        responseObserver.onNext(ToolInvokeReply.newBuilder()
-                .setIsError(true)
-                .addAllContent(List.of(String.format("Unable to invoke tool: %s", e.getMessage())))
-                .build());
+        responseObserver.onError(Status.INTERNAL
+                .withDescription(String.format("Unable to invoke tool: %s", e.getMessage()))
+                .asRuntimeException());
     }
 
     private static String resolveEndpoint(Definition toolDefinition, CamelContext camelContext) {
