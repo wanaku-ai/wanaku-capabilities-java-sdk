@@ -33,6 +33,7 @@ public class PluginConfiguration {
     private long initialDelay = 5;
     private long period = 5;
     private boolean noWait = false;
+    private boolean pingEnabled = false;
 
     /**
      * Load configuration from properties file and environment variables.
@@ -77,6 +78,7 @@ public class PluginConfiguration {
         config.initialDelay = Long.parseLong(getConfigValue(props, "initial.delay", "INITIAL_DELAY", "5"));
         config.period = Long.parseLong(getConfigValue(props, "period", "PERIOD", "5"));
         config.noWait = Boolean.parseBoolean(getConfigValue(props, "no.wait", "NO_WAIT", "false"));
+        config.pingEnabled = Boolean.parseBoolean(getConfigValue(props, "ping.enabled", "PING_ENABLED", "false"));
 
         return config;
     }
@@ -189,5 +191,9 @@ public class PluginConfiguration {
 
     public boolean isNoWait() {
         return noWait;
+    }
+
+    public boolean isPingEnabled() {
+        return pingEnabled;
     }
 }

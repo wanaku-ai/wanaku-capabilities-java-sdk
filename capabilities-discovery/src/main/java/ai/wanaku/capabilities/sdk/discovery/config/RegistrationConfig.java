@@ -35,4 +35,15 @@ public interface RegistrationConfig {
      * @return The period in seconds.
      */
     long getPeriod();
+
+    /**
+     * Returns whether capability-side ping is enabled.
+     * When disabled, the capability will not send periodic ping requests to the router
+     * after initial registration.
+     *
+     * @return {@code true} if ping is enabled, {@code false} otherwise. Defaults to {@code false}.
+     */
+    default boolean isPingEnabled() {
+        return false;
+    }
 }
