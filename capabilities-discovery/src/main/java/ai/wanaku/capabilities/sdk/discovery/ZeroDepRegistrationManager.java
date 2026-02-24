@@ -176,7 +176,9 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
     @Override
     public void register() {
         if (isRegistered()) {
-            ping();
+            if (config.isPingEnabled()) {
+                ping();
+            }
         } else {
             tryRegistering();
         }
@@ -218,6 +220,10 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
      */
     @Override
     public void ping() {
+        if (!config.isPingEnabled()) {
+            return;
+        }
+
         if (target != null && target.getId() != null) {
             LOG.trace("Pinging router ...");
             try {
