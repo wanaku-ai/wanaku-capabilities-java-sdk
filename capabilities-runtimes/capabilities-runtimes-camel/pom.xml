@@ -13,11 +13,6 @@
     <packaging>pom</packaging>
     <name>Wanaku Capabilities SDK :: Runtimes :: Camel</name>
 
-    <properties>
-        <jgit.version>7.5.0.202512021534-r</jgit.version>
-        <jackson-dataformat-yaml.version>2.21.0</jackson-dataformat-yaml.version>
-    </properties>
-
     <modules>
         <module>capabilities-runtimes-camel-common</module>
         <module>capabilities-runtimes-camel-plugin</module>
