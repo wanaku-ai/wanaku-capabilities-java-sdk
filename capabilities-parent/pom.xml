@@ -22,7 +22,7 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <camel.version>4.14.4</camel.version>
+        <camel.version>4.18.0</camel.version>
         <jgit.version>7.2.0.202503040940-r</jgit.version>
         <jackson-dataformat-yaml.version>2.21.0</jackson-dataformat-yaml.version>
         <jackson-databind.version>2.21.0</jackson-databind.version>
