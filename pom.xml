@@ -17,8 +17,10 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
+        <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
         <central-publishing-maven-plugin.version>0.10.0</central-publishing-maven-plugin.version>
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
         <maven-scm-plugin.version>2.1.0</maven-scm-plugin.version>
@@ -82,9 +84,6 @@
     <profiles>
         <profile>
             <id>coverage</id>
-            <properties>
-                <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
-            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -127,6 +126,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
+                        <version>${maven-source-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
