@@ -18,7 +18,6 @@ import ai.wanaku.capabilities.sdk.api.discovery.DiscoveryCallback;
 import ai.wanaku.capabilities.sdk.api.discovery.RegistrationManager;
 import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
 import ai.wanaku.capabilities.sdk.api.types.WanakuResponse;
-import ai.wanaku.capabilities.sdk.api.types.discovery.ServiceState;
 import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
 import ai.wanaku.capabilities.sdk.data.files.InstanceDataManager;
 import ai.wanaku.capabilities.sdk.data.files.ServiceEntry;
@@ -175,11 +174,7 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
      */
     @Override
     public void register() {
-        if (isRegistered()) {
-            if (config.isPingEnabled()) {
-                ping();
-            }
-        } else {
+        if (!isRegistered()) {
             tryRegistering();
         }
     }
@@ -212,82 +207,6 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
             stop();
         } finally {
             tryDeregistering();
-        }
-    }
-
-    /**
-     * Sends a ping to the Wanaku Discovery API to keep the service registration alive.
-     */
-    @Override
-    public void ping() {
-        if (!config.isPingEnabled()) {
-            return;
-        }
-
-        if (target != null && target.getId() != null) {
-            LOG.trace("Pinging router ...");
-            try {
-                // Assuming client.ping(target.getId()) exists and returns HttpResponse<String>
-                final HttpResponse<String> response = client.ping(target.getId());
-                final int status = response.statusCode();
-                runCallBack(c -> c.onPing(this, target, status));
-            } catch (Exception e) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.warn("Pinging router failed with {}", e.getMessage(), e);
-                } else {
-                    LOG.warn("Pinging router failed with {}", e.getMessage());
-                }
-            }
-        }
-    }
-
-    /**
-     * Updates the service's state to 'unhealthy' with a given reason.
-     *
-     * @param reason The reason for the service being unhealthy.
-     */
-    @Override
-    public void lastAsFail(String reason) {
-        if (target.getId() == null) {
-            LOG.warn("Trying to update the state of an unknown service {}", target.getServiceName());
-            return;
-        }
-
-        try {
-            final HttpResponse<String> response = client.updateState(target.getId(), ServiceState.newUnhealthy(reason));
-            if (response.statusCode() != 200) {
-                LOG.error("Could not update the state of an service {} ({})", target.getServiceName(), target.getId());
-            }
-        } catch (Exception e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.warn("Updating last status failed with {}", e.getMessage(), e);
-            } else {
-                LOG.warn("Updating last status failed with {}", e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * Updates the service's state to 'healthy'.
-     */
-    @Override
-    public void lastAsSuccessful() {
-        if (target.getId() == null) {
-            LOG.warn("Trying to update the state of an unknown service {}", target.getServiceName());
-            return;
-        }
-
-        try {
-            final HttpResponse<String> response = client.updateState(target.getId(), ServiceState.newHealthy());
-            if (response.statusCode() != 200) {
-                LOG.error("Could not update the state of an service {} ({})", target.getServiceName(), target.getId());
-            }
-        } catch (Exception e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.warn("Updating last status failed with {}", e.getMessage(), e);
-            } else {
-                LOG.warn("Updating last status failed with {}", e.getMessage());
-            }
         }
     }
 
