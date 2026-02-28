@@ -27,7 +27,8 @@ public interface RegistrationManager {
      * This method is used to periodically inform the registry that the service is still active
      * and operational, preventing its registration from expiring due to inactivity.
      */
-    void ping();
+    @Deprecated(forRemoval = true)
+    default void ping() {}
 
     /**
      * Notifies the Wanaku registration system that the last attempted operation (tool call
@@ -37,7 +38,8 @@ public interface RegistrationManager {
      * This information can be used for logging, debugging, or alerting purposes
      * by the registration system.
      */
-    void lastAsFail(String reason);
+    @Deprecated(forRemoval = true)
+    default void lastAsFail(String reason) {}
 
     /**
      * Notifies the Wanaku registration system that the last attempted operation (tool call
@@ -45,7 +47,8 @@ public interface RegistrationManager {
      * This method can be used to update the service's status within the registry,
      * indicating its continued health and availability.
      */
-    void lastAsSuccessful();
+    @Deprecated(forRemoval = true)
+    default void lastAsSuccessful() {}
 
     /**
      * Adds a callback to be run after some operations have executed
