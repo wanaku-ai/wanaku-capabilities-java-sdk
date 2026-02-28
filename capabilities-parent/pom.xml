@@ -32,7 +32,7 @@
         <grpc.version>1.79.0</grpc.version>
         <protoc-gen-grpc-java.version>1.72.0</protoc-gen-grpc-java.version>
         <annotations-api.version>6.0.53</annotations-api.version>
-        <junit-jupiter.version>5.13.4</junit-jupiter.version>
+        <junit-jupiter.version>6.0.3</junit-jupiter.version>
         <oauth2-oidc-sdk.version>11.33</oauth2-oidc-sdk.version>
         <langchain4j.version>1.11.0</langchain4j.version>
         <mockito.version>5.21.0</mockito.version>
