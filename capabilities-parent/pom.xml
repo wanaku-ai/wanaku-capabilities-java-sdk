@@ -35,7 +35,7 @@
         <junit-jupiter.version>5.13.4</junit-jupiter.version>
         <oauth2-oidc-sdk.version>11.33</oauth2-oidc-sdk.version>
         <langchain4j.version>1.11.0</langchain4j.version>
-        <mockito.version>5.21.0</mockito.version>
+        <mockito.version>5.22.0</mockito.version>
         <palantir-java-format.version>2.71.0</palantir-java-format.version>
     </properties>
 
