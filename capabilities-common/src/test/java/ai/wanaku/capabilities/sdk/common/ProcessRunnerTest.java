@@ -8,18 +8,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ProcessRunnerTest {
 
-    private static boolean isWindows() {
-        return System.getProperty("os.name").toLowerCase().contains("win");
+    private static String[] shellCommand(String script) {
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            return new String[] {"cmd.exe", "/c", script};
+        } else {
+            return new String[] {"sh", "-c", script};
+        }
     }
 
     @Test
     void runWithOutput_returnsCommandOutput() {
-        String output;
-        if (isWindows()) {
-            output = ProcessRunner.runWithOutput("cmd.exe", "/c", "echo hello");
-        } else {
-            output = ProcessRunner.runWithOutput("sh", "-c", "echo hello");
-        }
+        String output = ProcessRunner.runWithOutput(shellCommand("echo hello"));
 
         assertNotNull(output, "Output should not be null");
         assertFalse(output.isEmpty(), "Output should not be empty");
@@ -28,12 +27,8 @@ public class ProcessRunnerTest {
 
     @Test
     void runWithOutput_nonZeroExitDoesNotThrow() {
-        String output;
-        if (isWindows()) {
-            output = assertDoesNotThrow(() -> ProcessRunner.runWithOutput("cmd.exe", "/c", "echo output && exit /b 1"));
-        } else {
-            output = assertDoesNotThrow(() -> ProcessRunner.runWithOutput("sh", "-c", "echo output; exit 1"));
-        }
+        String[] command = shellCommand("echo output; exit 1");
+        String output = assertDoesNotThrow(() -> ProcessRunner.runWithOutput(command));
 
         assertNotNull(output, "Output should not be null");
         assertTrue(output.contains("output"), "Output should contain 'output'");
@@ -41,12 +36,7 @@ public class ProcessRunnerTest {
 
     @Test
     void runWithOutput_capturesStderrViaMergedStream() {
-        String output;
-        if (isWindows()) {
-            output = ProcessRunner.runWithOutput("cmd.exe", "/c", "echo stdout && echo stderr 1>&2");
-        } else {
-            output = ProcessRunner.runWithOutput("sh", "-c", "echo stdout && echo stderr 1>&2");
-        }
+        String output = ProcessRunner.runWithOutput(shellCommand("echo stdout && echo stderr 1>&2"));
 
         assertNotNull(output, "Output should not be null");
         assertFalse(output.isEmpty(), "Output should not be empty");
