@@ -54,18 +54,4 @@ public class NonConvertableResponseException extends WanakuException {
             String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
-
-    /**
-     * Creates a new instance of this exception for the given tool name.
-     *
-     * Note that this method is incorrectly named - it should probably be renamed to something like
-     * {@code forResponseType} or similar. This will throw an exception with a message indicating
-     * that the response was not convertible to the required type.
-     *
-     * @param toolName the name of the tool (or response) that could not be converted to the required type
-     * @return a new instance of this exception with a message indicating that the response was not convertible
-     */
-    public static NonConvertableResponseException forName(String toolName) {
-        return new NonConvertableResponseException(String.format("Tool %s not found", toolName));
-    }
 }
