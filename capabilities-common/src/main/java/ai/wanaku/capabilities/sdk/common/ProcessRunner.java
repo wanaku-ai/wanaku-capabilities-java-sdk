@@ -21,9 +21,8 @@ public class ProcessRunner {
     public static String runWithOutput(String... command) {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(command);
-            // Redirect output and error streams to a pipe
             processBuilder.redirectOutput(ProcessBuilder.Redirect.PIPE);
-            processBuilder.redirectError(ProcessBuilder.Redirect.PIPE);
+            processBuilder.redirectErrorStream(true);
 
             final Process process = processBuilder.start();
             LOG.info("Waiting for process to finish...");
@@ -36,20 +35,21 @@ public class ProcessRunner {
             LOG.error("I/O Error: {}", e.getMessage(), e);
             throw new WanakuException(e);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             LOG.error("Interrupted: {}", e.getMessage(), e);
             throw new WanakuException(e);
         }
     }
 
     private static String readOutput(Process process) throws IOException {
-        // Read the output from the process
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        StringBuilder output = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            output.append(line).append("\n");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            StringBuilder output = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line).append("\n");
+            }
+            return output.toString();
         }
-        return output.toString();
     }
 
     public static void run(File directory, String... command) {
@@ -74,6 +74,7 @@ public class ProcessRunner {
             LOG.error("I/O Error: {}", e.getMessage(), e);
             throw new WanakuException(e);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             LOG.error("Interrupted: {}", e.getMessage(), e);
             throw new WanakuException(e);
         }
