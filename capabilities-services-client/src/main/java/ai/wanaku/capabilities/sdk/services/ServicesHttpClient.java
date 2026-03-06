@@ -462,6 +462,19 @@ public class ServicesHttpClient {
         executeDelete("/api/v1/data-store/remove?name=" + name);
     }
 
+    // ==================== Service Catalog API Methods ====================
+
+    /**
+     * Downloads a service catalog by name, returning the raw DataStore with Base64-encoded ZIP data.
+     *
+     * @param name The name of the service catalog to download.
+     * @return The response containing the DataStore with the Base64-encoded ZIP.
+     * @throws WanakuException If an error occurs during the request.
+     */
+    public WanakuResponse<DataStore> getServiceCatalog(String name) {
+        return executeGet("/api/v1/service-catalog/download?name=" + name, new TypeReference<>() {});
+    }
+
     // ==================== Code Execution Engine API Methods ====================
 
     /**
