@@ -21,7 +21,7 @@
         <spotless-maven-plugin.version>3.2.1</spotless-maven-plugin.version>
 
         <camel.version>4.18.0</camel.version>
-        <jgit.version>7.5.0.202512021534-r</jgit.version>
+        <jgit.version>7.6.0.202603022253-r</jgit.version>
         <jackson-dataformat-yaml.version>2.21.1</jackson-dataformat-yaml.version>
         <jackson-databind.version>2.21.1</jackson-databind.version>
         <jackson-annotations.version>2.21</jackson-annotations.version>
