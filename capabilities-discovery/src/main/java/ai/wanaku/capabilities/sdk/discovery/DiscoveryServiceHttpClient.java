@@ -95,13 +95,47 @@ public class DiscoveryServiceHttpClient {
     }
 
     /**
+     * Executes a DELETE request to the Discovery API.
+     *
+     * @param operationPath The specific API endpoint path.
+     * @param serviceTarget The {@link ServiceTarget} object to be sent in the request body.
+     * @return The {@link HttpResponse} from the API.
+     * @throws RuntimeException If JSON processing fails or an I/O error occurs during the request.
+     */
+    private HttpResponse<String> executeDelete(String operationPath, ServiceTarget serviceTarget) {
+
+        try {
+            String jsonRequestBody = serializer.serialize(serviceTarget);
+            URI uri = URI.create(this.baseUrl + this.serviceBasePath + operationPath);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(uri)
+                    .header("Content-Type", MediaType.APPLICATION_JSON)
+                    .header("Accept", MediaType.WILDCARD)
+                    .header("Authorization", serviceAuthenticator.toHeaderValue())
+                    .method("DELETE", HttpRequest.BodyPublishers.ofString(jsonRequestBody))
+                    .build();
+
+            return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (JsonProcessingException e) {
+            throw new InvalidResponseDataException(e);
+        } catch (IOException e) {
+            throw new WanakuException(e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            LOG.warn("Interrupted while waiting for request to DELETE");
+            return null;
+        }
+    }
+
+    /**
      * Registers a service with the Wanaku Discovery API.
      *
      * @param serviceTarget The {@link ServiceTarget} representing the service to register.
      * @return The {@link HttpResponse} from the registration API call.
      */
     public HttpResponse<String> register(ServiceTarget serviceTarget) {
-        return executePost("/register", serviceTarget);
+        return executePost("", serviceTarget);
     }
 
     /**
@@ -111,7 +145,7 @@ public class DiscoveryServiceHttpClient {
      * @return The {@link HttpResponse} from the deregistration API call.
      */
     public HttpResponse<String> deregister(ServiceTarget serviceTarget) {
-        return executePost("/deregister", serviceTarget);
+        return executeDelete("", serviceTarget);
     }
 
     /**
@@ -123,7 +157,7 @@ public class DiscoveryServiceHttpClient {
      */
     public HttpResponse<String> ping(String id) {
         try {
-            URI uri = URI.create(this.baseUrl + this.serviceBasePath + "/ping/");
+            URI uri = URI.create(this.baseUrl + this.serviceBasePath + "/heartbeats");
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(uri)

@@ -195,9 +195,9 @@ public class ServicesHttpClient {
     }
 
     /**
-     * Executes a DELETE request (using PUT with query param) to the Services API.
+     * Executes a DELETE request to the Services API.
      *
-     * @param path The API endpoint path with query parameters.
+     * @param path The API endpoint path.
      * @throws WanakuException If an error occurs during the request.
      */
     private void executeDelete(String path) {
@@ -208,7 +208,7 @@ public class ServicesHttpClient {
                     .uri(uri)
                     .header("Accept", MediaType.APPLICATION_JSON)
                     .header("Authorization", serviceAuthenticator.toHeaderValue())
-                    .PUT(HttpRequest.BodyPublishers.noBody())
+                    .DELETE()
                     .build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -234,7 +234,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<ToolReference> addTool(ToolReference toolReference) {
-        return executePost("/api/v1/tools/add", toolReference, new TypeReference<>() {});
+        return executePost("/api/v1/tools", toolReference, new TypeReference<>() {});
     }
 
     /**
@@ -245,7 +245,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<ToolReference> addToolWithPayload(ToolPayload toolPayload) {
-        return executePost("/api/v1/tools/addWithPayload", toolPayload, new TypeReference<>() {});
+        return executePost("/api/v1/tools/payloads", toolPayload, new TypeReference<>() {});
     }
 
     /**
@@ -255,7 +255,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<List<ToolReference>> listTools() {
-        return executeGet("/api/v1/tools/list", new TypeReference<>() {});
+        return executeGet("/api/v1/tools", new TypeReference<>() {});
     }
 
     /**
@@ -266,17 +266,18 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<ToolReference> getToolByName(String name) {
-        return executePost("/api/v1/tools?name=" + name, "", new TypeReference<>() {});
+        return executeGet("/api/v1/tools/" + name, new TypeReference<>() {});
     }
 
     /**
      * Updates an existing tool.
      *
+     * @param name The name of the tool to update.
      * @param toolReference The {@link ToolReference} with updated information.
      * @throws WanakuException If an error occurs during the request.
      */
-    public void updateTool(ToolReference toolReference) {
-        executePost("/api/v1/tools/update", toolReference, new TypeReference<WanakuResponse<Void>>() {});
+    public void updateTool(String name, ToolReference toolReference) {
+        executePut("/api/v1/tools/" + name, toolReference);
     }
 
     /**
@@ -286,7 +287,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public void removeTool(String toolName) {
-        executeDelete("/api/v1/tools/remove?tool=" + toolName);
+        executeDelete("/api/v1/tools/" + toolName);
     }
 
     // ==================== Resources API Methods ====================
@@ -299,7 +300,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<ResourceReference> exposeResource(ResourceReference resourceReference) {
-        return executePost("/api/v1/resources/expose", resourceReference, new TypeReference<>() {});
+        return executePost("/api/v1/resources", resourceReference, new TypeReference<>() {});
     }
 
     /**
@@ -310,7 +311,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<ResourceReference> exposeResourceWithPayload(ResourcePayload resourcePayload) {
-        return executePost("/api/v1/resources/exposeWithPayload", resourcePayload, new TypeReference<>() {});
+        return executePost("/api/v1/resources/payloads", resourcePayload, new TypeReference<>() {});
     }
 
     /**
@@ -320,17 +321,18 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<List<ResourceReference>> listResources() {
-        return executeGet("/api/v1/resources/list", new TypeReference<>() {});
+        return executeGet("/api/v1/resources", new TypeReference<>() {});
     }
 
     /**
      * Updates an existing resource.
      *
+     * @param name The name of the resource to update.
      * @param resourceReference The {@link ResourceReference} with updated information.
      * @throws WanakuException If an error occurs during the request.
      */
-    public void updateResource(ResourceReference resourceReference) {
-        executePost("/api/v1/resources/update", resourceReference, new TypeReference<WanakuResponse<Void>>() {});
+    public void updateResource(String name, ResourceReference resourceReference) {
+        executePut("/api/v1/resources/" + name, resourceReference);
     }
 
     /**
@@ -340,7 +342,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public void removeResource(String resourceName) {
-        executeDelete("/api/v1/resources/remove?resource=" + resourceName);
+        executeDelete("/api/v1/resources/" + resourceName);
     }
 
     // ==================== Forwards API Methods ====================
@@ -352,7 +354,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public void addForward(ForwardReference forwardReference) {
-        executePost("/api/v1/forwards/add", forwardReference, new TypeReference<WanakuResponse<Void>>() {});
+        executePost("/api/v1/forwards", forwardReference, new TypeReference<WanakuResponse<Void>>() {});
     }
 
     /**
@@ -362,27 +364,28 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<List<ForwardReference>> listForwards() {
-        return executeGet("/api/v1/forwards/list", new TypeReference<>() {});
+        return executeGet("/api/v1/forwards", new TypeReference<>() {});
     }
 
     /**
      * Updates an existing forward reference.
      *
+     * @param name The name of the forward to update.
      * @param forwardReference The {@link ForwardReference} with updated information.
      * @throws WanakuException If an error occurs during the request.
      */
-    public void updateForward(ForwardReference forwardReference) {
-        executePost("/api/v1/forwards/update", forwardReference, new TypeReference<WanakuResponse<Void>>() {});
+    public void updateForward(String name, ForwardReference forwardReference) {
+        executePut("/api/v1/forwards/" + name, forwardReference);
     }
 
     /**
-     * Removes a forward reference.
+     * Removes a forward reference by name.
      *
-     * @param forwardReference The {@link ForwardReference} to remove.
+     * @param name The name of the forward to remove.
      * @throws WanakuException If an error occurs during the request.
      */
-    public void removeForward(ForwardReference forwardReference) {
-        executePut("/api/v1/forwards/remove", forwardReference);
+    public void removeForward(String name) {
+        executeDelete("/api/v1/forwards/" + name);
     }
 
     // ==================== Namespaces API Methods ====================
@@ -394,7 +397,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<List<Namespace>> listNamespaces() {
-        return executeGet("/api/v1/namespaces/list", new TypeReference<>() {});
+        return executeGet("/api/v1/namespaces", new TypeReference<>() {});
     }
 
     // ==================== DataStores API Methods ====================
@@ -407,7 +410,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<DataStore> addDataStore(DataStore dataStore) {
-        return executePost("/api/v1/data-store/add", dataStore, new TypeReference<>() {});
+        return executePost("/api/v1/data-store", dataStore, new TypeReference<>() {});
     }
 
     /**
@@ -417,7 +420,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<List<DataStore>> listDataStores() {
-        return executeGet("/api/v1/data-store/list", new TypeReference<>() {});
+        return executeGet("/api/v1/data-store", new TypeReference<>() {});
     }
 
     /**
@@ -428,7 +431,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<DataStore> getDataStoreById(String id) {
-        return executeGet("/api/v1/data-store/get?id=" + id, new TypeReference<>() {});
+        return executeGet("/api/v1/data-store/" + id, new TypeReference<>() {});
     }
 
     /**
@@ -439,7 +442,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<List<DataStore>> getDataStoresByName(String name) {
-        return executeGet("/api/v1/data-store/get?name=" + name, new TypeReference<>() {});
+        return executeGet("/api/v1/data-store?name=" + name, new TypeReference<>() {});
     }
 
     /**
@@ -449,7 +452,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public void removeDataStore(String id) {
-        executeDelete("/api/v1/data-store/remove?id=" + id);
+        executeDelete("/api/v1/data-store/" + id);
     }
 
     /**
@@ -459,7 +462,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public void removeDataStoresByName(String name) {
-        executeDelete("/api/v1/data-store/remove?name=" + name);
+        executeDelete("/api/v1/data-store?name=" + name);
     }
 
     // ==================== Code Execution Engine API Methods ====================
