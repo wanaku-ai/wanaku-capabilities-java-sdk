@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DiscoveryServiceHttpClientTest {
 
@@ -100,6 +101,11 @@ class DiscoveryServiceHttpClientTest {
         assertEquals(1, requests.size());
         assertEquals("POST", requests.getFirst().method());
         assertEquals("/api/v1/management/discovery", requests.getFirst().path());
+
+        String body = requests.getFirst().body();
+        assertTrue(body.contains("\"serviceName\":\"test-service\""), "Body should contain serviceName");
+        assertTrue(body.contains("\"host\":\"localhost\""), "Body should contain host");
+        assertTrue(body.contains("\"port\":9090"), "Body should contain port");
     }
 
     @Test
@@ -113,6 +119,11 @@ class DiscoveryServiceHttpClientTest {
         assertEquals(1, requests.size());
         assertEquals("DELETE", requests.getFirst().method());
         assertEquals("/api/v1/management/discovery", requests.getFirst().path());
+
+        String body = requests.getFirst().body();
+        assertTrue(body.contains("\"serviceName\":\"test-service\""), "Body should contain serviceName");
+        assertTrue(body.contains("\"host\":\"localhost\""), "Body should contain host");
+        assertTrue(body.contains("\"port\":9090"), "Body should contain port");
     }
 
     @Test

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -224,6 +225,16 @@ public class ServicesHttpClient {
         }
     }
 
+    /**
+     * URL-encodes a path segment or query parameter value.
+     *
+     * @param value The value to encode.
+     * @return The URL-encoded value.
+     */
+    private static String encode(String value) {
+        return URLEncoder.encode(value, StandardCharsets.UTF_8);
+    }
+
     // ==================== Tools API Methods ====================
 
     /**
@@ -266,7 +277,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<ToolReference> getToolByName(String name) {
-        return executeGet("/api/v1/tools/" + name, new TypeReference<>() {});
+        return executeGet("/api/v1/tools/" + encode(name), new TypeReference<>() {});
     }
 
     /**
@@ -277,7 +288,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public void updateTool(String name, ToolReference toolReference) {
-        executePut("/api/v1/tools/" + name, toolReference);
+        executePut("/api/v1/tools/" + encode(name), toolReference);
     }
 
     /**
@@ -287,7 +298,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public void removeTool(String toolName) {
-        executeDelete("/api/v1/tools/" + toolName);
+        executeDelete("/api/v1/tools/" + encode(toolName));
     }
 
     // ==================== Resources API Methods ====================
@@ -332,7 +343,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public void updateResource(String name, ResourceReference resourceReference) {
-        executePut("/api/v1/resources/" + name, resourceReference);
+        executePut("/api/v1/resources/" + encode(name), resourceReference);
     }
 
     /**
@@ -342,7 +353,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public void removeResource(String resourceName) {
-        executeDelete("/api/v1/resources/" + resourceName);
+        executeDelete("/api/v1/resources/" + encode(resourceName));
     }
 
     // ==================== Forwards API Methods ====================
@@ -375,7 +386,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public void updateForward(String name, ForwardReference forwardReference) {
-        executePut("/api/v1/forwards/" + name, forwardReference);
+        executePut("/api/v1/forwards/" + encode(name), forwardReference);
     }
 
     /**
@@ -385,7 +396,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public void removeForward(String name) {
-        executeDelete("/api/v1/forwards/" + name);
+        executeDelete("/api/v1/forwards/" + encode(name));
     }
 
     // ==================== Namespaces API Methods ====================
@@ -431,7 +442,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<DataStore> getDataStoreById(String id) {
-        return executeGet("/api/v1/data-store/" + id, new TypeReference<>() {});
+        return executeGet("/api/v1/data-store/" + encode(id), new TypeReference<>() {});
     }
 
     /**
@@ -442,7 +453,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<List<DataStore>> getDataStoresByName(String name) {
-        return executeGet("/api/v1/data-store?name=" + name, new TypeReference<>() {});
+        return executeGet("/api/v1/data-store?name=" + encode(name), new TypeReference<>() {});
     }
 
     /**
@@ -452,7 +463,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public void removeDataStore(String id) {
-        executeDelete("/api/v1/data-store/" + id);
+        executeDelete("/api/v1/data-store/" + encode(id));
     }
 
     /**
@@ -462,7 +473,7 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public void removeDataStoresByName(String name) {
-        executeDelete("/api/v1/data-store?name=" + name);
+        executeDelete("/api/v1/data-store?name=" + encode(name));
     }
 
     // ==================== Code Execution Engine API Methods ====================

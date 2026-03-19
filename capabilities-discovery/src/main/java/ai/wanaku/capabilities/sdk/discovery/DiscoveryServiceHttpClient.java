@@ -61,48 +61,15 @@ public class DiscoveryServiceHttpClient {
     }
 
     /**
-     * Executes a POST request to the Discovery API.
+     * Executes an HTTP request with a JSON body to the Discovery API.
      *
-     * @param operationPath The specific API endpoint path (e.g., "/register").
-     * @param serviceTarget The {@link ServiceTarget} object to be sent in the request body.
-     * @return The {@link HttpResponse} from the API.
-     * @throws RuntimeException If JSON processing fails or an I/O error occurs during the request.
-     */
-    private HttpResponse<String> executePost(String operationPath, ServiceTarget serviceTarget) {
-
-        try {
-            String jsonRequestBody = serializer.serialize(serviceTarget);
-            URI uri = URI.create(this.baseUrl + this.serviceBasePath + operationPath);
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .header("Content-Type", MediaType.APPLICATION_JSON)
-                    .header("Accept", MediaType.WILDCARD)
-                    .header("Authorization", serviceAuthenticator.toHeaderValue())
-                    .POST(HttpRequest.BodyPublishers.ofString(jsonRequestBody))
-                    .build();
-
-            return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (JsonProcessingException e) {
-            throw new InvalidResponseDataException(e);
-        } catch (IOException e) {
-            throw new WanakuException(e);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            LOG.warn("Interrupted while waiting for request to POST");
-            return null;
-        }
-    }
-
-    /**
-     * Executes a DELETE request to the Discovery API.
-     *
+     * @param httpMethod The HTTP method (e.g., "POST", "DELETE").
      * @param operationPath The specific API endpoint path.
      * @param serviceTarget The {@link ServiceTarget} object to be sent in the request body.
      * @return The {@link HttpResponse} from the API.
      * @throws RuntimeException If JSON processing fails or an I/O error occurs during the request.
      */
-    private HttpResponse<String> executeDelete(String operationPath, ServiceTarget serviceTarget) {
+    private HttpResponse<String> executeRequest(String httpMethod, String operationPath, ServiceTarget serviceTarget) {
 
         try {
             String jsonRequestBody = serializer.serialize(serviceTarget);
@@ -113,7 +80,7 @@ public class DiscoveryServiceHttpClient {
                     .header("Content-Type", MediaType.APPLICATION_JSON)
                     .header("Accept", MediaType.WILDCARD)
                     .header("Authorization", serviceAuthenticator.toHeaderValue())
-                    .method("DELETE", HttpRequest.BodyPublishers.ofString(jsonRequestBody))
+                    .method(httpMethod, HttpRequest.BodyPublishers.ofString(jsonRequestBody))
                     .build();
 
             return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -123,7 +90,7 @@ public class DiscoveryServiceHttpClient {
             throw new WanakuException(e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            LOG.warn("Interrupted while waiting for request to DELETE");
+            LOG.warn("Interrupted while waiting for {} request", httpMethod);
             return null;
         }
     }
@@ -135,7 +102,7 @@ public class DiscoveryServiceHttpClient {
      * @return The {@link HttpResponse} from the registration API call.
      */
     public HttpResponse<String> register(ServiceTarget serviceTarget) {
-        return executePost("", serviceTarget);
+        return executeRequest("POST", "", serviceTarget);
     }
 
     /**
@@ -145,7 +112,7 @@ public class DiscoveryServiceHttpClient {
      * @return The {@link HttpResponse} from the deregistration API call.
      */
     public HttpResponse<String> deregister(ServiceTarget serviceTarget) {
-        return executeDelete("", serviceTarget);
+        return executeRequest("DELETE", "", serviceTarget);
     }
 
     /**
