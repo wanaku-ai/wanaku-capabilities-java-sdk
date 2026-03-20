@@ -49,5 +49,20 @@ public final class ReservedArgumentNames {
      */
     public static final String METADATA_PREFIX = "wanaku_meta_";
 
+    /**
+     * Prefix for authentication arguments that should be converted to headers.
+     * <p>
+     * Arguments with this prefix (e.g., {@code wanaku_auth_Authorization}) are extracted
+     * from the regular arguments, the prefix is stripped, and the remaining name
+     * becomes the header name (e.g., {@code Authorization}).
+     * <p>
+     * Unlike {@link #METADATA_PREFIX}, authentication arguments are treated as sensitive:
+     * they are never exposed to LLMs, and are always redacted in logs and observability events.
+     * <p>
+     * These arguments are intended to be set by MCP clients (not by LLMs) to propagate
+     * access tokens or other credentials to downstream capabilities.
+     */
+    public static final String AUTH_PREFIX = "wanaku_auth_";
+
     private ReservedArgumentNames() {}
 }
