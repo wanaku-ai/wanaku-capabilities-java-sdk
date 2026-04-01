@@ -43,7 +43,11 @@ public class ExponentialBackoffRetryPolicy implements RetryPolicy {
 
     @Override
     public long getDelayMillis(int attempt) {
-        long delay = initialDelayMillis * (1L << (attempt - 1));
+        int shift = Math.min(attempt - 1, Long.SIZE - 2);
+        long delay = initialDelayMillis * (1L << shift);
+        if (delay <= 0) {
+            return maxDelayMillis;
+        }
         return Math.min(delay, maxDelayMillis);
     }
 
@@ -64,6 +68,9 @@ public class ExponentialBackoffRetryPolicy implements RetryPolicy {
         private Builder() {}
 
         public Builder maxRetries(int maxRetries) {
+            if (maxRetries < 0) {
+                throw new IllegalArgumentException("maxRetries must be >= 0, but was " + maxRetries);
+            }
             this.maxRetries = maxRetries;
             return this;
         }
