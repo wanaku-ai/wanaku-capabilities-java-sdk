@@ -8,6 +8,10 @@
     </parent>
 
     <artifactId>capabilities-archetypes-java-tool</artifactId>
+
+    <properties>
+        <skipArchetypeIT>${skipTests}</skipArchetypeIT>
+    </properties>
     <packaging>maven-archetype</packaging>
 
     <name>Wanaku Capabilities SDK :: Archetypes :: Java Tool</name>
@@ -43,7 +47,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-archetype-plugin</artifactId>
                 <configuration>
-                    <skip>${skipTests}</skip>
+                    <skip>${skipArchetypeIT}</skip>
                 </configuration>
                 <executions>
                     <execution>
