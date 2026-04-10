@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>ai.wanaku.sdk</groupId>
+        <artifactId>capabilities-runtimes-camel</artifactId>
+        <version>0.1.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>capabilities-runtime-camel-common</artifactId>
+    <name>Wanaku Capabilities SDK :: Runtimes :: Camel :: Common (Relocated)</name>
+    <description>This artifact has been relocated to capabilities-runtimes-camel-common</description>
+
+    <distributionManagement>
+        <relocation>
+            <groupId>ai.wanaku.sdk</groupId>
+            <artifactId>capabilities-runtimes-camel-common</artifactId>
+            <version>${project.version}</version>
+            <message>This artifact has been renamed from capabilities-runtime-camel-common to capabilities-runtimes-camel-common</message>
+        </relocation>
+    </distributionManagement>
+
+</project>

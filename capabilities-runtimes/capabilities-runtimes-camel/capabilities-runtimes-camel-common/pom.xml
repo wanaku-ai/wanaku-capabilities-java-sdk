@@ -9,7 +9,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>capabilities-runtime-camel-common</artifactId>
+    <artifactId>capabilities-runtimes-camel-common</artifactId>
     <name>Wanaku Capabilities SDK :: Runtimes :: Camel :: Common</name>
     <description>Shared utilities, models, and core business logic for Camel runtime integration</description>
 
