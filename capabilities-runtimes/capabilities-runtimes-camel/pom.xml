@@ -16,6 +16,10 @@
     <modules>
         <module>capabilities-runtimes-camel-common</module>
         <module>capabilities-runtimes-camel-plugin</module>
+
+        <!-- Relocation modules for old artifact names -->
+        <module>capabilities-runtime-camel-common</module>
+        <module>capabilities-runtime-camel-plugin</module>
     </modules>
 
 </project>

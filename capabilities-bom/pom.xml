@@ -58,12 +58,12 @@
             </dependency>
             <dependency>
                 <groupId>ai.wanaku.sdk</groupId>
-                <artifactId>capabilities-runtime-camel-common</artifactId>
+                <artifactId>capabilities-runtimes-camel-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>ai.wanaku.sdk</groupId>
-                <artifactId>capabilities-runtime-camel-plugin</artifactId>
+                <artifactId>capabilities-runtimes-camel-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

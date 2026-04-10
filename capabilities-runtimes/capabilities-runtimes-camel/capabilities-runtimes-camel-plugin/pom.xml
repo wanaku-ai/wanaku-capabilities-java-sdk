@@ -9,7 +9,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>capabilities-runtime-camel-plugin</artifactId>
+    <artifactId>capabilities-runtimes-camel-plugin</artifactId>
     <name>Wanaku Capabilities SDK :: Runtimes :: Camel :: Plugin</name>
     <description>ContextServicePlugin implementation for embedding Camel integration capability into Camel applications</description>
 
@@ -17,7 +17,7 @@
         <!-- Internal -->
         <dependency>
             <groupId>ai.wanaku.sdk</groupId>
-            <artifactId>capabilities-runtime-camel-common</artifactId>
+            <artifactId>capabilities-runtimes-camel-common</artifactId>
             <version>${project.version}</version>
         </dependency>
 
