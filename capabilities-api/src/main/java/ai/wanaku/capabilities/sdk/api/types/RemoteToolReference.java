@@ -165,7 +165,7 @@ public class RemoteToolReference extends LabelsAwareEntity<String> implements Ca
         ret.setType(ref.getType());
         ret.setUri("<remote>");
         ret.setId(ref.getId());
-
+        ret.setNamespace(ref.getNamespace());
         return ret;
     }
 
