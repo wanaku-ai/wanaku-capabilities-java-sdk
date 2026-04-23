@@ -113,10 +113,10 @@ public class PluginConfiguration {
             LOG.info("No routes or routes ref found, using builtin routes from the current integration application");
         }
         if (clientId == null || clientId.isEmpty()) {
-            throw new IllegalStateException("client.id (or CLIENT_ID env var) is required");
+            LOG.info("No client ID configured, running without authentication");
         }
         if (clientSecret == null || clientSecret.isEmpty()) {
-            throw new IllegalStateException("client.secret (or CLIENT_SECRET env var) is required");
+            LOG.info("No client secret configured, running without authentication");
         }
     }
 

@@ -137,4 +137,53 @@ class DiscoveryServiceHttpClientTest {
         assertEquals(
                 "/api/v1/management/discovery/heartbeats", requests.getFirst().path());
     }
+
+    // ==================== No-Auth Tests ====================
+
+    @Test
+    void noAuthClientCanRegister() throws IOException {
+        HttpServer noAuthServer = HttpServer.create(new InetSocketAddress(0), 0);
+        int noAuthPort = noAuthServer.getAddress().getPort();
+        String noAuthBaseUrl = "http://localhost:" + noAuthPort;
+        List<RequestRecord> noAuthRequests = new CopyOnWriteArrayList<>();
+
+        noAuthServer.createContext("/api/v1/management/discovery", exchange -> {
+            String body = new String(exchange.getRequestBody().readAllBytes());
+            noAuthRequests.add(new RequestRecord(
+                    exchange.getRequestMethod(), exchange.getRequestURI().getPath(), body));
+
+            String response = "{\"data\":{\"id\":\"test-id\",\"serviceName\":\"test\"}}";
+            exchange.getResponseHeaders().set("Content-Type", "application/json");
+            exchange.sendResponseHeaders(200, response.length());
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(response.getBytes());
+            }
+        });
+
+        noAuthServer.start();
+
+        try {
+            DefaultServiceConfig noAuthConfig = DefaultServiceConfig.Builder.newBuilder()
+                    .baseUrl(noAuthBaseUrl)
+                    .serializer(new JacksonSerializer())
+                    .build();
+
+            DiscoveryServiceHttpClient noAuthClient = new DiscoveryServiceHttpClient(noAuthConfig);
+            ServiceTarget target = ServiceTarget.newEmptyTarget("test-service", "localhost", 9090, "tool-invoker");
+
+            HttpResponse<String> response = noAuthClient.register(target);
+
+            assertNotNull(response);
+            assertEquals(200, response.statusCode());
+            assertEquals(1, noAuthRequests.size());
+            assertEquals("POST", noAuthRequests.getFirst().method());
+            assertEquals(
+                    "/api/v1/management/discovery", noAuthRequests.getFirst().path());
+
+            String body = noAuthRequests.getFirst().body();
+            assertTrue(body.contains("\"serviceName\":\"test-service\""), "Body should contain serviceName");
+        } finally {
+            noAuthServer.stop(0);
+        }
+    }
 }

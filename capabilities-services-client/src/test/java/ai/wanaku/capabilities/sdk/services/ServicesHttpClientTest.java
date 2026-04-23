@@ -301,4 +301,45 @@ class ServicesHttpClientTest {
         assertEquals("DELETE", requests.getFirst().method());
         assertEquals("/api/v1/data-store?name=my-store", requests.getFirst().path());
     }
+
+    // ==================== No-Auth Tests ====================
+
+    @Test
+    void noAuthClientCanListTools() throws IOException {
+        HttpServer noAuthServer = HttpServer.create(new InetSocketAddress(0), 0);
+        int noAuthPort = noAuthServer.getAddress().getPort();
+        String noAuthBaseUrl = "http://localhost:" + noAuthPort;
+        List<RequestRecord> noAuthRequests = new CopyOnWriteArrayList<>();
+
+        noAuthServer.createContext("/api/", exchange -> {
+            String body = new String(exchange.getRequestBody().readAllBytes());
+            noAuthRequests.add(new RequestRecord(
+                    exchange.getRequestMethod(), exchange.getRequestURI().getPath(), body));
+
+            String response = "{\"data\":null}";
+            exchange.getResponseHeaders().set("Content-Type", "application/json");
+            exchange.sendResponseHeaders(200, response.length());
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(response.getBytes());
+            }
+        });
+
+        noAuthServer.start();
+
+        try {
+            DefaultServiceConfig noAuthConfig = DefaultServiceConfig.Builder.newBuilder()
+                    .baseUrl(noAuthBaseUrl)
+                    .serializer(new JacksonSerializer())
+                    .build();
+
+            ServicesHttpClient noAuthClient = new ServicesHttpClient(noAuthConfig);
+            noAuthClient.listTools();
+
+            assertEquals(1, noAuthRequests.size());
+            assertEquals("GET", noAuthRequests.getFirst().method());
+            assertEquals("/api/v1/tools", noAuthRequests.getFirst().path());
+        } finally {
+            noAuthServer.stop(0);
+        }
+    }
 }
