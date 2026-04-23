@@ -44,7 +44,7 @@ public class DiscoveryServiceHttpClient {
         this.baseUrl = sanitize(config);
         this.serializer = config.getSerializer();
 
-        serviceAuthenticator = new ServiceAuthenticator(config);
+        serviceAuthenticator = config.isAuthEnabled() ? new ServiceAuthenticator(config) : null;
     }
 
     /**
@@ -58,6 +58,19 @@ public class DiscoveryServiceHttpClient {
         return config.getBaseUrl() != null && config.getBaseUrl().endsWith("/")
                 ? config.getBaseUrl().substring(0, config.getBaseUrl().length() - 1)
                 : config.getBaseUrl();
+    }
+
+    /**
+     * Adds the Authorization header to the request builder if authentication is enabled.
+     *
+     * @param builder The HTTP request builder to add the header to.
+     * @return The builder with the Authorization header added if applicable.
+     */
+    private HttpRequest.Builder withAuth(HttpRequest.Builder builder) {
+        if (serviceAuthenticator != null) {
+            builder.header("Authorization", serviceAuthenticator.toHeaderValue());
+        }
+        return builder;
     }
 
     /**
@@ -75,11 +88,10 @@ public class DiscoveryServiceHttpClient {
             String jsonRequestBody = serializer.serialize(serviceTarget);
             URI uri = URI.create(this.baseUrl + this.serviceBasePath + operationPath);
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .header("Content-Type", MediaType.APPLICATION_JSON)
-                    .header("Accept", MediaType.WILDCARD)
-                    .header("Authorization", serviceAuthenticator.toHeaderValue())
+            HttpRequest request = withAuth(HttpRequest.newBuilder()
+                            .uri(uri)
+                            .header("Content-Type", MediaType.APPLICATION_JSON)
+                            .header("Accept", MediaType.WILDCARD))
                     .method(httpMethod, HttpRequest.BodyPublishers.ofString(jsonRequestBody))
                     .build();
 
@@ -126,9 +138,7 @@ public class DiscoveryServiceHttpClient {
         try {
             URI uri = URI.create(this.baseUrl + this.serviceBasePath + "/heartbeats");
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .header("Authorization", serviceAuthenticator.toHeaderValue())
+            HttpRequest request = withAuth(HttpRequest.newBuilder().uri(uri))
                     .POST(HttpRequest.BodyPublishers.ofString(id))
                     .build();
 
@@ -151,11 +161,10 @@ public class DiscoveryServiceHttpClient {
             String jsonRequestBody = serializer.serialize(serviceState);
             URI uri = URI.create(this.baseUrl + this.serviceBasePath + "/update/" + id);
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .header("Content-Type", MediaType.APPLICATION_JSON)
-                    .header("Accept", MediaType.WILDCARD)
-                    .header("Authorization", serviceAuthenticator.toHeaderValue())
+            HttpRequest request = withAuth(HttpRequest.newBuilder()
+                            .uri(uri)
+                            .header("Content-Type", MediaType.APPLICATION_JSON)
+                            .header("Accept", MediaType.WILDCARD))
                     .POST(HttpRequest.BodyPublishers.ofString(jsonRequestBody))
                     .build();
 

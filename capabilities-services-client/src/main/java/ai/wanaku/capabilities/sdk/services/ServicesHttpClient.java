@@ -63,7 +63,7 @@ public class ServicesHttpClient {
         this.baseUrl = sanitize(config);
         this.serializer = config.getSerializer();
         this.objectMapper = new ObjectMapper();
-        this.serviceAuthenticator = new ServiceAuthenticator(config);
+        this.serviceAuthenticator = config.isAuthEnabled() ? new ServiceAuthenticator(config) : null;
     }
 
     /**
@@ -76,6 +76,19 @@ public class ServicesHttpClient {
         return config.getBaseUrl() != null && config.getBaseUrl().endsWith("/")
                 ? config.getBaseUrl().substring(0, config.getBaseUrl().length() - 1)
                 : config.getBaseUrl();
+    }
+
+    /**
+     * Adds the Authorization header to the request builder if authentication is enabled.
+     *
+     * @param builder The HTTP request builder to add the header to.
+     * @return The builder with the Authorization header added if applicable.
+     */
+    private HttpRequest.Builder withAuth(HttpRequest.Builder builder) {
+        if (serviceAuthenticator != null) {
+            builder.header("Authorization", serviceAuthenticator.toHeaderValue());
+        }
+        return builder;
     }
 
     /**
@@ -94,11 +107,10 @@ public class ServicesHttpClient {
             String jsonRequestBody = serializer.serialize(payload);
             URI uri = URI.create(this.baseUrl + path);
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .header("Content-Type", MediaType.APPLICATION_JSON)
-                    .header("Accept", MediaType.APPLICATION_JSON)
-                    .header("Authorization", serviceAuthenticator.toHeaderValue())
+            HttpRequest request = withAuth(HttpRequest.newBuilder()
+                            .uri(uri)
+                            .header("Content-Type", MediaType.APPLICATION_JSON)
+                            .header("Accept", MediaType.APPLICATION_JSON))
                     .POST(HttpRequest.BodyPublishers.ofString(jsonRequestBody))
                     .build();
 
@@ -133,11 +145,10 @@ public class ServicesHttpClient {
             String jsonRequestBody = serializer.serialize(payload);
             URI uri = URI.create(this.baseUrl + path);
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .header("Content-Type", MediaType.APPLICATION_JSON)
-                    .header("Accept", MediaType.APPLICATION_JSON)
-                    .header("Authorization", serviceAuthenticator.toHeaderValue())
+            HttpRequest request = withAuth(HttpRequest.newBuilder()
+                            .uri(uri)
+                            .header("Content-Type", MediaType.APPLICATION_JSON)
+                            .header("Accept", MediaType.APPLICATION_JSON))
                     .PUT(HttpRequest.BodyPublishers.ofString(jsonRequestBody))
                     .build();
 
@@ -170,10 +181,8 @@ public class ServicesHttpClient {
         try {
             URI uri = URI.create(this.baseUrl + path);
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .header("Accept", MediaType.APPLICATION_JSON)
-                    .header("Authorization", serviceAuthenticator.toHeaderValue())
+            HttpRequest request = withAuth(
+                            HttpRequest.newBuilder().uri(uri).header("Accept", MediaType.APPLICATION_JSON))
                     .GET()
                     .build();
 
@@ -205,10 +214,8 @@ public class ServicesHttpClient {
         try {
             URI uri = URI.create(this.baseUrl + path);
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .header("Accept", MediaType.APPLICATION_JSON)
-                    .header("Authorization", serviceAuthenticator.toHeaderValue())
+            HttpRequest request = withAuth(
+                            HttpRequest.newBuilder().uri(uri).header("Accept", MediaType.APPLICATION_JSON))
                     .DELETE()
                     .build();
 
@@ -550,10 +557,7 @@ public class ServicesHttpClient {
         System.out.println("Reading from path " + this.baseUrl + path);
         URI uri = URI.create(this.baseUrl + path);
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(uri)
-                .header("Accept", "text/event-stream")
-                .header("Authorization", serviceAuthenticator.toHeaderValue())
+        HttpRequest request = withAuth(HttpRequest.newBuilder().uri(uri).header("Accept", "text/event-stream"))
                 .GET()
                 .build();
 

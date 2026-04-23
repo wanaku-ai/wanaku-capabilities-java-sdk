@@ -25,4 +25,19 @@ public interface SecurityServiceConfig {
      * @return The OpenID Connect token endpoint as a {@code String}.
      */
     String getTokenEndpoint();
+
+    /**
+     * Returns whether authentication is enabled. Authentication is considered enabled
+     * when client ID, secret, and token endpoint are all non-null and non-empty.
+     *
+     * @return {@code true} if authentication is enabled, {@code false} otherwise.
+     */
+    default boolean isAuthEnabled() {
+        return getClientId() != null
+                && !getClientId().isEmpty()
+                && getSecret() != null
+                && !getSecret().isEmpty()
+                && getTokenEndpoint() != null
+                && !getTokenEndpoint().isEmpty();
+    }
 }
