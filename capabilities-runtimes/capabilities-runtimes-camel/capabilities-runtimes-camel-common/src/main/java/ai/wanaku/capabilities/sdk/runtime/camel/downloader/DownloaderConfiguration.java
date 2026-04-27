@@ -5,12 +5,12 @@ package ai.wanaku.capabilities.sdk.runtime.camel.downloader;
  * Built using the builder pattern, this class holds the retry policy and any other
  * download-related configuration.
  */
-public class ResourceDownloaderConfiguration {
+public class DownloaderConfiguration {
     private static final RetryPolicy NO_RETRY = new NoRetryPolicy();
 
     private final RetryPolicy retryPolicy;
 
-    private ResourceDownloaderConfiguration(Builder builder) {
+    private DownloaderConfiguration(Builder builder) {
         this.retryPolicy = builder.retryPolicy;
     }
 
@@ -21,7 +21,7 @@ public class ResourceDownloaderConfiguration {
     /**
      * Returns a default configuration with no retry.
      */
-    public static ResourceDownloaderConfiguration defaultConfig() {
+    public static DownloaderConfiguration defaultConfig() {
         return newBuilder().build();
     }
 
@@ -39,8 +39,8 @@ public class ResourceDownloaderConfiguration {
             return this;
         }
 
-        public ResourceDownloaderConfiguration build() {
-            return new ResourceDownloaderConfiguration(this);
+        public DownloaderConfiguration build() {
+            return new DownloaderConfiguration(this);
         }
     }
 

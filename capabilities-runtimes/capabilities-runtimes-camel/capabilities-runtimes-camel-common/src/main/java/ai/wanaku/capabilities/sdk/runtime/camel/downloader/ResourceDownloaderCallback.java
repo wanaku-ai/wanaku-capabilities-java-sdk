@@ -20,17 +20,17 @@ public class ResourceDownloaderCallback implements DiscoveryCallback {
     private final CountDownLatch countDownLatch = new CountDownLatch(1);
 
     private final DownloaderFactory downloaderFactory;
-    private final ResourceDownloaderConfiguration configuration;
+    private final DownloaderConfiguration configuration;
     private Map<ResourceType, Path> downloadedResources = new HashMap<>();
 
     public ResourceDownloaderCallback(DownloaderFactory downloaderFactory, List<ResourceRefs<URI>> resources) {
-        this(downloaderFactory, resources, ResourceDownloaderConfiguration.defaultConfig());
+        this(downloaderFactory, resources, DownloaderConfiguration.defaultConfig());
     }
 
     public ResourceDownloaderCallback(
             DownloaderFactory downloaderFactory,
             List<ResourceRefs<URI>> resources,
-            ResourceDownloaderConfiguration configuration) {
+            DownloaderConfiguration configuration) {
         this.resources = resources;
         this.downloaderFactory = downloaderFactory;
         this.configuration = configuration;

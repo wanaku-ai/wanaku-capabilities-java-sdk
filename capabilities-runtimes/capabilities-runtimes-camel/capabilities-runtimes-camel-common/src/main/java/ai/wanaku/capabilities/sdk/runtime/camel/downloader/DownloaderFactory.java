@@ -20,6 +20,14 @@ public class DownloaderFactory {
         this.dataDir = dataDir;
     }
 
+    public ServicesHttpClient getServicesHttpClient() {
+        return servicesHttpClient;
+    }
+
+    public Path getDataDir() {
+        return dataDir;
+    }
+
     public Downloader getDownloader(URI uri) {
         if (uri == null || uri.getScheme() == null) {
             throw new IllegalArgumentException("URI and scheme cannot be null");

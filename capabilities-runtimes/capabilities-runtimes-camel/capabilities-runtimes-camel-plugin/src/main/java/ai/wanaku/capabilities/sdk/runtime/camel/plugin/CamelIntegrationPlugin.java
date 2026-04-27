@@ -26,10 +26,10 @@ import ai.wanaku.capabilities.sdk.discovery.ZeroDepRegistrationManager;
 import ai.wanaku.capabilities.sdk.discovery.config.DefaultRegistrationConfig;
 import ai.wanaku.capabilities.sdk.discovery.deserializer.JacksonDeserializer;
 import ai.wanaku.capabilities.sdk.discovery.util.DiscoveryHelper;
+import ai.wanaku.capabilities.sdk.runtime.camel.downloader.DownloaderConfiguration;
 import ai.wanaku.capabilities.sdk.runtime.camel.downloader.DownloaderFactory;
 import ai.wanaku.capabilities.sdk.runtime.camel.downloader.ExponentialBackoffRetryPolicy;
 import ai.wanaku.capabilities.sdk.runtime.camel.downloader.ResourceDownloaderCallback;
-import ai.wanaku.capabilities.sdk.runtime.camel.downloader.ResourceDownloaderConfiguration;
 import ai.wanaku.capabilities.sdk.runtime.camel.downloader.ResourceListBuilder;
 import ai.wanaku.capabilities.sdk.runtime.camel.downloader.ResourceRefs;
 import ai.wanaku.capabilities.sdk.runtime.camel.downloader.ResourceType;
@@ -97,7 +97,7 @@ public class CamelIntegrationPlugin implements ContextServicePlugin {
                     .addDependenciesRef(config.getDependenciesRef())
                     .buildForPlugin();
 
-            ResourceDownloaderConfiguration downloaderConfig = ResourceDownloaderConfiguration.newBuilder()
+            DownloaderConfiguration downloaderConfig = DownloaderConfiguration.newBuilder()
                     .retryPolicy(ExponentialBackoffRetryPolicy.newBuilder()
                             .maxRetries(config.getRetries())
                             .build())
