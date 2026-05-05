@@ -1,5 +1,6 @@
 package ai.wanaku.capabilities.sdk.api.types.discovery;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,12 +67,18 @@ public class ActivityRecord implements WanakuEntity<String> {
      * Checks whether the service is currently active.
      * <p>
      * A service is considered active if its health status is {@link HealthStatus#HEALTHY}
-     * or {@link HealthStatus#PENDING}.
+     * or {@link HealthStatus#PENDING} within 1 minute from the moment it was last seen.
      *
      * @return {@code true} if the service is active, {@code false} otherwise
      */
     public boolean isActive() {
-        return healthStatus == HealthStatus.HEALTHY || healthStatus == HealthStatus.PENDING;
+        if (healthStatus == HealthStatus.HEALTHY) {
+            return true;
+        }
+        if (healthStatus == HealthStatus.PENDING && lastSeen != null) {
+            return Duration.between(lastSeen, Instant.now()).toMinutes() < 1;
+        }
+        return false;
     }
 
     /**
