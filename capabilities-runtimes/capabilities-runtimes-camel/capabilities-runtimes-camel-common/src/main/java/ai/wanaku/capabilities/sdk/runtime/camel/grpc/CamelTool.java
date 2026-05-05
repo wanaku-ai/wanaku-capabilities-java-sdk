@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.Route;
@@ -22,11 +23,11 @@ import ai.wanaku.core.exchange.v1.ToolInvokerGrpc;
 public class CamelTool extends ToolInvokerGrpc.ToolInvokerImplBase {
     private static final Logger LOG = LoggerFactory.getLogger(CamelTool.class);
 
+    private final CamelContextResolver contextResolver;
     private final McpSpec mcpSpec;
-    private final CamelContext camelContext;
 
-    public CamelTool(CamelContext camelContext, McpSpec spec) {
-        this.camelContext = camelContext;
+    public CamelTool(Future<CamelContext> camelContextFuture, McpSpec spec) {
+        this.contextResolver = new CamelContextResolver(camelContextFuture);
         this.mcpSpec = spec;
     }
 
@@ -41,11 +42,18 @@ public class CamelTool extends ToolInvokerGrpc.ToolInvokerImplBase {
     public void invokeTool(ToolInvokeRequest request, StreamObserver<ToolInvokeReply> responseObserver) {
         LOG.debug("About to run a Camel route as tool");
 
+        final CamelContext ctx;
+        try {
+            ctx = contextResolver.resolve();
+        } catch (Exception e) {
+            responseObserver.onError(e);
+            return;
+        }
+
         final String uri = request.getUri();
         final URI routeUri = URI.create(uri);
         final String host = routeUri.getHost();
 
-        // Try to find the definition in tools first, then in resources
         Map<String, Definition> tools = getTools(mcpSpec);
         Definition toolDefinition = tools.get(host);
 
@@ -57,9 +65,9 @@ public class CamelTool extends ToolInvokerGrpc.ToolInvokerImplBase {
             return;
         }
 
-        final String endpointUri = resolveEndpoint(toolDefinition, camelContext);
+        final String endpointUri = resolveEndpoint(toolDefinition, ctx);
 
-        try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
+        try (ProducerTemplate producerTemplate = ctx.createProducerTemplate()) {
             final Object reply;
 
             if (!request.getArgumentsMap().isEmpty()) {

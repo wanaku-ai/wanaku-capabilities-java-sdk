@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ConsumerTemplate;
 import org.apache.camel.Route;
@@ -20,11 +21,11 @@ import ai.wanaku.core.exchange.v1.ResourceRequest;
 public class CamelResource extends ResourceAcquirerGrpc.ResourceAcquirerImplBase {
     private static final Logger LOG = LoggerFactory.getLogger(CamelResource.class);
 
+    private final CamelContextResolver contextResolver;
     private final McpSpec mcpSpec;
-    private final CamelContext camelContext;
 
-    public CamelResource(CamelContext camelContext, McpSpec mcpSpec) {
-        this.camelContext = camelContext;
+    public CamelResource(Future<CamelContext> camelContextFuture, McpSpec mcpSpec) {
+        this.contextResolver = new CamelContextResolver(camelContextFuture);
         this.mcpSpec = mcpSpec;
     }
 
@@ -38,6 +39,14 @@ public class CamelResource extends ResourceAcquirerGrpc.ResourceAcquirerImplBase
     @Override
     public void resourceAcquire(ResourceRequest request, StreamObserver<ResourceReply> responseObserver) {
         LOG.debug("About to run a Camel route as resource provider");
+
+        final CamelContext ctx;
+        try {
+            ctx = contextResolver.resolve();
+        } catch (Exception e) {
+            responseObserver.onError(e);
+            return;
+        }
 
         final String uri = request.getLocation();
         URI routeUri = URI.create(uri);
@@ -54,8 +63,8 @@ public class CamelResource extends ResourceAcquirerGrpc.ResourceAcquirerImplBase
             return;
         }
 
-        try (final ConsumerTemplate consumerTemplate = camelContext.createConsumerTemplate()) {
-            final String endpointUri = resolveEndpoint(definition, camelContext);
+        try (final ConsumerTemplate consumerTemplate = ctx.createConsumerTemplate()) {
+            final String endpointUri = resolveEndpoint(definition, ctx);
             LOG.info("Consuming from {} as {}", endpointUri, routeUri);
 
             Object ret = consumerTemplate.receiveBody(endpointUri, 5000, String.class);

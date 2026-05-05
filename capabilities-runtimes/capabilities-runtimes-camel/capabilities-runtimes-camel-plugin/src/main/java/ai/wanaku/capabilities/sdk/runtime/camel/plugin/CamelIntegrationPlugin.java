@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import org.apache.camel.CamelContext;
 import org.apache.camel.spi.ContextServicePlugin;
 import org.slf4j.Logger;
@@ -118,14 +119,16 @@ public class CamelIntegrationPlugin implements ContextServicePlugin {
 
             McpSpec mcpSpec = createMcpSpec(httpClient, downloadedResources);
 
-            // Start gRPC server
+            CompletableFuture<CamelContext> contextFuture = new CompletableFuture<>();
+            contextFuture.complete(camelContext);
+
             final ServerBuilder<?> serverBuilder =
                     Grpc.newServerBuilderForPort(config.getGrpcPort(), InsecureServerCredentials.create());
             grpcServer = serverBuilder
-                    .addService(new CamelTool(camelContext, mcpSpec))
-                    .addService(new CamelResource(camelContext, mcpSpec))
+                    .addService(new CamelTool(contextFuture, mcpSpec))
+                    .addService(new CamelResource(contextFuture, mcpSpec))
                     .addService(new ProvisionBase(config.getServiceName()))
-                    .addService(new CamelHealthProbe(camelContext, registrationManager.getTarget()))
+                    .addService(new CamelHealthProbe(contextFuture, registrationManager.getTarget()))
                     .build();
 
             grpcServer.start();
