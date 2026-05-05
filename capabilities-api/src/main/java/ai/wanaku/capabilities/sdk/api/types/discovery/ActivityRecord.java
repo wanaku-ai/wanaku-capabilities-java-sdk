@@ -15,6 +15,12 @@ import ai.wanaku.capabilities.sdk.api.types.WanakuEntity;
  * are used by the service discovery mechanism to monitor service health and availability.
  */
 public class ActivityRecord implements WanakuEntity<String> {
+    /**
+     * The maximum amount of time, in minutes, the service can be in pending
+     * state until it can be considered fully gone/down.
+     */
+    public static final int TIME_TO_LET_GO = 10;
+
     private String id;
     private Instant lastSeen;
     private HealthStatus healthStatus = HealthStatus.PENDING;
@@ -67,7 +73,7 @@ public class ActivityRecord implements WanakuEntity<String> {
      * Checks whether the service is currently active.
      * <p>
      * A service is considered active if its health status is {@link HealthStatus#HEALTHY}
-     * or {@link HealthStatus#PENDING} within 1 minute from the moment it was last seen.
+     * or {@link HealthStatus#PENDING} within {@link ActivityRecord#TIME_TO_LET_GO} minutes from the moment it was last seen.
      *
      * @return {@code true} if the service is active, {@code false} otherwise
      */
@@ -76,7 +82,7 @@ public class ActivityRecord implements WanakuEntity<String> {
             return true;
         }
         if (healthStatus == HealthStatus.PENDING && lastSeen != null) {
-            return Duration.between(lastSeen, Instant.now()).toMinutes() < 1;
+            return Duration.between(lastSeen, Instant.now()).toMinutes() < TIME_TO_LET_GO;
         }
         return false;
     }
