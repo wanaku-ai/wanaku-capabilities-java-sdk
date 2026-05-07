@@ -2,7 +2,6 @@ package ai.wanaku.capabilities.sdk.runtime.camel.grpc;
 
 import java.util.Objects;
 import java.util.concurrent.Future;
-import org.apache.camel.CamelContext;
 import org.apache.camel.ServiceStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +19,8 @@ public class CamelHealthProbe extends HealthProbeGrpc.HealthProbeImplBase {
     private final CamelContextResolver contextResolver;
     private final ServiceTarget target;
 
-    public CamelHealthProbe(Future<CamelContext> camelContextFuture, ServiceTarget target) {
-        this.contextResolver = new CamelContextResolver(camelContextFuture);
+    public CamelHealthProbe(Future<WanakuRegistrationInfo> registrationInfoFuture, ServiceTarget target) {
+        this.contextResolver = new CamelContextResolver(registrationInfoFuture);
         this.target = Objects.requireNonNull(target);
     }
 
@@ -54,15 +53,15 @@ public class CamelHealthProbe extends HealthProbeGrpc.HealthProbeImplBase {
                     .withDescription("Invalid request id " + request.getId())
                     .asRuntimeException());
         } else {
-            final CamelContext ctx;
+            final WanakuRegistrationInfo info;
             try {
-                ctx = contextResolver.resolve();
+                info = contextResolver.resolve();
             } catch (Exception e) {
                 responseObserver.onError(e);
                 return;
             }
 
-            RuntimeStatus status = getStatus(ctx.getStatus());
+            RuntimeStatus status = getStatus(info.camelContext().getStatus());
             responseObserver.onNext(
                     HealthProbeReply.newBuilder().setStatus(status).build());
             responseObserver.onCompleted();

@@ -24,11 +24,9 @@ public class CamelTool extends ToolInvokerGrpc.ToolInvokerImplBase {
     private static final Logger LOG = LoggerFactory.getLogger(CamelTool.class);
 
     private final CamelContextResolver contextResolver;
-    private final McpSpec mcpSpec;
 
-    public CamelTool(Future<CamelContext> camelContextFuture, McpSpec spec) {
-        this.contextResolver = new CamelContextResolver(camelContextFuture);
-        this.mcpSpec = spec;
+    public CamelTool(Future<WanakuRegistrationInfo> registrationInfoFuture) {
+        this.contextResolver = new CamelContextResolver(registrationInfoFuture);
     }
 
     public Map<String, Definition> getTools(McpSpec mcpSpec) {
@@ -42,19 +40,20 @@ public class CamelTool extends ToolInvokerGrpc.ToolInvokerImplBase {
     public void invokeTool(ToolInvokeRequest request, StreamObserver<ToolInvokeReply> responseObserver) {
         LOG.debug("About to run a Camel route as tool");
 
-        final CamelContext ctx;
+        final WanakuRegistrationInfo info;
         try {
-            ctx = contextResolver.resolve();
+            info = contextResolver.resolve();
         } catch (Exception e) {
             responseObserver.onError(e);
             return;
         }
 
+        final CamelContext ctx = info.camelContext();
         final String uri = request.getUri();
         final URI routeUri = URI.create(uri);
         final String host = routeUri.getHost();
 
-        Map<String, Definition> tools = getTools(mcpSpec);
+        Map<String, Definition> tools = getTools(info.mcpSpec());
         Definition toolDefinition = tools.get(host);
 
         if (toolDefinition == null) {

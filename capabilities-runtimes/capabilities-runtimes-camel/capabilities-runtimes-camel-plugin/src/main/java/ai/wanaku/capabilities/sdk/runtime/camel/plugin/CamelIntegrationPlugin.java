@@ -38,6 +38,7 @@ import ai.wanaku.capabilities.sdk.runtime.camel.grpc.CamelHealthProbe;
 import ai.wanaku.capabilities.sdk.runtime.camel.grpc.CamelResource;
 import ai.wanaku.capabilities.sdk.runtime.camel.grpc.CamelTool;
 import ai.wanaku.capabilities.sdk.runtime.camel.grpc.ProvisionBase;
+import ai.wanaku.capabilities.sdk.runtime.camel.grpc.WanakuRegistrationInfo;
 import ai.wanaku.capabilities.sdk.runtime.camel.init.Initializer;
 import ai.wanaku.capabilities.sdk.runtime.camel.init.InitializerFactory;
 import ai.wanaku.capabilities.sdk.runtime.camel.model.McpSpec;
@@ -119,16 +120,16 @@ public class CamelIntegrationPlugin implements ContextServicePlugin {
 
             McpSpec mcpSpec = createMcpSpec(httpClient, downloadedResources);
 
-            CompletableFuture<CamelContext> contextFuture = new CompletableFuture<>();
-            contextFuture.complete(camelContext);
+            CompletableFuture<WanakuRegistrationInfo> registrationInfoFuture = new CompletableFuture<>();
+            registrationInfoFuture.complete(new WanakuRegistrationInfo(camelContext, mcpSpec));
 
             final ServerBuilder<?> serverBuilder =
                     Grpc.newServerBuilderForPort(config.getGrpcPort(), InsecureServerCredentials.create());
             grpcServer = serverBuilder
-                    .addService(new CamelTool(contextFuture, mcpSpec))
-                    .addService(new CamelResource(contextFuture, mcpSpec))
+                    .addService(new CamelTool(registrationInfoFuture))
+                    .addService(new CamelResource(registrationInfoFuture))
                     .addService(new ProvisionBase(config.getServiceName()))
-                    .addService(new CamelHealthProbe(contextFuture, registrationManager.getTarget()))
+                    .addService(new CamelHealthProbe(registrationInfoFuture, registrationManager.getTarget()))
                     .build();
 
             grpcServer.start();

@@ -22,11 +22,9 @@ public class CamelResource extends ResourceAcquirerGrpc.ResourceAcquirerImplBase
     private static final Logger LOG = LoggerFactory.getLogger(CamelResource.class);
 
     private final CamelContextResolver contextResolver;
-    private final McpSpec mcpSpec;
 
-    public CamelResource(Future<CamelContext> camelContextFuture, McpSpec mcpSpec) {
-        this.contextResolver = new CamelContextResolver(camelContextFuture);
-        this.mcpSpec = mcpSpec;
+    public CamelResource(Future<WanakuRegistrationInfo> registrationInfoFuture) {
+        this.contextResolver = new CamelContextResolver(registrationInfoFuture);
     }
 
     public Map<String, Definition> getResources(McpSpec mcpSpec) {
@@ -40,19 +38,20 @@ public class CamelResource extends ResourceAcquirerGrpc.ResourceAcquirerImplBase
     public void resourceAcquire(ResourceRequest request, StreamObserver<ResourceReply> responseObserver) {
         LOG.debug("About to run a Camel route as resource provider");
 
-        final CamelContext ctx;
+        final WanakuRegistrationInfo info;
         try {
-            ctx = contextResolver.resolve();
+            info = contextResolver.resolve();
         } catch (Exception e) {
             responseObserver.onError(e);
             return;
         }
 
+        final CamelContext ctx = info.camelContext();
         final String uri = request.getLocation();
         URI routeUri = URI.create(uri);
         final String host = routeUri.getHost();
 
-        Map<String, Definition> resources = getResources(mcpSpec);
+        Map<String, Definition> resources = getResources(info.mcpSpec());
         Definition definition = resources.get(host);
 
         if (definition == null) {
