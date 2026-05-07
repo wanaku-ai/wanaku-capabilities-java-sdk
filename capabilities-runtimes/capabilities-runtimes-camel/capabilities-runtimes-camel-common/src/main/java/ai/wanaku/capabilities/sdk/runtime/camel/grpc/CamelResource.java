@@ -21,10 +21,10 @@ import ai.wanaku.core.exchange.v1.ResourceRequest;
 public class CamelResource extends ResourceAcquirerGrpc.ResourceAcquirerImplBase {
     private static final Logger LOG = LoggerFactory.getLogger(CamelResource.class);
 
-    private final CamelContextResolver contextResolver;
+    private final WanakuRegistrationInfoResolver contextResolver;
 
     public CamelResource(Future<WanakuRegistrationInfo> registrationInfoFuture) {
-        this.contextResolver = new CamelContextResolver(registrationInfoFuture);
+        this.contextResolver = new WanakuRegistrationInfoResolver(registrationInfoFuture);
     }
 
     public Map<String, Definition> getResources(McpSpec mcpSpec) {
