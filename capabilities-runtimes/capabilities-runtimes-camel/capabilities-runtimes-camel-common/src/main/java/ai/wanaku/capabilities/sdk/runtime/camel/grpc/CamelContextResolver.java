@@ -2,33 +2,32 @@ package ai.wanaku.capabilities.sdk.runtime.camel.grpc;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import org.apache.camel.CamelContext;
 import io.grpc.Status;
 
 public class CamelContextResolver {
-    private final Future<CamelContext> camelContextFuture;
-    private volatile CamelContext camelContext;
+    private final Future<WanakuRegistrationInfo> registrationInfoFuture;
+    private volatile WanakuRegistrationInfo registrationInfo;
 
-    public CamelContextResolver(Future<CamelContext> camelContextFuture) {
-        this.camelContextFuture = camelContextFuture;
+    public CamelContextResolver(Future<WanakuRegistrationInfo> registrationInfoFuture) {
+        this.registrationInfoFuture = registrationInfoFuture;
     }
 
-    public CamelContext resolve() {
-        CamelContext ctx = this.camelContext;
-        if (ctx != null) {
-            return ctx;
+    public WanakuRegistrationInfo resolve() {
+        WanakuRegistrationInfo info = this.registrationInfo;
+        if (info != null) {
+            return info;
         }
 
-        if (!camelContextFuture.isDone()) {
+        if (!registrationInfoFuture.isDone()) {
             throw Status.FAILED_PRECONDITION
                     .withDescription("Camel context is not yet available")
                     .asRuntimeException();
         }
 
         try {
-            ctx = camelContextFuture.get();
-            this.camelContext = ctx;
-            return ctx;
+            info = registrationInfoFuture.get();
+            this.registrationInfo = info;
+            return info;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw Status.UNAVAILABLE
