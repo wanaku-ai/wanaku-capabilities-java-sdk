@@ -23,10 +23,10 @@ import ai.wanaku.core.exchange.v1.ToolInvokerGrpc;
 public class CamelTool extends ToolInvokerGrpc.ToolInvokerImplBase {
     private static final Logger LOG = LoggerFactory.getLogger(CamelTool.class);
 
-    private final CamelContextResolver contextResolver;
+    private final WanakuRegistrationInfoResolver contextResolver;
 
     public CamelTool(Future<WanakuRegistrationInfo> registrationInfoFuture) {
-        this.contextResolver = new CamelContextResolver(registrationInfoFuture);
+        this.contextResolver = new WanakuRegistrationInfoResolver(registrationInfoFuture);
     }
 
     public Map<String, Definition> getTools(McpSpec mcpSpec) {

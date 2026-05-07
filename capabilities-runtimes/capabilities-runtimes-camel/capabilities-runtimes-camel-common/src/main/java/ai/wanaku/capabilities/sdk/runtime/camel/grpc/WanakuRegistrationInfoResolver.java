@@ -4,11 +4,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import io.grpc.Status;
 
-public class CamelContextResolver {
+public class WanakuRegistrationInfoResolver {
     private final Future<WanakuRegistrationInfo> registrationInfoFuture;
     private volatile WanakuRegistrationInfo registrationInfo;
 
-    public CamelContextResolver(Future<WanakuRegistrationInfo> registrationInfoFuture) {
+    public WanakuRegistrationInfoResolver(Future<WanakuRegistrationInfo> registrationInfoFuture) {
         this.registrationInfoFuture = registrationInfoFuture;
     }
 

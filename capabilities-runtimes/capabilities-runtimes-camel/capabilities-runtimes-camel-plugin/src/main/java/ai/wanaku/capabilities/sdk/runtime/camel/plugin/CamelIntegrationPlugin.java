@@ -121,7 +121,8 @@ public class CamelIntegrationPlugin implements ContextServicePlugin {
             McpSpec mcpSpec = createMcpSpec(httpClient, downloadedResources);
 
             CompletableFuture<WanakuRegistrationInfo> registrationInfoFuture = new CompletableFuture<>();
-            registrationInfoFuture.complete(new WanakuRegistrationInfo(camelContext, mcpSpec));
+            registrationInfoFuture.complete(
+                    new WanakuRegistrationInfo(camelContext, mcpSpec, registrationManager.getTarget()));
 
             final ServerBuilder<?> serverBuilder =
                     Grpc.newServerBuilderForPort(config.getGrpcPort(), InsecureServerCredentials.create());
@@ -129,7 +130,7 @@ public class CamelIntegrationPlugin implements ContextServicePlugin {
                     .addService(new CamelTool(registrationInfoFuture))
                     .addService(new CamelResource(registrationInfoFuture))
                     .addService(new ProvisionBase(config.getServiceName()))
-                    .addService(new CamelHealthProbe(registrationInfoFuture, registrationManager.getTarget()))
+                    .addService(new CamelHealthProbe(registrationInfoFuture))
                     .build();
 
             grpcServer.start();
