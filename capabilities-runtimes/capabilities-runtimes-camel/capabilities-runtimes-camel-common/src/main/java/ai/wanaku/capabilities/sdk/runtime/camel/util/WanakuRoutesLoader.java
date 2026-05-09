@@ -17,6 +17,13 @@
 
 package ai.wanaku.capabilities.sdk.runtime.camel.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Properties;
+import java.util.ServiceLoader;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.main.download.DependencyDownloader;
@@ -29,6 +36,7 @@ import org.apache.camel.main.download.DependencyDownloaderTransformerResolver;
 import org.apache.camel.main.download.DependencyDownloaderUriFactoryResolver;
 import org.apache.camel.main.download.MavenDependencyDownloader;
 import org.apache.camel.spi.ComponentResolver;
+import org.apache.camel.spi.ContextServicePlugin;
 import org.apache.camel.spi.DataFormatResolver;
 import org.apache.camel.spi.LanguageResolver;
 import org.apache.camel.spi.Resource;
@@ -104,6 +112,9 @@ public class WanakuRoutesLoader {
         DependencyDownloaderRoutesLoader loader = new DependencyDownloaderRoutesLoader(context);
         camelContextExtension.addContextPlugin(RoutesLoader.class, loader);
 
+        loadServiceProperties(context, path);
+        discoverAndLoadPlugins(context);
+
         final ResourceLoader resourceLoader = PluginHelper.getResourceLoader(context);
         final Resource resource = resourceLoader.resolveResource(path);
 
@@ -155,6 +166,44 @@ public class WanakuRoutesLoader {
 
         downloader.start();
         return downloader;
+    }
+
+    private void loadServiceProperties(CamelContext context, String routePath) {
+        Path routeFile = Path.of(URI.create(routePath));
+        Path serviceProps = routeFile.getParent().resolve("service.properties");
+
+        if (!Files.exists(serviceProps)) {
+            return;
+        }
+
+        context.getPropertiesComponent().addLocation("file:" + serviceProps.toAbsolutePath());
+        LOG.info("Registered service.properties as Camel property source: {}", serviceProps);
+
+        try (InputStream is = Files.newInputStream(serviceProps)) {
+            Properties props = new Properties();
+            props.load(is);
+
+            for (String key : props.stringPropertyNames()) {
+                if (key.startsWith("forage.")) {
+                    System.setProperty(key, props.getProperty(key));
+                    LOG.debug("Set system property from service.properties: {}", key);
+                }
+            }
+        } catch (IOException e) {
+            LOG.warn("Failed to load service.properties: {}", e.getMessage());
+        }
+    }
+
+    private void discoverAndLoadPlugins(CamelContext context) {
+        ClassLoader depClassLoader = Thread.currentThread().getContextClassLoader();
+        ServiceLoader<ContextServicePlugin> plugins = ServiceLoader.load(ContextServicePlugin.class, depClassLoader);
+
+        for (ContextServicePlugin plugin : plugins) {
+            if (plugin.getClass().getClassLoader() != WanakuRoutesLoader.class.getClassLoader()) {
+                LOG.info("Loading discovered plugin: {}", plugin.getClass().getName());
+                plugin.load(context);
+            }
+        }
     }
 
     /** Creates a child class loader that the dependency downloader will add downloaded JARs to. */
