@@ -76,6 +76,7 @@
         <module>capabilities-runtimes</module>
         <module>capabilities-services-client</module>
         <module>capabilities-code-execution-engines</module>
+        <module>capabilities-maven-downloader</module>
         <module>capabilities-bom</module>
         <module>capabilities-archetypes</module>
         <module>capabilities-api</module>

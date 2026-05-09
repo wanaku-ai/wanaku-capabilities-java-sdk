@@ -81,6 +81,11 @@
                 <artifactId>langchain4j-code-execution-engine-wanaku</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>ai.wanaku.sdk</groupId>
+                <artifactId>capabilities-maven-downloader</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
