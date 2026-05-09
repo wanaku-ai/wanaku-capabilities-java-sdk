@@ -68,6 +68,9 @@ public final class ServiceCatalogExtractor {
             entriesToExtract.put(depsEntry.trim(), ResourceType.DEPENDENCY_REF);
         }
 
+        String propsEntry = system + "/service.properties";
+        entriesToExtract.put(propsEntry, ResourceType.PROPERTIES_REF);
+
         Map<ResourceType, Path> result = extractEntries(zipBytes, entriesToExtract, dataDir);
 
         if (!result.containsKey(ResourceType.ROUTES_REF)) {

@@ -4,4 +4,5 @@ public enum ResourceType {
     ROUTES_REF,
     RULES_REF,
     DEPENDENCY_REF,
+    PROPERTIES_REF,
 }

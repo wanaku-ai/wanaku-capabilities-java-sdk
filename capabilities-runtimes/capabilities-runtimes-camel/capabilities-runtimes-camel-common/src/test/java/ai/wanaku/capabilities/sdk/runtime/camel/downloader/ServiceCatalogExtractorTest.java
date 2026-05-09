@@ -49,6 +49,21 @@ class ServiceCatalogExtractorTest {
     }
 
     @Test
+    void testExtractWithServiceProperties() throws Exception {
+        String base64Zip = createTestZipWithProperties("test-catalog", "sys1");
+        Map<ResourceType, Path> result = ServiceCatalogExtractor.extract(base64Zip, "sys1", tempDir);
+
+        assertTrue(result.containsKey(ResourceType.PROPERTIES_REF));
+        assertTrue(Files.exists(result.get(ResourceType.PROPERTIES_REF)));
+
+        Properties extracted = new Properties();
+        try (var is = Files.newInputStream(result.get(ResourceType.PROPERTIES_REF))) {
+            extracted.load(is);
+        }
+        assertEquals("test-api-key", extracted.getProperty("forage.tavily.api.key"));
+    }
+
+    @Test
     void testExtractUnknownSystem() {
         String base64Zip = createTestZip("test-catalog", "sys1");
         assertThrows(WanakuException.class, () -> ServiceCatalogExtractor.extract(base64Zip, "nonexistent", tempDir));
@@ -82,6 +97,46 @@ class ServiceCatalogExtractorTest {
 
     private String createTestZipWithDeps(String name, String... systems) {
         return createTestZipInternal(name, true, systems);
+    }
+
+    private String createTestZipWithProperties(String name, String... systems) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try (ZipOutputStream zos = new ZipOutputStream(baos)) {
+                Properties props = new Properties();
+                props.setProperty("catalog.name", name);
+                props.setProperty("catalog.description", "Test catalog");
+                props.setProperty("catalog.services", String.join(",", systems));
+
+                for (String sys : systems) {
+                    String routesPath = sys + "/" + sys + ".camel.yaml";
+                    String rulesPath = sys + "/" + sys + ".wanaku-rules.yaml";
+                    props.setProperty("catalog.routes." + sys, routesPath);
+                    props.setProperty("catalog.rules." + sys, rulesPath);
+
+                    zos.putNextEntry(new ZipEntry(routesPath));
+                    zos.write(("# Routes for " + sys).getBytes());
+                    zos.closeEntry();
+
+                    zos.putNextEntry(new ZipEntry(rulesPath));
+                    zos.write(("# Rules for " + sys).getBytes());
+                    zos.closeEntry();
+
+                    zos.putNextEntry(new ZipEntry(sys + "/service.properties"));
+                    zos.write("forage.tavily.api.key=test-api-key\n".getBytes());
+                    zos.closeEntry();
+                }
+
+                zos.putNextEntry(new ZipEntry("index.properties"));
+                ByteArrayOutputStream propsOut = new ByteArrayOutputStream();
+                props.store(propsOut, null);
+                zos.write(propsOut.toByteArray());
+                zos.closeEntry();
+            }
+            return Base64.getEncoder().encodeToString(baos.toByteArray());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private String createTestZipInternal(String name, boolean includeDeps, String... systems) {
