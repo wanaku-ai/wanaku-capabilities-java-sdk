@@ -26,24 +26,10 @@ import java.util.Properties;
 import java.util.ServiceLoader;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ExtendedCamelContext;
-import org.apache.camel.main.download.DependencyDownloader;
-import org.apache.camel.main.download.DependencyDownloaderClassLoader;
-import org.apache.camel.main.download.DependencyDownloaderComponentResolver;
-import org.apache.camel.main.download.DependencyDownloaderDataFormatResolver;
-import org.apache.camel.main.download.DependencyDownloaderLanguageResolver;
-import org.apache.camel.main.download.DependencyDownloaderRoutesLoader;
-import org.apache.camel.main.download.DependencyDownloaderTransformerResolver;
-import org.apache.camel.main.download.DependencyDownloaderUriFactoryResolver;
-import org.apache.camel.main.download.MavenDependencyDownloader;
-import org.apache.camel.spi.ComponentResolver;
 import org.apache.camel.spi.ContextServicePlugin;
-import org.apache.camel.spi.DataFormatResolver;
-import org.apache.camel.spi.LanguageResolver;
 import org.apache.camel.spi.Resource;
 import org.apache.camel.spi.ResourceLoader;
 import org.apache.camel.spi.RoutesLoader;
-import org.apache.camel.spi.TransformerResolver;
-import org.apache.camel.spi.UriFactoryResolver;
 import org.apache.camel.support.PluginHelper;
 import org.slf4j.Logger;
 import ai.wanaku.capabilities.sdk.runtime.camel.exceptions.RouteLoadingException;
@@ -59,25 +45,10 @@ import ai.wanaku.capabilities.sdk.runtime.camel.exceptions.RouteLoadingException
 public class WanakuRoutesLoader {
     private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(WanakuRoutesLoader.class);
 
-    private final String dependenciesList;
-    private final String repositoriesList;
-    private final DependencyDownloaderClassLoader cl;
-    private final MavenDependencyDownloader downloader;
-
     /**
      * Creates a new loader.
-     *
-     * @param dependenciesList comma-separated Maven coordinates ({@code group:artifact:version}) to
-     *                         download before loading routes, or {@code null} for none
-     * @param repositoriesList comma-separated Maven repository URLs to resolve dependencies from,
-     *                         or {@code null} to use the default repositories
      */
-    public WanakuRoutesLoader(String dependenciesList, String repositoriesList) {
-        this.dependenciesList = dependenciesList;
-        this.repositoriesList = repositoriesList;
-        this.cl = createClassLoader();
-        this.downloader = createDownloader(cl);
-    }
+    public WanakuRoutesLoader() {}
 
     /**
      * Downloads required dependencies, registers dependency-aware resolvers on the given context,
@@ -90,28 +61,6 @@ public class WanakuRoutesLoader {
     public void loadRoute(CamelContext context, String path) {
         final ExtendedCamelContext camelContextExtension = context.getCamelContextExtension();
 
-        try {
-            context.addService(downloader);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        camelContextExtension.addContextPlugin(
-                ComponentResolver.class, new DependencyDownloaderComponentResolver(context, null, false, false));
-        camelContextExtension.addContextPlugin(
-                DataFormatResolver.class, new DependencyDownloaderDataFormatResolver(context, null, false));
-        camelContextExtension.addContextPlugin(
-                LanguageResolver.class, new DependencyDownloaderLanguageResolver(context, null, false));
-        camelContextExtension.addContextPlugin(
-                TransformerResolver.class, new DependencyDownloaderTransformerResolver(context, null, false));
-        camelContextExtension.addContextPlugin(
-                UriFactoryResolver.class, new DependencyDownloaderUriFactoryResolver(context));
-
-        downloadDependencies(context);
-
-        DependencyDownloaderRoutesLoader loader = new DependencyDownloaderRoutesLoader(context);
-        camelContextExtension.addContextPlugin(RoutesLoader.class, loader);
-
         loadServiceProperties(context, path);
         discoverAndLoadPlugins(context);
 
@@ -119,53 +68,12 @@ public class WanakuRoutesLoader {
         final Resource resource = resourceLoader.resolveResource(path);
 
         try {
-            loader.loadRoutes(resource);
+            camelContextExtension.getContextPlugin(RoutesLoader.class).loadRoutes(resource);
         } catch (Exception e) {
             throw new RouteLoadingException(path, e);
         }
 
         context.build();
-    }
-
-    /**
-     * Downloads each dependency from {@link #dependenciesList} using the Maven downloader and
-     * registers the downloader as a context plugin.
-     */
-    private void downloadDependencies(CamelContext camelContext) {
-        ExtendedCamelContext camelContextExtension = camelContext.getCamelContextExtension();
-
-        if (dependenciesList != null) {
-            final String[] dependencies = dependenciesList.split(",");
-            for (String dependency : dependencies) {
-                // In case of empty file
-                if (!dependency.isEmpty()) {
-                    dependency = dependency.trim();
-                    downloader.downloadDependency(
-                            GavUtil.group(dependency), GavUtil.artifact(dependency), GavUtil.version(dependency));
-                }
-            }
-
-            cl.getDownloaded().forEach(d -> LOG.debug("Downloaded {}", d));
-        }
-
-        Thread.currentThread().setContextClassLoader(cl);
-        camelContextExtension.addContextPlugin(DependencyDownloader.class, downloader);
-    }
-
-    /**
-     * Creates and starts a {@link MavenDependencyDownloader} configured with the given class loader
-     * and optional custom repositories.
-     */
-    private MavenDependencyDownloader createDownloader(DependencyDownloaderClassLoader cl) {
-        MavenDependencyDownloader downloader = new MavenDependencyDownloader();
-        downloader.setClassLoader(cl);
-
-        if (repositoriesList != null) {
-            downloader.setRepositories(repositoriesList);
-        }
-
-        downloader.start();
-        return downloader;
     }
 
     private void loadServiceProperties(CamelContext context, String routePath) {
@@ -195,8 +103,8 @@ public class WanakuRoutesLoader {
     }
 
     private void discoverAndLoadPlugins(CamelContext context) {
-        ClassLoader depClassLoader = Thread.currentThread().getContextClassLoader();
-        ServiceLoader<ContextServicePlugin> plugins = ServiceLoader.load(ContextServicePlugin.class, depClassLoader);
+        ServiceLoader<ContextServicePlugin> plugins =
+                ServiceLoader.load(ContextServicePlugin.class, context.getApplicationContextClassLoader());
 
         for (ContextServicePlugin plugin : plugins) {
             if (plugin.getClass().getClassLoader() != WanakuRoutesLoader.class.getClassLoader()) {
@@ -204,12 +112,5 @@ public class WanakuRoutesLoader {
                 plugin.load(context);
             }
         }
-    }
-
-    /** Creates a child class loader that the dependency downloader will add downloaded JARs to. */
-    private static DependencyDownloaderClassLoader createClassLoader() {
-        final ClassLoader parentCL = WanakuRoutesLoader.class.getClassLoader();
-
-        return new DependencyDownloaderClassLoader(parentCL);
     }
 }

@@ -75,6 +75,14 @@ public class WanakuMavenDownloader implements AutoCloseable {
     }
 
     /**
+     * Creates a downloader that resolves from Maven Central only, using {@code ~/.m2/repository}
+     * as the local repository.
+     */
+    public WanakuMavenDownloader(ClassLoader classLoader) {
+        this(Collections.emptyList(), defaultLocalRepo(), classLoader);
+    }
+
+    /**
      * Creates a downloader that resolves from Maven Central plus the given extra repositories,
      * using {@code ~/.m2/repository} as the local repository.
      *
@@ -91,6 +99,16 @@ public class WanakuMavenDownloader implements AutoCloseable {
      * @param localRepository   path to the local Maven repository cache
      */
     public WanakuMavenDownloader(List<Repository> extraRepositories, Path localRepository) {
+        this(extraRepositories, localRepository, WanakuMavenDownloader.class.getClassLoader());
+    }
+
+    /**
+     * Creates a downloader with full control over repositories and local cache path.
+     *
+     * @param extraRepositories additional remote repositories to resolve from
+     * @param localRepository   path to the local Maven repository cache
+     */
+    public WanakuMavenDownloader(List<Repository> extraRepositories, Path localRepository, ClassLoader classLoader) {
         Objects.requireNonNull(extraRepositories, "extraRepositories must not be null");
         Objects.requireNonNull(localRepository, "localRepository must not be null");
 
@@ -107,7 +125,8 @@ public class WanakuMavenDownloader implements AutoCloseable {
         }
         this.repositories = Collections.unmodifiableList(repos);
 
-        this.classLoader = new DynamicClassLoader(WanakuMavenDownloader.class.getClassLoader());
+        //        this.classLoader = new DynamicClassLoader(WanakuMavenDownloader.class.getClassLoader());
+        this.classLoader = new DynamicClassLoader(classLoader);
     }
 
     /**
