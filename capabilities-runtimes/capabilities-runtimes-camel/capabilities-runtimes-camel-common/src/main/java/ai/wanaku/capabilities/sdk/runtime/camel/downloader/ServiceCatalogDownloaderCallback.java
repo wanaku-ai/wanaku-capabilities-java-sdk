@@ -82,7 +82,9 @@ public class ServiceCatalogDownloaderCallback implements DiscoveryCallback {
 
                 downloadedResources =
                         ServiceCatalogExtractor.extract(catalog.getData(), systemName, downloaderFactory.getDataDir());
-                LOG.info("Extracted {} resource(s) from service catalog", downloadedResources.size());
+                LOG.info(
+                        "Service catalog extracted successfully ({} resource type(s) mapped)",
+                        downloadedResources.size());
                 success = true;
                 return;
             } catch (Exception e) {

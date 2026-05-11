@@ -34,15 +34,16 @@ public final class ServiceCatalogExtractor {
     private static final String PROP_ROUTES_PREFIX = "catalog.routes.";
     private static final String PROP_RULES_PREFIX = "catalog.rules.";
     private static final String PROP_DEPENDENCIES_PREFIX = "catalog.dependencies.";
+    private static final String PROP_PROPERTIES_PREFIX = "catalog.properties.";
 
     private ServiceCatalogExtractor() {}
 
     /**
-     * Extracts routes, rules, and optionally dependencies files for a given system
-     * from a Base64-encoded service catalog ZIP archive.
+     * Extracts all files from a Base64-encoded service catalog ZIP archive,
+     * then maps the known resource types for the given system.
      *
      * @param base64Data the Base64-encoded ZIP data
-     * @param system     the system name to extract files for
+     * @param system     the system name to resolve resource references for
      * @param dataDir    the directory where extracted files will be written
      * @return a map of resource types to their extracted file paths
      * @throws WanakuException if the ZIP is invalid or required files are missing
@@ -57,29 +58,32 @@ public final class ServiceCatalogExtractor {
         }
 
         Properties props = readIndex(zipBytes);
+        extractAll(zipBytes, dataDir);
+
+        Map<ResourceType, Path> result = new HashMap<>();
+
         String routesEntry = requireProperty(props, PROP_ROUTES_PREFIX + system, system);
+        result.put(ResourceType.ROUTES_REF, dataDir.resolve(routesEntry));
+
         String rulesEntry = requireProperty(props, PROP_RULES_PREFIX + system, system);
+        result.put(ResourceType.RULES_REF, dataDir.resolve(rulesEntry));
+
         String depsEntry = props.getProperty(PROP_DEPENDENCIES_PREFIX + system);
-
-        Map<String, ResourceType> entriesToExtract = new HashMap<>();
-        entriesToExtract.put(routesEntry, ResourceType.ROUTES_REF);
-        entriesToExtract.put(rulesEntry, ResourceType.RULES_REF);
         if (depsEntry != null && !depsEntry.isBlank()) {
-            entriesToExtract.put(depsEntry.trim(), ResourceType.DEPENDENCY_REF);
+            result.put(ResourceType.DEPENDENCY_REF, dataDir.resolve(depsEntry.trim()));
         }
 
-        String propsEntry = system + "/service.properties";
-        entriesToExtract.put(propsEntry, ResourceType.PROPERTIES_REF);
-
-        Map<ResourceType, Path> result = extractEntries(zipBytes, entriesToExtract, dataDir);
-
-        if (!result.containsKey(ResourceType.ROUTES_REF)) {
-            throw new WanakuException(
-                    "Routes file '" + routesEntry + "' for system '" + system + "' not found in catalog ZIP");
-        }
-        if (!result.containsKey(ResourceType.RULES_REF)) {
-            throw new WanakuException(
-                    "Rules file '" + rulesEntry + "' for system '" + system + "' not found in catalog ZIP");
+        String propsEntry = props.getProperty(PROP_PROPERTIES_PREFIX + system);
+        if (propsEntry != null && !propsEntry.isBlank()) {
+            result.put(ResourceType.PROPERTIES_REF, dataDir.resolve(propsEntry.trim()));
+        } else {
+            Path routesDir = dataDir.resolve(routesEntry).getParent();
+            if (routesDir != null) {
+                Path conventional = routesDir.resolve("service.properties");
+                if (Files.exists(conventional)) {
+                    result.put(ResourceType.PROPERTIES_REF, conventional);
+                }
+            }
         }
 
         return result;
@@ -102,32 +106,34 @@ public final class ServiceCatalogExtractor {
         throw new WanakuException("Catalog ZIP does not contain " + INDEX_FILE);
     }
 
-    private static Map<ResourceType, Path> extractEntries(
-            byte[] zipBytes, Map<String, ResourceType> entriesToExtract, Path dataDir) throws WanakuException {
-        Map<ResourceType, Path> result = new HashMap<>();
-
+    private static void extractAll(byte[] zipBytes, Path dataDir) throws WanakuException {
         try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(zipBytes))) {
             ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
-                ResourceType type = entriesToExtract.get(entry.getName());
-                if (type != null) {
-                    Path targetPath = dataDir.resolve(entry.getName());
-                    Files.createDirectories(targetPath.getParent());
-
-                    try (OutputStream out = Files.newOutputStream(targetPath)) {
-                        zis.transferTo(out);
-                    }
-
-                    result.put(type, targetPath);
-                    LOG.info("Extracted catalog file '{}' to {}", entry.getName(), targetPath);
+                if (entry.isDirectory()) {
+                    zis.closeEntry();
+                    continue;
                 }
+
+                String name = entry.getName();
+                if (name.contains("..")) {
+                    zis.closeEntry();
+                    continue;
+                }
+
+                Path targetPath = dataDir.resolve(name);
+                Files.createDirectories(targetPath.getParent());
+
+                try (OutputStream out = Files.newOutputStream(targetPath)) {
+                    zis.transferTo(out);
+                }
+
+                LOG.info("Extracted catalog file '{}' to {}", name, targetPath);
                 zis.closeEntry();
             }
         } catch (IOException e) {
             throw new WanakuException("Failed to extract catalog files: " + e.getMessage(), e);
         }
-
-        return result;
     }
 
     private static String requireProperty(Properties props, String key, String system) throws WanakuException {
