@@ -17,6 +17,7 @@
 
 package ai.wanaku.capabilities.sdk.maven;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -187,6 +188,11 @@ public class WanakuMavenDownloader implements AutoCloseable {
 
     @Override
     public void close() {
+        try {
+            classLoader.close();
+        } catch (IOException e) {
+            LOG.warn("Failed to close classloader: {}", e.getMessage());
+        }
         session.close();
         repositorySystem.close();
     }
