@@ -69,14 +69,12 @@ public class ToolReference extends LabelsAwareEntity<String> implements Callable
     }
 
     /**
-     * Sets the URI of the tool reference and returns the current object for method chaining.
+     * Sets the URI of the tool reference.
      *
      * @param uri the new URI of the tool reference
-     * @return the current ToolReference object
      */
-    public ToolReference setUri(String uri) {
+    public void setUri(String uri) {
         this.uri = uri;
-        return this;
     }
 
     /**
@@ -90,14 +88,12 @@ public class ToolReference extends LabelsAwareEntity<String> implements Callable
     }
 
     /**
-     * Sets the type of the tool reference and returns the current object for method chaining.
+     * Sets the type of the tool reference.
      *
      * @param type the new type of the tool reference
-     * @return the current ToolReference object
      */
-    public ToolReference setType(String type) {
+    public void setType(String type) {
         this.type = type;
-        return this;
     }
 
     /**
