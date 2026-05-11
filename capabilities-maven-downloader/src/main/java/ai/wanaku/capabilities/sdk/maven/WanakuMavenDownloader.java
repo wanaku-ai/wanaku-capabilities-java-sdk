@@ -125,7 +125,6 @@ public class WanakuMavenDownloader implements AutoCloseable {
         }
         this.repositories = Collections.unmodifiableList(repos);
 
-        //        this.classLoader = new DynamicClassLoader(WanakuMavenDownloader.class.getClassLoader());
         this.classLoader = new DynamicClassLoader(classLoader);
     }
 
