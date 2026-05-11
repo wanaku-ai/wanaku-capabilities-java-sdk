@@ -270,6 +270,23 @@ public class ResourceReference extends LabelsAwareEntity<String> {
         public void setValue(String value) {
             this.value = value;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            Param param = (Param) o;
+            return Objects.equals(name, param.name) && Objects.equals(value, param.value);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name, value);
+        }
     }
 
     @Override
