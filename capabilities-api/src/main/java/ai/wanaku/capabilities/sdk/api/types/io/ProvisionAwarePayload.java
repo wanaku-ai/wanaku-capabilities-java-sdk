@@ -1,5 +1,7 @@
 package ai.wanaku.capabilities.sdk.api.types.io;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Interface for payloads that carry provisioning information.
  * <p>
@@ -34,7 +36,7 @@ public interface ProvisionAwarePayload<T> {
      *
      * @return the configuration data as a string, or {@code null} if no configuration is provided
      */
-    String getConfigurationData();
+    @Nullable String getConfigurationData();
 
     /**
      * Gets the secrets data associated with this payload.
@@ -45,5 +47,5 @@ public interface ProvisionAwarePayload<T> {
      *
      * @return the secrets data as a string, or {@code null} if no secrets are provided
      */
-    String getSecretsData();
+    @Nullable String getSecretsData();
 }

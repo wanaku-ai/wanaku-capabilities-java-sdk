@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Request payload for submitting code to be executed.
@@ -134,7 +135,7 @@ public class CodeExecutionRequest {
      *
      * @param environment a map of environment variable names to values
      */
-    public void setEnvironment(Map<String, String> environment) {
+    public void setEnvironment(@Nullable Map<String, String> environment) {
         this.environment = environment != null ? environment : new HashMap<>();
     }
 
@@ -152,7 +153,7 @@ public class CodeExecutionRequest {
      *
      * @param arguments a list of command-line arguments
      */
-    public void setArguments(List<String> arguments) {
+    public void setArguments(@Nullable List<String> arguments) {
         this.arguments = arguments != null ? arguments : new ArrayList<>();
     }
 
@@ -170,7 +171,7 @@ public class CodeExecutionRequest {
      *
      * @param metadata a map of metadata key-value pairs
      */
-    public void setMetadata(Map<String, Object> metadata) {
+    public void setMetadata(@Nullable Map<String, Object> metadata) {
         this.metadata = metadata != null ? metadata : new HashMap<>();
     }
 

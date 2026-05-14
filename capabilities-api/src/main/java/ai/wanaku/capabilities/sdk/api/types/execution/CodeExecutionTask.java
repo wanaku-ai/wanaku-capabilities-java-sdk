@@ -2,6 +2,7 @@ package ai.wanaku.capabilities.sdk.api.types.execution;
 
 import java.time.Instant;
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Internal representation of a code execution task.
@@ -22,9 +23,9 @@ public class CodeExecutionTask {
     private String language;
     private CodeExecutionStatus status;
     private Instant submittedAt;
-    private Instant startedAt;
-    private Instant completedAt;
-    private Integer exitCode;
+    private @Nullable Instant startedAt;
+    private @Nullable Instant completedAt;
+    private @Nullable Integer exitCode;
 
     /**
      * Default constructor for serialization frameworks.
@@ -163,7 +164,7 @@ public class CodeExecutionTask {
      *
      * @return the start timestamp, or null if not started
      */
-    public Instant getStartedAt() {
+    public @Nullable Instant getStartedAt() {
         return startedAt;
     }
 
@@ -181,7 +182,7 @@ public class CodeExecutionTask {
      *
      * @return the completion timestamp, or null if not completed
      */
-    public Instant getCompletedAt() {
+    public @Nullable Instant getCompletedAt() {
         return completedAt;
     }
 
@@ -199,7 +200,7 @@ public class CodeExecutionTask {
      *
      * @return the exit code, or null if not completed
      */
-    public Integer getExitCode() {
+    public @Nullable Integer getExitCode() {
         return exitCode;
     }
 
@@ -263,7 +264,7 @@ public class CodeExecutionTask {
      *
      * @return the duration in milliseconds, or null if not started or not completed
      */
-    public Long getExecutionDurationMs() {
+    public @Nullable Long getExecutionDurationMs() {
         if (startedAt == null || completedAt == null) {
             return null;
         }

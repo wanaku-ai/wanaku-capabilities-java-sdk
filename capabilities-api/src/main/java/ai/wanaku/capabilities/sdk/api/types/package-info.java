@@ -19,4 +19,7 @@
  * @see ai.wanaku.capabilities.sdk.api.types.io
  * @see ai.wanaku.capabilities.sdk.api.types.discovery
  */
+@NullMarked
 package ai.wanaku.capabilities.sdk.api.types;
+
+import org.jspecify.annotations.NullMarked;

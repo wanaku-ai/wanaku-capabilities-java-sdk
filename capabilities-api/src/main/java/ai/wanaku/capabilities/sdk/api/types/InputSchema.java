@@ -4,15 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents the input schema for a tool, including type, properties, and required fields.
  */
 public class InputSchema {
 
-    private String type;
+    private @Nullable String type;
     private Map<String, Property> properties = new HashMap<>();
-    private List<String> required;
+    private @Nullable List<String> required;
 
     /**
      * Default constructor for InputSchema.
@@ -24,7 +25,7 @@ public class InputSchema {
      *
      * @return the type of the input schema
      */
-    public String getType() {
+    public @Nullable String getType() {
         return type;
     }
 
@@ -60,7 +61,7 @@ public class InputSchema {
      *
      * @return a list of required field names
      */
-    public List<String> getRequired() {
+    public @Nullable List<String> getRequired() {
         return required;
     }
 

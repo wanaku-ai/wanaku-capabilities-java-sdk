@@ -1,6 +1,7 @@
 package ai.wanaku.capabilities.sdk.api.types.providers;
 
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import ai.wanaku.capabilities.sdk.api.types.WanakuEntity;
 
 /**
@@ -15,10 +16,10 @@ public class ServiceTarget implements WanakuEntity<String> {
     private String host;
     private int port;
     private String serviceType;
-    private String serviceSubType;
-    private String languageName;
-    private String languageType;
-    private String languageSubType;
+    private @Nullable String serviceSubType;
+    private @Nullable String languageName;
+    private @Nullable String languageType;
+    private @Nullable String languageSubType;
 
     /**
      * Default constructor for ServiceTarget.
@@ -118,7 +119,7 @@ public class ServiceTarget implements WanakuEntity<String> {
      *
      * @return The subtype of the service, or null if not specified.
      */
-    public String getServiceSubType() {
+    public @Nullable String getServiceSubType() {
         return serviceSubType;
     }
 
@@ -136,7 +137,7 @@ public class ServiceTarget implements WanakuEntity<String> {
      *
      * @return The name of the programming language, or null if not specified.
      */
-    public String getLanguageName() {
+    public @Nullable String getLanguageName() {
         return languageName;
     }
 
@@ -154,7 +155,7 @@ public class ServiceTarget implements WanakuEntity<String> {
      *
      * @return The type of the language, or null if not specified.
      */
-    public String getLanguageType() {
+    public @Nullable String getLanguageType() {
         return languageType;
     }
 
@@ -172,7 +173,7 @@ public class ServiceTarget implements WanakuEntity<String> {
      *
      * @return The subtype of the language, or null if not specified.
      */
-    public String getLanguageSubType() {
+    public @Nullable String getLanguageSubType() {
         return languageSubType;
     }
 

@@ -3,6 +3,7 @@ package ai.wanaku.capabilities.sdk.api.types.execution;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Events streamed via SSE to communicate execution progress and results.
@@ -36,10 +37,10 @@ public class CodeExecutionEvent {
     private String taskId;
     private long timestamp;
     private CodeExecutionStatus status;
-    private String output;
-    private String error;
-    private Integer exitCode;
-    private String message;
+    private @Nullable String output;
+    private @Nullable String error;
+    private @Nullable Integer exitCode;
+    private @Nullable String message;
     private Map<String, Object> metadata;
 
     /**
@@ -143,7 +144,7 @@ public class CodeExecutionEvent {
      *
      * @return the output content, or null if not applicable
      */
-    public String getOutput() {
+    public @Nullable String getOutput() {
         return output;
     }
 
@@ -163,7 +164,7 @@ public class CodeExecutionEvent {
      *
      * @return the error content, or null if not applicable
      */
-    public String getError() {
+    public @Nullable String getError() {
         return error;
     }
 
@@ -183,7 +184,7 @@ public class CodeExecutionEvent {
      *
      * @return the exit code, or null if not applicable
      */
-    public Integer getExitCode() {
+    public @Nullable Integer getExitCode() {
         return exitCode;
     }
 
@@ -201,7 +202,7 @@ public class CodeExecutionEvent {
      *
      * @return the message, or null if not set
      */
-    public String getMessage() {
+    public @Nullable String getMessage() {
         return message;
     }
 
@@ -228,7 +229,7 @@ public class CodeExecutionEvent {
      *
      * @param metadata a map of metadata key-value pairs
      */
-    public void setMetadata(Map<String, Object> metadata) {
+    public void setMetadata(@Nullable Map<String, Object> metadata) {
         this.metadata = metadata != null ? metadata : new HashMap<>();
     }
 

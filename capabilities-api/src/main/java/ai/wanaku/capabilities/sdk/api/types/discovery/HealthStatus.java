@@ -1,5 +1,7 @@
 package ai.wanaku.capabilities.sdk.api.types.discovery;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Represents the health status of a service in the Wanaku system.
  */
@@ -30,7 +32,7 @@ public enum HealthStatus {
      * @param value the string value to convert
      * @return the matching HealthStatus, or {@link #PENDING} if no match is found or value is null
      */
-    public static HealthStatus fromValue(String value) {
+    public static HealthStatus fromValue(@Nullable String value) {
         if (value == null) {
             return PENDING;
         }

@@ -37,6 +37,7 @@
         <langchain4j.version>1.12.2</langchain4j.version>
         <maven.resolver.version>2.0.17</maven.resolver.version>
         <maven.resolver-provider.version>3.9.15</maven.resolver-provider.version>
+        <jspecify.version>1.0.0</jspecify.version>
         <mockito.version>5.23.0</mockito.version>
         <palantir-java-format.version>2.71.0</palantir-java-format.version>
     </properties>
@@ -84,6 +85,12 @@
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson-databind.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jspecify</groupId>
+                <artifactId>jspecify</artifactId>
+                <version>${jspecify.version}</version>
             </dependency>
 
             <dependency>

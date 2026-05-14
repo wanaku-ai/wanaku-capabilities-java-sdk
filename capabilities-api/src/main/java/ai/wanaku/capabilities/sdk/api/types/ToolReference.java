@@ -1,6 +1,7 @@
 package ai.wanaku.capabilities.sdk.api.types;
 
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This class represents a reference to a tool with various attributes such as name, description, URI, type, and input schema.
@@ -13,8 +14,8 @@ public class ToolReference extends LabelsAwareEntity<String> implements Callable
     private String type;
     private InputSchema inputSchema;
     private String namespace;
-    private String configurationURI;
-    private String secretsURI;
+    private @Nullable String configurationURI;
+    private @Nullable String secretsURI;
 
     /**
      * Default constructor for ToolReference.
@@ -142,7 +143,7 @@ public class ToolReference extends LabelsAwareEntity<String> implements Callable
      *
      * @return the configuration URI, or {@code null} if not configured
      */
-    public String getConfigurationURI() {
+    public @Nullable String getConfigurationURI() {
         return configurationURI;
     }
 
@@ -163,7 +164,7 @@ public class ToolReference extends LabelsAwareEntity<String> implements Callable
      *
      * @return the secrets URI, or {@code null} if not configured
      */
-    public String getSecretsURI() {
+    public @Nullable String getSecretsURI() {
         return secretsURI;
     }
 

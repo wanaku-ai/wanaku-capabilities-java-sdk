@@ -1,5 +1,7 @@
 package ai.wanaku.capabilities.sdk.api.types;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Represents a Wanaku response, which can contain either an error or data.
  *
@@ -7,7 +9,7 @@ package ai.wanaku.capabilities.sdk.api.types;
  * @param error An optional error to include in the response
  * @param data The data to include in the response.
  */
-public record WanakuResponse<T>(WanakuError error, T data) {
+public record WanakuResponse<T>(@Nullable WanakuError error, @Nullable T data) {
 
     /**
      * Creates a new Wanaku response with no error and no data.

@@ -1,5 +1,7 @@
 package ai.wanaku.capabilities.sdk.api.types;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Represents an error response from the Wanaku API or services.
  * <p>
@@ -12,7 +14,7 @@ package ai.wanaku.capabilities.sdk.api.types;
  *
  * @param message the error message describing what went wrong, or {@code null} if no message is available
  */
-public record WanakuError(String message) {
+public record WanakuError(@Nullable String message) {
 
     /**
      * Default constructor that creates a {@link WanakuError} with no message.

@@ -15,4 +15,7 @@
  *
  * @since 1.0.0
  */
+@NullMarked
 package ai.wanaku.capabilities.sdk.api.types.execution;
+
+import org.jspecify.annotations.NullMarked;

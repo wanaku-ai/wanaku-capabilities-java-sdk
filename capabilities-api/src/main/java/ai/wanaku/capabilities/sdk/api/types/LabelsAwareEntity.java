@@ -2,6 +2,7 @@ package ai.wanaku.capabilities.sdk.api.types;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Abstract base class for Wanaku entities that support labels.
@@ -19,7 +20,7 @@ public abstract class LabelsAwareEntity<T> implements WanakuEntity<T> {
      */
     protected LabelsAwareEntity() {}
 
-    private Map<String, String> labels;
+    private @Nullable Map<String, String> labels;
 
     /**
      * Gets the labels as a map.
@@ -57,7 +58,7 @@ public abstract class LabelsAwareEntity<T> implements WanakuEntity<T> {
      *
      * @param labelsMap the labels to add
      */
-    public void addLabels(Map<String, String> labelsMap) {
+    public void addLabels(@Nullable Map<String, String> labelsMap) {
         if (labelsMap != null) {
             getLabels().putAll(labelsMap);
         }
@@ -69,7 +70,7 @@ public abstract class LabelsAwareEntity<T> implements WanakuEntity<T> {
      * @param labelKey the label key to look up
      * @return the label value, or null if not found
      */
-    public String getLabelValue(String labelKey) {
+    public @Nullable String getLabelValue(String labelKey) {
         if (labels == null) {
             return null;
         }
