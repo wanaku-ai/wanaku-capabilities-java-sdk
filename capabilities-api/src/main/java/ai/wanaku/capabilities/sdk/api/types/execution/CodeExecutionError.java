@@ -16,6 +16,7 @@
 package ai.wanaku.capabilities.sdk.api.types.execution;
 
 import java.util.Map;
+import org.jspecify.annotations.Nullable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -46,7 +47,7 @@ public class CodeExecutionError {
      * Present when the error relates to a specific task.
      */
     @JsonProperty("taskId")
-    private String taskId;
+    private @Nullable String taskId;
 
     /**
      * The timestamp when the error occurred (Unix timestamp in milliseconds).
@@ -59,7 +60,7 @@ public class CodeExecutionError {
      * Can include field-specific validation errors, stack traces, etc.
      */
     @JsonProperty("details")
-    private Map<String, String> details;
+    private @Nullable Map<String, String> details;
 
     /**
      * Default constructor for JSON serialization.
@@ -112,7 +113,7 @@ public class CodeExecutionError {
         this.message = message;
     }
 
-    public String getTaskId() {
+    public @Nullable String getTaskId() {
         return taskId;
     }
 
@@ -128,7 +129,7 @@ public class CodeExecutionError {
         this.timestamp = timestamp;
     }
 
-    public Map<String, String> getDetails() {
+    public @Nullable Map<String, String> getDetails() {
         return details;
     }
 

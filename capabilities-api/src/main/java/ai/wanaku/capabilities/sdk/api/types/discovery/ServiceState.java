@@ -2,6 +2,7 @@ package ai.wanaku.capabilities.sdk.api.types.discovery;
 
 import java.time.Instant;
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Contains the state of the service for an specific point in time
@@ -10,7 +11,7 @@ public class ServiceState {
     private Instant timestamp;
     private boolean healthy;
     private HealthStatus healthStatus;
-    private String reason;
+    private @Nullable String reason;
 
     /**
      * Default constructor for serialization frameworks.
@@ -103,7 +104,7 @@ public class ServiceState {
      *
      * @return the reason message, or {@code null} if not set
      */
-    public String getReason() {
+    public @Nullable String getReason() {
         return reason;
     }
 

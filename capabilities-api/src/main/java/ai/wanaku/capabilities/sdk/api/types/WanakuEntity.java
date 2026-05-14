@@ -1,5 +1,7 @@
 package ai.wanaku.capabilities.sdk.api.types;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Base interface for all Wanaku entity types.
  * <p>
@@ -16,7 +18,7 @@ public interface WanakuEntity<K> {
      *
      * @return the entity identifier, or {@code null} if not yet assigned
      */
-    K getId();
+    @Nullable K getId();
 
     /**
      * Sets the unique identifier for this entity.

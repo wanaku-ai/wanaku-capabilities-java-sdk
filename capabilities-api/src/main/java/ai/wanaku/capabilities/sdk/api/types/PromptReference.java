@@ -2,6 +2,7 @@ package ai.wanaku.capabilities.sdk.api.types;
 
 import java.util.List;
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a prompt reference in the MCP protocol.
@@ -30,17 +31,17 @@ public class PromptReference implements WanakuEntity<String> {
      * The prompt messages following MCP specification.
      * Each message has a role (user, assistant) and content.
      */
-    private List<PromptMessage> messages;
+    private @Nullable List<PromptMessage> messages;
 
     /**
      * List of arguments/parameters this prompt accepts.
      */
-    private List<PromptArgument> arguments;
+    private @Nullable List<PromptArgument> arguments;
 
     /**
      * Optional list of tool names that this prompt may use.
      */
-    private List<String> toolReferences;
+    private @Nullable List<String> toolReferences;
 
     /**
      * The namespace this prompt belongs to.
@@ -103,7 +104,7 @@ public class PromptReference implements WanakuEntity<String> {
      *
      * @return the list of prompt messages
      */
-    public List<PromptMessage> getMessages() {
+    public @Nullable List<PromptMessage> getMessages() {
         return messages;
     }
 
@@ -121,7 +122,7 @@ public class PromptReference implements WanakuEntity<String> {
      *
      * @return the list of prompt arguments
      */
-    public List<PromptArgument> getArguments() {
+    public @Nullable List<PromptArgument> getArguments() {
         return arguments;
     }
 
@@ -139,7 +140,7 @@ public class PromptReference implements WanakuEntity<String> {
      *
      * @return the list of tool references
      */
-    public List<String> getToolReferences() {
+    public @Nullable List<String> getToolReferences() {
         return toolReferences;
     }
 

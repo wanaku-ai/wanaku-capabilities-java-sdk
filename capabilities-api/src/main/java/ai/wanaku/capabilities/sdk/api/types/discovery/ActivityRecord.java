@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import ai.wanaku.capabilities.sdk.api.types.WanakuEntity;
 
 /**
@@ -22,7 +23,7 @@ public class ActivityRecord implements WanakuEntity<String> {
     public static final int TIME_TO_LET_GO = 10;
 
     private String id;
-    private Instant lastSeen;
+    private @Nullable Instant lastSeen;
     private HealthStatus healthStatus = HealthStatus.PENDING;
     private List<ServiceState> states = new ArrayList<>();
 
@@ -56,7 +57,7 @@ public class ActivityRecord implements WanakuEntity<String> {
      *
      * @return the last seen timestamp, or {@code null} if never observed
      */
-    public Instant getLastSeen() {
+    public @Nullable Instant getLastSeen() {
         return lastSeen;
     }
 

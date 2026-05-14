@@ -1,6 +1,7 @@
 package ai.wanaku.capabilities.sdk.api.types;
 
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a message in an MCP prompt.
@@ -11,7 +12,7 @@ public class PromptMessage {
      * The role of the message sender.
      * Valid values: "user", "assistant"
      */
-    private String role;
+    private @Nullable String role;
 
     /**
      * The content of the message.
@@ -21,7 +22,7 @@ public class PromptMessage {
      * - AudioContent
      * - EmbeddedResource
      */
-    private PromptContent content;
+    private @Nullable PromptContent content;
 
     /**
      * Default constructor for serialization frameworks.
@@ -44,7 +45,7 @@ public class PromptMessage {
      *
      * @return the role
      */
-    public String getRole() {
+    public @Nullable String getRole() {
         return role;
     }
 
@@ -62,7 +63,7 @@ public class PromptMessage {
      *
      * @return the message content
      */
-    public PromptContent getContent() {
+    public @Nullable PromptContent getContent() {
         return content;
     }
 

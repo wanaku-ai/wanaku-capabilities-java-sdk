@@ -2,6 +2,7 @@ package ai.wanaku.capabilities.sdk.api.types;
 
 import java.util.List;
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a resource reference, containing details such as location, type, and parameters.
@@ -42,10 +43,10 @@ public class ResourceReference extends LabelsAwareEntity<String> {
     /**
      * A list of parameters associated with the resource.
      */
-    private List<Param> params;
+    private @Nullable List<Param> params;
 
-    private String configurationURI;
-    private String secretsURI;
+    private @Nullable String configurationURI;
+    private @Nullable String secretsURI;
     private String namespace;
 
     /**
@@ -143,7 +144,7 @@ public class ResourceReference extends LabelsAwareEntity<String> {
      *
      * @return the list of resource parameters
      */
-    public List<Param> getParams() {
+    public @Nullable List<Param> getParams() {
         return params;
     }
 
@@ -164,7 +165,7 @@ public class ResourceReference extends LabelsAwareEntity<String> {
      *
      * @return the configuration URI, or {@code null} if not configured
      */
-    public String getConfigurationURI() {
+    public @Nullable String getConfigurationURI() {
         return configurationURI;
     }
 
@@ -185,7 +186,7 @@ public class ResourceReference extends LabelsAwareEntity<String> {
      *
      * @return the secrets URI, or {@code null} if not configured
      */
-    public String getSecretsURI() {
+    public @Nullable String getSecretsURI() {
         return secretsURI;
     }
 

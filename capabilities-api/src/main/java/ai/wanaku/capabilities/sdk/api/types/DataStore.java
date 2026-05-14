@@ -1,6 +1,7 @@
 package ai.wanaku.capabilities.sdk.api.types;
 
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Entity representing a data store entry for persisting arbitrary binary or text data.
@@ -77,7 +78,7 @@ public class DataStore extends LabelsAwareEntity<String> {
      * @return the ID, or {@code null} if not yet persisted
      */
     @Override
-    public String getId() {
+    public @Nullable String getId() {
         return id;
     }
 
