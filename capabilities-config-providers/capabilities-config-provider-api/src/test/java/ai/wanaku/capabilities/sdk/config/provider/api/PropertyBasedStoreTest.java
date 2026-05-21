@@ -38,6 +38,7 @@ class PropertyBasedStoreTest {
         assertEquals(2, entries.size());
         assertEquals("localhost", entries.get("db.host"));
         assertEquals("5432", entries.get("db.port"));
+        assertNull(entries.get("app.name"));
     }
 
     @Test
