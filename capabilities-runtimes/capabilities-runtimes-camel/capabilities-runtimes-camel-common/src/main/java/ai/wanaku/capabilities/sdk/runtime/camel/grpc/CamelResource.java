@@ -18,6 +18,11 @@ import ai.wanaku.core.exchange.v1.ResourceAcquirerGrpc;
 import ai.wanaku.core.exchange.v1.ResourceReply;
 import ai.wanaku.core.exchange.v1.ResourceRequest;
 
+/**
+ * gRPC service that acquires MCP resources by consuming from Camel routes.
+ * Resolves the requested resource URI to a route definition and reads from
+ * the corresponding Camel endpoint.
+ */
 public class CamelResource extends ResourceAcquirerGrpc.ResourceAcquirerImplBase {
     private static final Logger LOG = LoggerFactory.getLogger(CamelResource.class);
 

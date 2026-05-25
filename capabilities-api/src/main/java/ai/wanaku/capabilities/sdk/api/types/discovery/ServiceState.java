@@ -5,7 +5,10 @@ import java.util.Objects;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Contains the state of the service for an specific point in time
+ * Represents a point-in-time snapshot of a service's health. Each state carries a timestamp,
+ * a boolean healthy flag, a detailed {@link HealthStatus}, and an optional reason message.
+ * Use the static factory methods ({@code newHealthy()}, {@code newUnhealthy(String)}, etc.)
+ * to create instances for common lifecycle transitions.
  */
 public class ServiceState {
     private Instant timestamp;

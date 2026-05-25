@@ -11,6 +11,10 @@ import ai.wanaku.core.exchange.v1.HealthProbeReply;
 import ai.wanaku.core.exchange.v1.HealthProbeRequest;
 import ai.wanaku.core.exchange.v1.RuntimeStatus;
 
+/**
+ * gRPC health-probe service that reports the runtime status of the Camel context.
+ * Maps Camel {@link ServiceStatus} values to the Wanaku {@link RuntimeStatus} protocol.
+ */
 public class CamelHealthProbe extends HealthProbeGrpc.HealthProbeImplBase {
     private static final Logger LOG = LoggerFactory.getLogger(CamelHealthProbe.class);
 

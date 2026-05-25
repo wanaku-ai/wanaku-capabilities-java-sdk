@@ -4,6 +4,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import io.grpc.Status;
 
+/**
+ * Lazily resolves a {@link WanakuRegistrationInfo} from a {@link Future}.
+ * Returns a cached instance after the first successful resolution. Throws a
+ * gRPC {@code FAILED_PRECONDITION} status if the context is not yet available.
+ */
 public class WanakuRegistrationInfoResolver {
     private final Future<WanakuRegistrationInfo> registrationInfoFuture;
     private volatile WanakuRegistrationInfo registrationInfo;
