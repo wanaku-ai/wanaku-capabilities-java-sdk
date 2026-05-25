@@ -1,8 +1,10 @@
 #!/bin/bash
 # Warms up javadoc.io caches for all publishable modules in this project.
-# Usage: ./docs/javadoc-warm.sh
+# Usage: ./docs/javadoc-warm.sh <version>
 
 set -euo pipefail
+
+VERSION="${1:?Usage: $0 <version>}"
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -40,8 +42,8 @@ PYEOF
         continue
     fi
 
-    url="https://javadoc.io/doc/${gid}/${aid}"
-    echo "Warming: ${gid}:${aid} -> ${url}"
+    url="https://javadoc.io/doc/${gid}/${aid}/${VERSION}"
+    echo "Warming: ${gid}:${aid}:${VERSION} -> ${url}"
     curl -sf -o /dev/null "$url" || echo "  WARNING: failed for ${aid}"
 done
 
