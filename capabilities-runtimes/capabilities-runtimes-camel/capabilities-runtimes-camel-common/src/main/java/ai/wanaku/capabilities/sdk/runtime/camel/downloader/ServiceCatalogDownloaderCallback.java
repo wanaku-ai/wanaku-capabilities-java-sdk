@@ -12,6 +12,11 @@ import ai.wanaku.capabilities.sdk.api.types.DataStore;
 import ai.wanaku.capabilities.sdk.api.types.WanakuResponse;
 import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
 
+/**
+ * A {@link DiscoveryCallback} that downloads and extracts a service catalog after
+ * successful registration. The catalog is fetched via the services HTTP client and
+ * extracted into the local data directory using {@link ServiceCatalogExtractor}.
+ */
 public class ServiceCatalogDownloaderCallback implements DiscoveryCallback {
     private static final Logger LOG = LoggerFactory.getLogger(ServiceCatalogDownloaderCallback.class);
 

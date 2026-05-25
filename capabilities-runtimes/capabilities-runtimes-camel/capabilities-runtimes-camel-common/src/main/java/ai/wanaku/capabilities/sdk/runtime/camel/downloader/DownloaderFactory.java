@@ -6,6 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ai.wanaku.capabilities.sdk.services.ServicesHttpClient;
 
+/**
+ * Factory that selects the appropriate {@link Downloader} for a given URI scheme.
+ * Supported schemes are {@code datastore://} and {@code file://}. Downloader instances
+ * are created lazily and reused for subsequent requests.
+ */
 public class DownloaderFactory {
     private static final Logger LOG = LoggerFactory.getLogger(DownloaderFactory.class);
 

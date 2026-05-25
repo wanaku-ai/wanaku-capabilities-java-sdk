@@ -20,6 +20,11 @@ import ai.wanaku.core.exchange.v1.ToolInvokeReply;
 import ai.wanaku.core.exchange.v1.ToolInvokeRequest;
 import ai.wanaku.core.exchange.v1.ToolInvokerGrpc;
 
+/**
+ * gRPC service that invokes MCP tools by producing to Camel routes.
+ * Resolves the requested tool URI to a route definition, maps request
+ * arguments to Camel headers, and sends the body to the endpoint.
+ */
 public class CamelTool extends ToolInvokerGrpc.ToolInvokerImplBase {
     private static final Logger LOG = LoggerFactory.getLogger(CamelTool.class);
 

@@ -13,6 +13,11 @@ import ai.wanaku.capabilities.sdk.api.discovery.RegistrationManager;
 import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
 import ai.wanaku.capabilities.sdk.common.exceptions.WanakuWebException;
 
+/**
+ * A {@link DiscoveryCallback} that downloads a set of resources after successful service registration.
+ * Downloads are executed with configurable retry logic and the caller can block on
+ * {@link #waitForDownloads()} until all resources have been fetched.
+ */
 public class ResourceDownloaderCallback implements DiscoveryCallback {
     private static final Logger LOG = LoggerFactory.getLogger(ResourceDownloaderCallback.class);
 
