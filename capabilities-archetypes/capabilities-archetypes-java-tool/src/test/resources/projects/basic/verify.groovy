@@ -46,8 +46,8 @@ assert pomContent.contains("capabilities-config-provider-api") : "pom.xml does n
 assert pomContent.contains("capabilities-config-provider-file") : "pom.xml does not include capabilities-config-provider-file dependency"
 
 // Verify correct dependency versions
-assert pomContent.contains("<slf4j.version>2.0.17</slf4j.version>") : "pom.xml has outdated slf4j version"
-assert pomContent.contains("<log4j.version>2.25.3</log4j.version>") : "pom.xml has outdated log4j version"
+assert pomContent.contains("<slf4j.version>2.0.18</slf4j.version>") : "pom.xml has outdated slf4j version"
+assert pomContent.contains("<log4j.version>2.26.0</log4j.version>") : "pom.xml has outdated log4j version"
 
 // Check source directory structure
 def srcMainJava = new File(projectDir, "src/main/java/ai/wanaku/test")

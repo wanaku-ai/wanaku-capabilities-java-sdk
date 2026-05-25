@@ -39,7 +39,7 @@
     <scm>
         <connection>scm:git:https://github.com/wanaku-ai/wanaku-capabilities-java-sdk.git</connection>
         <developerConnection>scm:git:https://github.com/wanaku-ai/wanaku-capabilities-java-sdk.git</developerConnection>
-        <url>https://github.com/wanaku-ai/wanaku</url>
+        <url>https://github.com/wanaku-ai/wanaku-capabilities-java-sdk</url>
         <tag>HEAD</tag>
     </scm>
 

@@ -23,7 +23,7 @@ import java.util.Objects;
  * @param streamUrl the full URL to the SSE stream endpoint
  * @param status the initial status of the task (typically PENDING)
  * @param submittedAt the timestamp (epoch milliseconds) when the task was submitted
- * @since 1.0.0
+ * @since 0.1.1
  */
 public record CodeExecutionResponse(String taskId, String streamUrl, CodeExecutionStatus status, long submittedAt) {
 

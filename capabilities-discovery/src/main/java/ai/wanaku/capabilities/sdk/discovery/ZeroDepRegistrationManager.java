@@ -243,7 +243,7 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
                             e);
                 } else {
                     LOG.warn(
-                            "Unable to run callback {}} due to {}",
+                            "Unable to run callback {} due to {}",
                             callback.getClass().getName(),
                             e.getMessage());
                 }

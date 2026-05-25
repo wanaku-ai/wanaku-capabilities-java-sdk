@@ -81,7 +81,7 @@ Add the following dependency to your project:
 <dependency>
     <groupId>ai.wanaku.sdk</groupId>
     <artifactId>capabilities-runtime-camel-plugin</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>${WANAKU_VERSION}</version>
 </dependency>
 ```
 

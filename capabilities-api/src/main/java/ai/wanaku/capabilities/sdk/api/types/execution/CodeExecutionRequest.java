@@ -22,7 +22,7 @@ import org.jspecify.annotations.Nullable;
  * request.setEnvironment(Map.of("ENV_VAR", "value"));
  * }</pre>
  *
- * @since 1.0.0
+ * @since 0.1.1
  */
 public class CodeExecutionRequest {
     /**
