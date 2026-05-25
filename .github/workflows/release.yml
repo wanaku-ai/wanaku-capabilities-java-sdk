@@ -56,6 +56,11 @@ jobs:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JRELEASER_PROJECT_VERSION: ${{ github.event.inputs.currentDevelopmentVersion }}
 
+      # Warm up javadoc.io caches
+
+      - name: Warm javadoc.io caches
+        run: bash docs/javadoc-warm.sh
+
       # Persist logs
 
       - name: JReleaser release output
