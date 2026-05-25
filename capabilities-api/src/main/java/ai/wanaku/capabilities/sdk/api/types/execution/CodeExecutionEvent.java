@@ -30,7 +30,7 @@ import org.jspecify.annotations.Nullable;
  * event.setTimestamp(System.currentTimeMillis());
  * }</pre>
  *
- * @since 1.0.0
+ * @since 0.1.1
  */
 public class CodeExecutionEvent {
     private CodeExecutionEventType eventType;

@@ -6,7 +6,7 @@ package ai.wanaku.capabilities.sdk.api.types.execution;
  * These event types are used in Server-Sent Events (SSE) to communicate
  * the progress and results of code execution to clients.
  *
- * @since 1.0.0
+ * @since 0.1.1
  */
 public enum CodeExecutionEventType {
     /**

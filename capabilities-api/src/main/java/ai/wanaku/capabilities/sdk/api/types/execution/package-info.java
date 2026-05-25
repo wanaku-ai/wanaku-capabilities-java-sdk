@@ -13,7 +13,7 @@
  *   <li>{@link ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionEventType} - Event type enumeration</li>
  * </ul>
  *
- * @since 1.0.0
+ * @since 0.1.1
  */
 @NullMarked
 package ai.wanaku.capabilities.sdk.api.types.execution;

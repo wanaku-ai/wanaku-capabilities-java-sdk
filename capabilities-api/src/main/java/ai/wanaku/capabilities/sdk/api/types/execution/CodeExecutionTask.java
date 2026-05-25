@@ -14,7 +14,7 @@ import org.jspecify.annotations.Nullable;
  * This class combines the original request with runtime state information such as
  * execution timestamps and status.
  *
- * @since 1.0.0
+ * @since 0.1.1
  */
 public class CodeExecutionTask {
     private String taskId;

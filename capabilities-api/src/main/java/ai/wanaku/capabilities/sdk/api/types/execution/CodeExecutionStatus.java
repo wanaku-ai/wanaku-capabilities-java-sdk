@@ -11,7 +11,7 @@ package ai.wanaku.capabilities.sdk.api.types.execution;
  * RUNNING → CANCELLED
  * </pre>
  *
- * @since 1.0.0
+ * @since 0.1.1
  */
 public enum CodeExecutionStatus {
     /**
