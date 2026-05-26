@@ -17,7 +17,7 @@ The Wanaku registration system enables capability services (tools, resources, co
 
 ## Registration Flow Diagram
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                         CLIENT REGISTRATION FLOW                            │
 └─────────────────────────────────────────────────────────────────────────────┘
@@ -144,7 +144,7 @@ All endpoints use the base path: `/api/v1/management/discovery`
 
 All requests must include the `Authorization` header with a Bearer token:
 
-```
+```text
 Authorization: Bearer {access_token}
 ```
 
@@ -330,6 +330,7 @@ registrationManager.start();
 ```
 
 This initiates:
+
 1. Initial registration attempt (with retries)
 2. Periodic heartbeat loop
 3. Automatic ID persistence
@@ -355,7 +356,7 @@ registrationManager.deregister();
 
 ## State Machine
 
-```
+```text
                                   ┌─────────────┐
                                   │             │
                         ┌────────►│  REGISTERED │◄────────┐
@@ -407,6 +408,7 @@ Handle HTTP errors appropriately:
 ### Token Expiration
 
 The SDK automatically handles token refresh:
+
 - Tokens are refreshed 30 seconds before expiration
 - Uses refresh token if available
 - Falls back to client credentials grant
@@ -415,15 +417,17 @@ The SDK automatically handles token refresh:
 
 Service IDs are persisted locally to survive restarts:
 
-```
+```text
 {dataDir}/{serviceName}.wanaku.dat
 ```
 
 File format (binary):
+
 - File header (magic bytes + version)
 - Service entry: 36-byte UUID + 4 bytes padding
 
 This allows:
+
 - Service to maintain same ID across restarts
 - Router to recognize returning services
 - Continuous activity tracking

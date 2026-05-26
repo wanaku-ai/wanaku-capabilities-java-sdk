@@ -19,14 +19,14 @@ mvn -B archetype:generate -DarchetypeGroupId=ai.wanaku.sdk \
 
 **Explanation of Parameters:**
 
-*   `-DarchetypeGroupId`: The groupId of the archetype (always `ai.wanaku.sdk`).
-*   `-DarchetypeArtifactId`: The artifactId of the archetype (always `capabilities-archetypes-java-tool`).
-*   `-DarchetypeVersion`: The version of the archetype. Use the current version of the Wanaku SDK, typically passed as `${WANAKU_VERSION}`.
-*   `-DgroupId`: Your project's group ID (e.g., `com.mycompany`).
-*   `-Dpackage`: Your project's base package (e.g., `com.mycompany.mytool`).
-*   `-DartifactId`: Your project's artifact ID (e.g., `my-awesome-tool`).
-*   `-Dname`: A human-readable name for your capability (e.g., `My Awesome Tool`).
-*   `-Dwanaku-sdk-version`: The version of the Wanaku SDK to be used in the generated project. This should match `${WANAKU_VERSION}`.
+- `-DarchetypeGroupId`: The groupId of the archetype (always `ai.wanaku.sdk`).
+- `-DarchetypeArtifactId`: The artifactId of the archetype (always `capabilities-archetypes-java-tool`).
+- `-DarchetypeVersion`: The version of the archetype. Use the current version of the Wanaku SDK, typically passed as `${WANAKU_VERSION}`.
+- `-DgroupId`: Your project's group ID (e.g., `com.mycompany`).
+- `-Dpackage`: Your project's base package (e.g., `com.mycompany.mytool`).
+- `-DartifactId`: Your project's artifact ID (e.g., `my-awesome-tool`).
+- `-Dname`: A human-readable name for your capability (e.g., `My Awesome Tool`).
+- `-Dwanaku-sdk-version`: The version of the Wanaku SDK to be used in the generated project. This should match `${WANAKU_VERSION}`.
 
 ## Modifying the Generated Tool Class
 
@@ -65,7 +65,7 @@ public class AppTool extends ToolInvokerGrpc.ToolInvokerImplBase {
 }
 ```
 
-Replace the `// TODO: Implement your tool's logic here` comment with your specific business logic. 
+Replace the `// TODO: Implement your tool's logic here` comment with your specific business logic.
 
 The `ToolInvokeRequest` object provides access to various information and services relevant to the tool's execution request.
 
@@ -177,6 +177,7 @@ tools:
 ```
 
 The `ROUTES_RULES` variable supports:
+
 - File paths: `file:///path/to/rules.yaml`
 - Datastore references: `datastore://rules.yaml`
 
@@ -194,6 +195,7 @@ java -jar target/my-app.jar
 ```
 
 Once running, the plugin:
+
 1. Registers with the Wanaku router
 2. Loads the MCP tool definitions from the rules file
 3. Starts a gRPC server exposing your routes as callable tools
@@ -201,7 +203,7 @@ Once running, the plugin:
 ### Example
 
 For a complete working example, see the [Cat Facts Example](https://github.com/wanaku-ai/wanaku-demos/tree/main/06-camel-integration-capability-existing-route/sample-routes/camel-core-examples/cat-facts-example) in the Wanaku Demos repository.
-=======
+
 ## Accessing Request Data
 
 The `ToolInvokeRequest` provides several methods to access invocation data:
@@ -276,7 +278,6 @@ String prefix = ReservedArgumentNames.METADATA_PREFIX;  // "wanaku_meta_"
 | `BODY` | `wanaku_body` | Argument containing request body content |
 | `METADATA_PREFIX` | `wanaku_meta_` | Prefix for arguments converted to headers |
 
-
-# Learn More
+## Learn More
 
 - **[Client Registration Flow](client-registration-flow.md)** - Client Registration Flow

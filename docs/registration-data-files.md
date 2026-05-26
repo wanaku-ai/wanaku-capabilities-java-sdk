@@ -5,6 +5,7 @@ This document explains how the registration process uses data files to persist t
 ## Overview
 
 When a capability service registers with the Wanaku Router, it receives a unique UUID. This ID must be persisted locally to:
+
 - Maintain identity across service restarts
 - Avoid duplicate registrations
 - Enable proper heartbeat and state update operations
@@ -14,12 +15,14 @@ When a capability service registers with the Wanaku Router, it receives a unique
 ### File Location and Naming
 
 Data files follow this naming convention:
-```
+
+```text
 {dataDir}/{serviceName}.wanaku.dat
 ```
 
 For example, a tool invoker service named "my-tool" with data directory `/var/wanaku` stores its ID at:
-```
+
+```text
 /var/wanaku/my-tool.wanaku.dat
 ```
 
@@ -27,7 +30,7 @@ For example, a tool invoker service named "my-tool" with data directory `/var/wa
 
 The data file uses a fixed-size binary format totaling 64 bytes:
 
-```
+```text
 +------------------------+
 |    FileHeader (24B)    |
 +------------------------+
@@ -84,6 +87,7 @@ if (instanceDataManager.dataFileExists()) {
 ```
 
 Key classes:
+
 - `InstanceDataManager`: Central persistence coordinator
 - `InstanceDataReader`: Binary file reader
 
@@ -129,7 +133,7 @@ public void writeEntry(ServiceTarget target) {
 
 ## Data Flow Diagram
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                   Service Startup                           │
 └──────────────────────────┬──────────────────────────────────┘
@@ -182,15 +186,19 @@ public void writeEntry(ServiceTarget target) {
 ## Design Considerations
 
 ### Idempotency
+
 The `writeEntry()` method checks if the file already exists before writing. This prevents accidental overwrites and ensures the original ID persists across the service lifetime.
 
 ### Binary Format
+
 Using a fixed-size binary format provides:
+
 - Efficient I/O with predictable buffer sizes
 - Fast reads without parsing overhead
 - Clear versioning for future format changes
 
 ### Thread Safety
+
 - File operations use `FileChannel` for atomic reads/writes
 - `InstanceDataReader` and `InstanceDataWriter` implement `AutoCloseable` for proper resource management
 
