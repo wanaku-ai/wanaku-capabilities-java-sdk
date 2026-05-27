@@ -26,7 +26,7 @@ public class ProcessRunner {
             processBuilder.redirectErrorStream(true);
 
             final Process process = processBuilder.start();
-            LOG.info("Waiting for process to finish...");
+            LOG.debug("Waiting for process to finish...");
 
             String output = readOutput(process);
 
@@ -60,7 +60,7 @@ public class ProcessRunner {
 
     public static void run(File directory, Map<String, String> environmentVariables, String... command) {
         try {
-            LOG.info("About to run command: {}", String.join(" ", command));
+            LOG.debug("About to run command: {}", String.join(" ", command));
             ProcessBuilder processBuilder = new ProcessBuilder();
             processBuilder.command(command).inheritIO().directory(directory);
 
@@ -70,7 +70,7 @@ public class ProcessRunner {
 
             final Process process = processBuilder.start();
 
-            LOG.info("Waiting for process to finish...");
+            LOG.debug("Waiting for process to finish...");
             waitForExit(process);
         } catch (IOException e) {
             LOG.error("I/O Error: {}", e.getMessage(), e);
