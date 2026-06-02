@@ -6,30 +6,30 @@ import java.util.Properties;
 import ai.wanaku.capabilities.sdk.common.VersionHelper;
 
 public class RuntimeVersionHelper {
-    /**
-     * The current version of this library, loaded from the "version.txt" file in the root directory.
-     */
-    public static final Properties VERSIONS;
+    private static final Properties VERSIONS;
 
     static {
-        // Initialize the VERSION field with the contents of the "version.txt" file
         VERSIONS = initVersions();
     }
 
-    /**
-     * Private constructor to prevent instantiation and ensure this class is used as a utility.
-     */
     private RuntimeVersionHelper() {}
 
     /**
-     * Initializes and returns the version string by reading from the "version.txt" file in the root directory.
-     *
-     * @return The current version of this library.
+     * Returns a defensive copy of the runtime version properties loaded from
+     * {@code runtime-versions.properties}.
      */
+    public static Properties getVersions() {
+        Properties copy = new Properties();
+        copy.putAll(VERSIONS);
+        return copy;
+    }
+
     private static Properties initVersions() {
         Properties props = new Properties();
         try (InputStream stream = VersionHelper.class.getResourceAsStream("/runtime-versions.properties")) {
-            assert stream != null;
+            if (stream == null) {
+                throw new IllegalStateException("Missing runtime-versions.properties on classpath");
+            }
             props.load(stream);
 
             return props;
