@@ -18,6 +18,7 @@
 package ai.wanaku.capabilities.sdk.maven;
 
 import java.util.Objects;
+import java.util.Properties;
 
 /**
  * An immutable Maven coordinate consisting of group ID, artifact ID, and version.
@@ -48,7 +49,41 @@ public record GAV(String groupId, String artifactId, String version) {
             throw new IllegalArgumentException(
                     "Invalid GAV format: expected 'groupId:artifactId:version' but got '" + gavString + "'");
         }
-        return new GAV(parts[0].trim(), parts[1].trim(), parts[2].trim());
+        return new GAV(GavUtil.group(parts), GavUtil.artifact(parts), GavUtil.version(parts));
+    }
+
+    /**
+     * Parses a colon-separated GAV string, inferring the version from the given properties
+     * when only {@code "groupId:artifactId"} is provided. Looks up the version first by
+     * {@code groupId:artifactId}, then by {@code groupId} alone.
+     *
+     * @param gavString  the GAV string to parse (2 or 3 colon-separated parts)
+     * @param properties the properties to look up versions from
+     * @return the parsed GAV
+     * @throws IllegalArgumentException if the format is invalid or the version cannot be resolved
+     */
+    public static GAV parse(String gavString, Properties properties) {
+        Objects.requireNonNull(gavString, "GAV string must not be null");
+        Objects.requireNonNull(properties, "properties must not be null");
+        String[] parts = gavString.split(":");
+        if (parts.length == 2) {
+            String groupId = GavUtil.group(parts);
+            String artifactId = GavUtil.artifact(parts);
+            String version = properties.getProperty(groupId + ":" + artifactId);
+            if (version == null) {
+                version = properties.getProperty(groupId);
+            }
+            if (version == null) {
+                throw new IllegalArgumentException(
+                        "Cannot resolve version for '%s': no matching entry in properties".formatted(gavString));
+            }
+            return new GAV(groupId, artifactId, version.trim());
+        }
+        if (parts.length == 3) {
+            return new GAV(GavUtil.group(parts), GavUtil.artifact(parts), GavUtil.version(parts));
+        }
+        throw new IllegalArgumentException(
+                "Invalid GAV format: expected 'groupId:artifactId[:version]' but got '" + gavString + "'");
     }
 
     @Override
