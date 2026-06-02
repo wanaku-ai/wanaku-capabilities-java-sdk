@@ -17,6 +17,8 @@
 
 package ai.wanaku.capabilities.sdk.maven;
 
+import java.util.Properties;
+
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -74,5 +76,50 @@ class GAVTest {
     @Test
     void constructorRejectsNullVersion() {
         assertThrows(NullPointerException.class, () -> new GAV("g", "a", null));
+    }
+
+    @Test
+    void parseTwoPartWithGroupIdKey() {
+        Properties props = new Properties();
+        props.setProperty("org.example", "2.0.0");
+
+        GAV gav = GAV.parse("org.example:my-lib", props);
+        assertEquals("org.example", gav.groupId());
+        assertEquals("my-lib", gav.artifactId());
+        assertEquals("2.0.0", gav.version());
+    }
+
+    @Test
+    void parseTwoPartWithSpecificKey() {
+        Properties props = new Properties();
+        props.setProperty("org.example:my-lib", "3.0.0");
+
+        GAV gav = GAV.parse("org.example:my-lib", props);
+        assertEquals("org.example", gav.groupId());
+        assertEquals("my-lib", gav.artifactId());
+        assertEquals("3.0.0", gav.version());
+    }
+
+    @Test
+    void parseTwoPartSpecificKeyTakesPrecedence() {
+        Properties props = new Properties();
+        props.setProperty("org.example", "2.0.0");
+        props.setProperty("org.example:my-lib", "3.0.0");
+
+        GAV gav = GAV.parse("org.example:my-lib", props);
+        assertEquals("3.0.0", gav.version());
+    }
+
+    @Test
+    void parseTwoPartMissingVersionThrows() {
+        Properties props = new Properties();
+        assertThrows(IllegalArgumentException.class, () -> GAV.parse("org.example:my-lib", props));
+    }
+
+    @Test
+    void parseThreePartWithPropertiesIgnoresLookup() {
+        Properties props = new Properties();
+        GAV gav = GAV.parse("org.example:my-lib:1.0", props);
+        assertEquals("1.0", gav.version());
     }
 }

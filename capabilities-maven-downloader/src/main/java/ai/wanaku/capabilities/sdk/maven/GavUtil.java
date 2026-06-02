@@ -15,19 +15,19 @@
  * limitations under the License.
  */
 
-package ai.wanaku.capabilities.sdk.runtime.camel.util;
+package ai.wanaku.capabilities.sdk.maven;
 
 public class GavUtil {
 
-    public static String group(String gav) {
-        return gav.split(":")[0];
+    public static String group(String[] gav) {
+        return gav[0].trim();
     }
 
-    public static String artifact(String gav) {
-        return gav.split(":")[1];
+    public static String artifact(String[] gav) {
+        return gav[1].trim();
     }
 
-    public static String version(String gav) {
-        return gav.split(":")[2];
+    public static String version(String[] gav) {
+        return gav[2].trim();
     }
 }
