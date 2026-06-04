@@ -4,7 +4,7 @@
 
     <groupId>ai.wanaku.sdk</groupId>
     <artifactId>wanaku-capabilities-java-sdk</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <inceptionYear>2025</inceptionYear>
     <url>https://github.com/wanaku-ai/wanaku-capabilities-java-sdk</url>
