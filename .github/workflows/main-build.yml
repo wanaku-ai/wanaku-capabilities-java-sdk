@@ -10,7 +10,9 @@ name: Build Main
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+      - '[0-9]*.[0-9]*.x'
 
 env:
   PROJECTS: ${{ github.workspace }}

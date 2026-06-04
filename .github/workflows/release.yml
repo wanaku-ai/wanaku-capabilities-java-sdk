@@ -9,6 +9,9 @@ on:
       nextDevelopmentVersion:
         description: 'The next development version'
         required: true
+      releaseBranch:
+        description: 'The release branch (e.g., 0.2.x)'
+        required: true
 
 jobs:
   release:
@@ -22,6 +25,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          ref: ${{ github.event.inputs.releaseBranch }}
 
       # Configure build steps as you'd normally do
 
