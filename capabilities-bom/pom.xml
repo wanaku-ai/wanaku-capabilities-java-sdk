@@ -23,6 +23,11 @@
             </dependency>
             <dependency>
                 <groupId>ai.wanaku.sdk</groupId>
+                <artifactId>capabilities-infinispan-marshallers</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ai.wanaku.sdk</groupId>
                 <artifactId>capabilities-common</artifactId>
                 <version>${project.version}</version>
             </dependency>

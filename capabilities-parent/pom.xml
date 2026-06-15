@@ -41,6 +41,7 @@
         <jspecify.version>1.0.0</jspecify.version>
         <mockito.version>5.23.0</mockito.version>
         <palantir-java-format.version>2.71.0</palantir-java-format.version>
+        <infinispan.version>16.0.0.Final</infinispan.version>
     </properties>
 
     <dependencyManagement>
@@ -106,6 +107,13 @@
                 <groupId>io.kaoto.forage</groupId>
                 <artifactId>forage</artifactId>
                 <version>${forage.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.infinispan</groupId>
+                <artifactId>infinispan-protostream</artifactId>
+                <version>${infinispan.version}</version>
                 <scope>provided</scope>
             </dependency>
 
