@@ -13,7 +13,6 @@ public class WanakuToolTransformer implements RulesTransformer {
     public static final String DEFAULT_INPUT_SCHEMA_TYPE = "object";
     private final String name;
     private final RulesProcessor<ToolReference> processor;
-    private final List<String> required = new ArrayList<>();
 
     public WanakuToolTransformer(String name, RulesProcessor<ToolReference> processor) {
         this.name = name;
@@ -46,6 +45,7 @@ public class WanakuToolTransformer implements RulesTransformer {
         if (properties == null) {
             return;
         }
+        final List<String> required = new ArrayList<>();
 
         for (var property : properties) {
             Property wanakuProperty = new Property();
