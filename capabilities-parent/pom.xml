@@ -35,7 +35,7 @@
         <annotations-api.version>6.0.53</annotations-api.version>
         <junit-jupiter.version>6.1.1</junit-jupiter.version>
         <oauth2-oidc-sdk.version>11.38.1</oauth2-oidc-sdk.version>
-        <langchain4j.version>1.15.1</langchain4j.version>
+        <langchain4j.version>1.17.2</langchain4j.version>
         <maven.resolver.version>2.0.18</maven.resolver.version>
         <maven.resolver-provider.version>3.9.16</maven.resolver-provider.version>
         <jspecify.version>1.0.0</jspecify.version>
