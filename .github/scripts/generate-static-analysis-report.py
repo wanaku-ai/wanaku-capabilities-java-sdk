@@ -63,6 +63,10 @@ def collect_spotbugs_findings():
     return bugs
 
 
+def _escape_cell(value):
+    return str(value).replace("|", "\\|")
+
+
 def build_report(pmd_violations, sb_bugs):
     lines = ["<!-- static-analysis-report -->", "## Static Analysis Report", ""]
 
@@ -74,8 +78,9 @@ def build_report(pmd_violations, sb_bugs):
         lines.append("|------|------|------|----------|-------------|")
         for v in pmd_violations:
             rule = f'[{v["rule"]}]({v["url"]})' if v["url"] else v["rule"]
+            msg = _escape_cell(v["message"])
             lines.append(
-                f'| `{v["file"]}` | {v["line"]} | {rule} | {v["priority"]} | {v["message"]} |'
+                f'| `{v["file"]}` | {v["line"]} | {rule} | {v["priority"]} | {msg} |'
             )
         lines.append("")
 
@@ -86,8 +91,9 @@ def build_report(pmd_violations, sb_bugs):
         lines.append("| File | Line | Type | Category | Priority | Description |")
         lines.append("|------|------|------|----------|----------|-------------|")
         for b in sb_bugs:
+            msg = _escape_cell(b["message"])
             lines.append(
-                f'| `{b["file"]}` | {b["line"]} | {b["type"]} | {b["category"]} | {b["priority"]} | {b["message"]} |'
+                f'| `{b["file"]}` | {b["line"]} | {b["type"]} | {b["category"]} | {b["priority"]} | {msg} |'
             )
         lines.append("")
 
