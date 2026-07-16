@@ -67,7 +67,7 @@ public class CamelResource extends ResourceAcquirerGrpc.ResourceAcquirerImplBase
             return;
         }
 
-        try (final ConsumerTemplate consumerTemplate = ctx.createConsumerTemplate()) {
+        try (ConsumerTemplate consumerTemplate = ctx.createConsumerTemplate()) {
             final String endpointUri = resolveEndpoint(definition, ctx);
             LOG.info("Consuming from {} as {}", endpointUri, routeUri);
 

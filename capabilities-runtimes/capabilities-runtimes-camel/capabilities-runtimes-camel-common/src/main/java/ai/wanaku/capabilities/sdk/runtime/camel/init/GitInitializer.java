@@ -42,7 +42,7 @@ public class GitInitializer implements Initializer {
 
         LOG.info("Cloning git repository from {} to {}", gitRepoUrl, clonedRepoPath);
 
-        try (Git git = Git.cloneRepository()
+        try (Git ignored = Git.cloneRepository()
                 .setURI(gitRepoUrl)
                 .setDirectory(clonedRepoDir)
                 .call()) {
