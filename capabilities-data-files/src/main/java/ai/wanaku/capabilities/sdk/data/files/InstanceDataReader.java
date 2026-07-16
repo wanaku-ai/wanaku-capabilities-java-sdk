@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ai.wanaku.capabilities.sdk.api.types.providers.ServiceType;
@@ -22,7 +23,7 @@ public class InstanceDataReader implements AutoCloseable {
     private final FileHeader fileHeader;
 
     static {
-        assert (((FileHeader.BYTES + ServiceEntry.BYTES) % 20) == 0)
+        assert ((FileHeader.BYTES + ServiceEntry.BYTES) % 20) == 0
                 : "File header and the file entries must be aligned on a 20 bytes boundary";
     }
 
@@ -63,7 +64,7 @@ public class InstanceDataReader implements AutoCloseable {
 
         byte[] name = new byte[FileHeader.FORMAT_NAME_SIZE];
         byteBuffer.get(name, 0, FileHeader.FORMAT_NAME_SIZE);
-        LOG.trace("File format name: '{}'", new String(name));
+        LOG.trace("File format name: '{}'", new String(name, StandardCharsets.UTF_8));
 
         int fileVersion = byteBuffer.getInt();
         LOG.trace("File version: '{}'", fileVersion);
@@ -71,7 +72,7 @@ public class InstanceDataReader implements AutoCloseable {
         ServiceType serviceType = ServiceType.fromIntValue(byteBuffer.getInt());
         LOG.trace("Role: '{}'", serviceType.intValue());
 
-        return new FileHeader(new String(name), serviceType, fileVersion);
+        return new FileHeader(new String(name, StandardCharsets.UTF_8), serviceType, fileVersion);
     }
 
     /**
@@ -86,7 +87,7 @@ public class InstanceDataReader implements AutoCloseable {
             byte[] idBytes = new byte[ServiceEntry.ID_LENGTH];
             byteBuffer.get(idBytes, 0, ServiceEntry.ID_LENGTH);
 
-            return new ServiceEntry(new String(idBytes));
+            return new ServiceEntry(new String(idBytes, StandardCharsets.UTF_8));
         }
 
         byteBuffer.compact();
@@ -99,7 +100,7 @@ public class InstanceDataReader implements AutoCloseable {
         byte[] idBytes = new byte[ServiceEntry.ID_LENGTH];
         byteBuffer.get(idBytes, 0, ServiceEntry.ID_LENGTH);
 
-        return new ServiceEntry(new String(idBytes));
+        return new ServiceEntry(new String(idBytes, StandardCharsets.UTF_8));
     }
 
     /**

@@ -2,6 +2,7 @@ package ai.wanaku.capabilities.sdk.common;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * A utility class that provides a way to retrieve Wanaku Capabilities SDK current version
@@ -32,7 +33,7 @@ public final class VersionHelper {
         try (InputStream stream = VersionHelper.class.getResourceAsStream("/version.txt")) {
             assert stream != null;
             byte[] bytes = stream.readAllBytes();
-            return new String(bytes);
+            return new String(bytes, StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

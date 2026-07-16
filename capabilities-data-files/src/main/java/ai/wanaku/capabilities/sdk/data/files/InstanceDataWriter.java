@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +55,7 @@ public class InstanceDataWriter implements AutoCloseable {
      */
     private void writeHeader(final FileHeader header) throws IOException {
         byteBuffer.clear();
-        byteBuffer.put(header.getFormatName().getBytes());
+        byteBuffer.put(header.getFormatName().getBytes(StandardCharsets.UTF_8));
         byteBuffer.putInt(header.getFileVersion());
         byteBuffer.putInt(header.getServiceType().intValue());
 
@@ -78,7 +79,7 @@ public class InstanceDataWriter implements AutoCloseable {
                     "Service entry id too long (it must not exceed the length of " + ServiceEntry.BYTES + ")");
         }
 
-        byteBuffer.put(entry.getId().getBytes());
+        byteBuffer.put(entry.getId().getBytes(StandardCharsets.UTF_8));
     }
 
     /**

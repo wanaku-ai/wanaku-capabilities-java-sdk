@@ -1,5 +1,6 @@
 package ai.wanaku.capabilities.sdk.api.types.execution;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,7 +91,7 @@ public class CodeExecutionRequest {
         if (code == null || code.trim().isEmpty()) {
             throw new IllegalArgumentException("Code must not be null or empty");
         }
-        if (code.getBytes().length > MAX_CODE_SIZE_BYTES) {
+        if (code.getBytes(StandardCharsets.UTF_8).length > MAX_CODE_SIZE_BYTES) {
             throw new IllegalArgumentException(
                     "Code size exceeds maximum allowed size of " + MAX_CODE_SIZE_BYTES + " bytes");
         }
@@ -184,7 +185,7 @@ public class CodeExecutionRequest {
         if (code == null || code.trim().isEmpty()) {
             throw new IllegalArgumentException("Code must not be null or empty");
         }
-        if (code.getBytes().length > MAX_CODE_SIZE_BYTES) {
+        if (code.getBytes(StandardCharsets.UTF_8).length > MAX_CODE_SIZE_BYTES) {
             throw new IllegalArgumentException(
                     "Code size exceeds maximum allowed size of " + MAX_CODE_SIZE_BYTES + " bytes");
         }

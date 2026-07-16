@@ -3,6 +3,7 @@ package ai.wanaku.capabilities.sdk.config.provider.file;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,7 +26,7 @@ public class FileConfigurationWriter implements ConfigWriter {
     public URI write(String id, String data) {
         try {
             final Path path = Paths.get(serviceHome.getAbsolutePath(), id);
-            Files.write(path, data.getBytes());
+            Files.write(path, data.getBytes(StandardCharsets.UTF_8));
 
             return path.toUri();
         } catch (IOException e) {

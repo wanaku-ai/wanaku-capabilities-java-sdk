@@ -155,10 +155,11 @@ public class ZeroDepRegistrationManager implements RegistrationManager {
     private int waitAndRetry(String serviceName, Exception e, int currentRetries, int waitSeconds) {
         if (currentRetries > 0) {
             LOG.info(
-                    "Retrying registration for service {} in {} seconds. Retries left: {}",
+                    "Retrying registration for service {} in {} seconds. Retries left: {}. Cause: {}",
                     serviceName,
                     waitSeconds,
-                    currentRetries - 1);
+                    currentRetries - 1,
+                    e.getMessage());
             try {
                 Thread.sleep(waitSeconds * 1000L);
             } catch (InterruptedException ie) {
