@@ -14,6 +14,7 @@ import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import ai.wanaku.capabilities.sdk.runtime.camel.model.Definition;
 import ai.wanaku.capabilities.sdk.runtime.camel.model.McpSpec;
+import ai.wanaku.capabilities.sdk.runtime.camel.model.Property;
 import ai.wanaku.capabilities.sdk.runtime.camel.spec.rules.tools.mapping.HeaderMapper;
 import ai.wanaku.capabilities.sdk.runtime.camel.spec.rules.tools.mapping.HeaderMapperFactory;
 import ai.wanaku.core.exchange.v1.ToolInvokeReply;
@@ -69,6 +70,15 @@ public class CamelTool extends ToolInvokerGrpc.ToolInvokerImplBase {
             return;
         }
 
+        List<String> missingParams = findMissingRequiredParameters(toolDefinition, request.getArgumentsMap());
+        if (!missingParams.isEmpty()) {
+            LOG.warn("Missing required parameter(s) for tool {}: {}", host, missingParams);
+            responseObserver.onError(Status.INVALID_ARGUMENT
+                    .withDescription("Missing required parameter(s): " + String.join(", ", missingParams))
+                    .asRuntimeException());
+            return;
+        }
+
         final String endpointUri = resolveEndpoint(toolDefinition, ctx);
 
         try (ProducerTemplate producerTemplate = ctx.createProducerTemplate()) {
@@ -116,5 +126,17 @@ public class CamelTool extends ToolInvokerGrpc.ToolInvokerImplBase {
         HeaderMapper headerMapper = HeaderMapperFactory.create(toolDefinition);
 
         return headerMapper.map(request, toolDefinition);
+    }
+
+    static List<String> findMissingRequiredParameters(Definition toolDefinition, Map<String, String> arguments) {
+        if (toolDefinition.getProperties() == null) {
+            return List.of();
+        }
+
+        return toolDefinition.getProperties().stream()
+                .filter(Property::isRequired)
+                .map(Property::getName)
+                .filter(name -> !arguments.containsKey(name))
+                .toList();
     }
 }
