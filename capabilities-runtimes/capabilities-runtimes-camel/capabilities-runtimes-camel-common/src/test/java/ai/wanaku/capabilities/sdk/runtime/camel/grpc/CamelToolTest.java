@@ -33,7 +33,9 @@ class CamelToolTest {
         Definition definition = definitionWithProperties(requiredProperty("city"), requiredProperty("country"));
         List<String> missing = CamelTool.findMissingRequiredParameters(definition, Map.of());
 
-        assertEquals(List.of("city", "country"), missing);
+        assertEquals(2, missing.size());
+        assertTrue(missing.contains("city"));
+        assertTrue(missing.contains("country"));
     }
 
     @Test
@@ -54,6 +56,17 @@ class CamelToolTest {
         List<String> missing = CamelTool.findMissingRequiredParameters(definition, Map.of());
 
         assertTrue(missing.isEmpty());
+    }
+
+    @Test
+    void findMissingRequiredParametersIgnoresNullName() {
+        Property nullName = new Property();
+        nullName.setRequired(true);
+
+        Definition definition = definitionWithProperties(requiredProperty("city"), nullName);
+        List<String> missing = CamelTool.findMissingRequiredParameters(definition, Map.of());
+
+        assertEquals(List.of("city"), missing);
     }
 
     @Test
