@@ -136,7 +136,7 @@ public class CamelTool extends ToolInvokerGrpc.ToolInvokerImplBase {
         return toolDefinition.getProperties().stream()
                 .filter(Property::isRequired)
                 .map(Property::getName)
-                .filter(name -> !arguments.containsKey(name))
+                .filter(name -> name != null && !arguments.containsKey(name))
                 .toList();
     }
 }
