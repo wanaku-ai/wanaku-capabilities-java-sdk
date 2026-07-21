@@ -1,5 +1,7 @@
 package ai.wanaku.capabilities.sdk.api.types;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Represents a namespace within the Wanaku system.
  * <p>
@@ -14,7 +16,7 @@ public class Namespace extends LabelsAwareEntity<String> {
     public Namespace() {}
 
     private String id;
-    private String name;
+    private @Nullable String name;
     private String path;
 
     /**
@@ -42,7 +44,7 @@ public class Namespace extends LabelsAwareEntity<String> {
      *
      * @return the namespace name
      */
-    public String getName() {
+    public @Nullable String getName() {
         return name;
     }
 
@@ -51,7 +53,7 @@ public class Namespace extends LabelsAwareEntity<String> {
      *
      * @param name the namespace name to set
      */
-    public void setName(String name) {
+    public void setName(@Nullable String name) {
         this.name = name;
     }
 
