@@ -55,6 +55,12 @@ public class CamelTool extends ToolInvokerGrpc.ToolInvokerImplBase {
         }
 
         final CamelContext ctx = info.camelContext();
+        if (!ctx.getStatus().isStarted()) {
+            responseObserver.onError(Status.FAILED_PRECONDITION
+                    .withDescription("Camel context is not yet available")
+                    .asRuntimeException());
+            return;
+        }
         final String uri = request.getUri();
         final URI routeUri = URI.create(uri);
         final String host = routeUri.getHost();
