@@ -7,8 +7,8 @@ on:
     branches:
       - '[0-9]*.[0-9]*.x'
   schedule:
-    # Run every 2 days at 00:00 UTC
-    - cron: '0 0 */2 * *'
+    # Run every 4 days at 00:00 UTC
+    - cron: '0 0 */4 * *'
 
 jobs:
   publish-snapshot:
