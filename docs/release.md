@@ -14,8 +14,8 @@ git push upstream 0.2.x
 
 ```shell
 export RELEASE_BRANCH=0.2.x
-export CURRENT_DEVELOPMENT_VERSION=0.2.1
-export NEXT_DEVELOPMENT_VERSION=0.2.2
+export CURRENT_DEVELOPMENT_VERSION=0.2.2
+export NEXT_DEVELOPMENT_VERSION=0.2.3
 ```
 
 ## Trigger the release
