@@ -42,9 +42,6 @@ public class ResourceDownloaderCallback implements DiscoveryCallback {
     }
 
     @Override
-    public void onPing(RegistrationManager manager, ServiceTarget target, int status) {}
-
-    @Override
     public void onRegistration(RegistrationManager manager, ServiceTarget target) {
         downloadResources();
     }

@@ -126,18 +126,6 @@ class DiscoveryServiceHttpClientTest {
         assertTrue(body.contains("\"port\":9090"), "Body should contain port");
     }
 
-    @Test
-    void pingUsesHeartbeatsPath() {
-        HttpResponse<String> response = client.ping("test-id");
-
-        assertNotNull(response);
-        assertEquals(200, response.statusCode());
-        assertEquals(1, requests.size());
-        assertEquals("POST", requests.getFirst().method());
-        assertEquals(
-                "/api/v1/management/discovery/heartbeats", requests.getFirst().path());
-    }
-
     // ==================== No-Auth Tests ====================
 
     @Test

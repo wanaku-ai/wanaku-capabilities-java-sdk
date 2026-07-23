@@ -23,14 +23,6 @@ public interface RegistrationManager {
     void deregister();
 
     /**
-     * Sends a "ping" or heartbeat signal to the Wanaku registration system.
-     * This method is used to periodically inform the registry that the service is still active
-     * and operational, preventing its registration from expiring due to inactivity.
-     */
-    @Deprecated(forRemoval = true)
-    default void ping() {}
-
-    /**
      * Notifies the Wanaku registration system that the last attempted operation (tool call
      * or resource acquisition) from this service failed.
      *

@@ -10,15 +10,6 @@ class DiscoveryLogCallback implements DiscoveryCallback {
     private static final Logger LOG = LoggerFactory.getLogger(DiscoveryLogCallback.class);
 
     @Override
-    public void onPing(RegistrationManager manager, ServiceTarget target, int status) {
-        if (status != 200) {
-            LOG.warn("Pinging router failed with status {}", status);
-        } else {
-            LOG.trace("Pinging router completed successfully");
-        }
-    }
-
-    @Override
     public void onRegistration(RegistrationManager manager, ServiceTarget target) {
         LOG.debug("The service {} successfully registered with ID {}.", target.getServiceName(), target.getId());
     }
