@@ -50,14 +50,7 @@ The Wanaku registration system enables capability services (tools, resources, co
        ├──── Trigger onRegistration callback ─────────────────────► │
        │                                                            │
        │  ┌─────────────────────────────────────────────────────┐   │
-       │  │ PHASE 3: HEALTH UPDATES (As Needed)                 │   │
-       │  └─────────────────────────────────────────────────────┘   │
-       │                                                            │
-       ├──── POST /api/v1/management/discovery/update/{id} ───────► │
-       │     Body: ServiceState                                     │
-       │                                                            │
-       │  ┌─────────────────────────────────────────────────────┐   │
-       │  │ PHASE 4: DEREGISTRATION                             │   │
+       │  │ PHASE 3: DEREGISTRATION                             │   │
        │  └─────────────────────────────────────────────────────┘   │
        │                                                            │
        ├──── POST /api/v1/management/discovery/deregister ────────► │
@@ -98,13 +91,6 @@ sequenceDiagram
     Client->>Storage: Persist service ID
     Client->>Client: Trigger onRegistration callbacks
 
-    Note over Client: Health Updates (as needed)
-    alt On success
-        Client->>Router: POST /update/{id} with healthy state
-    else On failure
-        Client->>Router: POST /update/{id} with unhealthy state
-    end
-
     Note over Client: Deregistration Phase
     Client->>Router: POST /api/v1/management/discovery/deregister
     Router-->>Client: 200 OK
@@ -119,7 +105,6 @@ All endpoints use the base path: `/api/v1/management/discovery`
 |----------|--------|--------------|----------|-------------|
 | `/register` | POST | `ServiceTarget` | `WanakuResponse<ServiceTarget>` | Register service, receive assigned ID |
 | `/deregister` | POST | `ServiceTarget` | Status code | Remove service from registry |
-| `/update/{id}` | POST | `ServiceState` | Status code | Report health status |
 
 ### Authentication
 
@@ -310,19 +295,7 @@ This initiates:
 1. Initial registration attempt (with retries)
 2. Automatic ID persistence
 
-### Step 7: Report Health Status
-
-During operation, report your service health:
-
-```java
-// On successful operation
-registrationManager.lastAsSuccessful();
-
-// On failure
-registrationManager.lastAsFail("Database connection lost");
-```
-
-### Step 8: Deregister on Shutdown
+### Step 7: Deregister on Shutdown
 
 ```java
 // In shutdown hook or @PreDestroy
@@ -466,14 +439,6 @@ public class CapabilityService {
 
         registrationManager.addCallBack(new DiscoveryLogCallback());
         registrationManager.start();
-    }
-
-    public void reportSuccess() {
-        registrationManager.lastAsSuccessful();
-    }
-
-    public void reportFailure(String reason) {
-        registrationManager.lastAsFail(reason);
     }
 
     public void shutdown() {
