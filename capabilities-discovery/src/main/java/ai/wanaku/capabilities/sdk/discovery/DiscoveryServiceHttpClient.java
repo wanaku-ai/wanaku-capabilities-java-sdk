@@ -10,7 +10,6 @@ import java.net.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
-import ai.wanaku.capabilities.sdk.api.types.discovery.ServiceState;
 import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
 import ai.wanaku.capabilities.sdk.common.config.ServiceConfig;
 import ai.wanaku.capabilities.sdk.common.serializer.Serializer;
@@ -20,7 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * A client for interacting with the Wanaku Discovery and Registration API.
- * This class handles HTTP requests for service registration, deregistration, and state updates.
+ * This class handles HTTP requests for service registration and deregistration.
  */
 public class DiscoveryServiceHttpClient {
     private static final Logger LOG = LoggerFactory.getLogger(DiscoveryServiceHttpClient.class);
@@ -125,33 +124,5 @@ public class DiscoveryServiceHttpClient {
      */
     public HttpResponse<String> deregister(ServiceTarget serviceTarget) {
         return executeRequest("DELETE", "", serviceTarget);
-    }
-
-    /**
-     * Updates the state of a service with the Wanaku Discovery API.
-     *
-     * @param id The ID of the service whose state is to be updated.
-     * @param serviceState The new {@link ServiceState} of the service.
-     * @return The {@link HttpResponse} from the update state API call.
-     * @throws RuntimeException If JSON processing fails or an I/O error occurs during the request.
-     */
-    public HttpResponse<String> updateState(String id, ServiceState serviceState) {
-        try {
-            String jsonRequestBody = serializer.serialize(serviceState);
-            URI uri = URI.create(this.baseUrl + this.serviceBasePath + "/update/" + id);
-
-            HttpRequest request = withAuth(HttpRequest.newBuilder()
-                            .uri(uri)
-                            .header("Content-Type", MediaType.APPLICATION_JSON)
-                            .header("Accept", MediaType.WILDCARD))
-                    .POST(HttpRequest.BodyPublishers.ofString(jsonRequestBody))
-                    .build();
-
-            return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (JsonProcessingException e) {
-            throw new InvalidResponseDataException(e);
-        } catch (InterruptedException | IOException e) {
-            throw new WanakuException(e);
-        }
     }
 }

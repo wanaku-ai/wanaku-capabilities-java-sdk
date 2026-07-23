@@ -23,26 +23,6 @@ public interface RegistrationManager {
     void deregister();
 
     /**
-     * Notifies the Wanaku registration system that the last attempted operation (tool call
-     * or resource acquisition) from this service failed.
-     *
-     * @param reason A descriptive string explaining the reason for the failure.
-     * This information can be used for logging, debugging, or alerting purposes
-     * by the registration system.
-     */
-    @Deprecated(forRemoval = true)
-    default void lastAsFail(String reason) {}
-
-    /**
-     * Notifies the Wanaku registration system that the last attempted operation (tool call
-     * or resource acquisition) from this service was successful.
-     * This method can be used to update the service's status within the registry,
-     * indicating its continued health and availability.
-     */
-    @Deprecated(forRemoval = true)
-    default void lastAsSuccessful() {}
-
-    /**
      * Adds a callback to be run after some operations have executed
      * @param callback the callback to add
      */

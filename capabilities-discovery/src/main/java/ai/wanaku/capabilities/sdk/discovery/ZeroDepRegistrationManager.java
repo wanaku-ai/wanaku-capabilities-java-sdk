@@ -28,7 +28,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 /**
  * An implementation of {@link RegistrationManager} that handles the lifecycle registration
  * of a capability service with the Wanaku Discovery and Registration API.
- * This manager is responsible for registering, deregistering, and updating the state of a service,
+ * This manager is responsible for registering and deregistering a service,
  * and it uses {@link InstanceDataManager} to persist service-related data.
  */
 public class ZeroDepRegistrationManager implements RegistrationManager {
