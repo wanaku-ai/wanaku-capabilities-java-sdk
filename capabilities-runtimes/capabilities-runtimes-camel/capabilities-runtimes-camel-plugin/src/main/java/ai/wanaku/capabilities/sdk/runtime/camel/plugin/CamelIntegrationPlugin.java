@@ -182,7 +182,6 @@ public class CamelIntegrationPlugin implements ContextServicePlugin {
                 .dataDir(ServicesHelper.getCanonicalServiceHome(config.getServiceName()))
                 .maxRetries(config.getRetries())
                 .waitSeconds(config.getRetryWaitSeconds())
-                .pingEnabled(config.isPingEnabled())
                 .build();
 
         ZeroDepRegistrationManager manager = new ZeroDepRegistrationManager(

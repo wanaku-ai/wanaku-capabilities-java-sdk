@@ -118,7 +118,7 @@ Configuration is provided via environment variables (recommended) or a propertie
 | `RETRIES`            | `12`    | Number of registration retry attempts             |
 | `RETRY_WAIT_SECONDS` | `5`     | Wait time between retries (seconds)               |
 | `INITIAL_DELAY`      | `5`     | Delay before first registration attempt (seconds) |
-| `PERIOD`             | `5`     | Registration ping period (seconds)                |
+| `PERIOD`             | `5`     | Registration check period (seconds)               |
 
 #### Properties File Example
 

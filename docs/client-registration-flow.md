@@ -50,25 +50,14 @@ The Wanaku registration system enables capability services (tools, resources, co
        ├──── Trigger onRegistration callback ─────────────────────► │
        │                                                            │
        │  ┌─────────────────────────────────────────────────────┐   │
-       │  │ PHASE 3: HEARTBEAT (Periodic)                       │   │
-       │  └─────────────────────────────────────────────────────┘   │
-       │                                                            │
-       ├──── POST /api/v1/management/discovery/ping/ ─────────────► │
-       │     Body: service ID                                       │
-       │                                                            │
-       │ ◄──── 200 OK ────────────────────────────────────────────┤
-       │                                                            │
-       ├──── Trigger onPing callback ─────────────────────────────► │
-       │                                                            │
-       │  ┌─────────────────────────────────────────────────────┐   │
-       │  │ PHASE 4: HEALTH UPDATES (As Needed)                 │   │
+       │  │ PHASE 3: HEALTH UPDATES (As Needed)                 │   │
        │  └─────────────────────────────────────────────────────┘   │
        │                                                            │
        ├──── POST /api/v1/management/discovery/update/{id} ───────► │
        │     Body: ServiceState                                     │
        │                                                            │
        │  ┌─────────────────────────────────────────────────────┐   │
-       │  │ PHASE 5: DEREGISTRATION                             │   │
+       │  │ PHASE 4: DEREGISTRATION                             │   │
        │  └─────────────────────────────────────────────────────┘   │
        │                                                            │
        ├──── POST /api/v1/management/discovery/deregister ────────► │
@@ -109,13 +98,6 @@ sequenceDiagram
     Client->>Storage: Persist service ID
     Client->>Client: Trigger onRegistration callbacks
 
-    Note over Client: Heartbeat Loop
-    loop Every {period} seconds
-        Client->>Router: POST /api/v1/management/discovery/ping/
-        Router-->>Client: 200 OK
-        Client->>Client: Trigger onPing callbacks
-    end
-
     Note over Client: Health Updates (as needed)
     alt On success
         Client->>Router: POST /update/{id} with healthy state
@@ -138,7 +120,6 @@ All endpoints use the base path: `/api/v1/management/discovery`
 | `/register` | POST | `ServiceTarget` | `WanakuResponse<ServiceTarget>` | Register service, receive assigned ID |
 | `/deregister` | POST | `ServiceTarget` | Status code | Remove service from registry |
 | `/update/{id}` | POST | `ServiceState` | Status code | Report health status |
-| `/ping/` | POST | Service ID (string) | Status code | Send heartbeat signal |
 
 ### Authentication
 
@@ -264,7 +245,7 @@ DefaultRegistrationConfig registrationConfig = DefaultRegistrationConfig.Builder
     .waitSeconds(5)          // Wait 5 seconds between retries
     .dataDir("/var/lib/myservice")  // Where to persist service ID
     .initialDelay(0)         // Start immediately
-    .period(30)              // Ping every 30 seconds
+    .period(30)              // Re-register check every 30 seconds
     .build();
 ```
 
@@ -312,11 +293,6 @@ registrationManager.addCallBack(new DiscoveryCallback() {
     }
 
     @Override
-    public void onPing(RegistrationManager manager, ServiceTarget target, int status) {
-        log.debug("Ping completed with status: {}", status);
-    }
-
-    @Override
     public void onDeregistration(RegistrationManager manager, ServiceTarget target, int status) {
         log.info("Deregistered with status: {}", status);
     }
@@ -332,8 +308,7 @@ registrationManager.start();
 This initiates:
 
 1. Initial registration attempt (with retries)
-2. Periodic heartbeat loop
-3. Automatic ID persistence
+2. Automatic ID persistence
 
 ### Step 7: Report Health Status
 
@@ -359,27 +334,18 @@ registrationManager.deregister();
 ```text
                                   ┌─────────────┐
                                   │             │
-                        ┌────────►│  REGISTERED │◄────────┐
-                        │         │             │         │
-                        │         └──────┬──────┘         │
-                        │                │                │
-                   register()        deregister()    ping() success
-                        │                │                │
-                        │                ▼                │
-┌─────────────┐         │         ┌─────────────┐         │         ┌─────────────┐
-│             │         │         │             │         │         │             │
-│   INITIAL   ├─────────┘         │ DEREGISTERED│         └─────────┤   ACTIVE    │
-│             │                   │             │                   │             │
-└─────────────┘                   └─────────────┘                   └──────┬──────┘
-                                                                          │
-                                                                     ping() sent
-                                                                          │
-                                                                          ▼
-                                                                   ┌─────────────┐
-                                                                   │             │
-                                                                   │  PINGING    │
-                                                                   │             │
-                                                                   └─────────────┘
+                        ┌────────►│  REGISTERED │
+                        │         │             │
+                        │         └──────┬──────┘
+                        │                │
+                   register()        deregister()
+                        │                │
+                        │                ▼
+┌─────────────┐         │         ┌─────────────┐
+│             │         │         │             │
+│   INITIAL   ├─────────┘         │ DEREGISTERED│
+│             │                   │             │
+└─────────────┘                   └─────────────┘
 ```
 
 ## Error Handling
@@ -442,7 +408,7 @@ This allows:
 | `waitSeconds` | int | 1 | Seconds between retry attempts |
 | `dataDir` | string | - | Directory for ID persistence |
 | `initialDelay` | long | 0 | Seconds before first registration |
-| `period` | long | 5 | Seconds between heartbeats |
+| `period` | long | 5 | Seconds between registration checks |
 
 ### ServiceConfig
 

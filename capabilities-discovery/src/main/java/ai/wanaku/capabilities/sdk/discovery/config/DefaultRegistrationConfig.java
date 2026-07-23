@@ -11,7 +11,6 @@ public class DefaultRegistrationConfig implements RegistrationConfig {
     private final String dataDir;
     private final long initialDelay;
     private final long period;
-    private final boolean pingEnabled;
 
     /**
      * Private constructor to enforce the use of the {@link Builder}.
@@ -24,7 +23,6 @@ public class DefaultRegistrationConfig implements RegistrationConfig {
         this.dataDir = builder.dataDir;
         this.initialDelay = builder.initialDelay;
         this.period = builder.period;
-        this.pingEnabled = builder.pingEnabled;
     }
 
     /**
@@ -36,7 +34,6 @@ public class DefaultRegistrationConfig implements RegistrationConfig {
         private String dataDir;
         private long initialDelay;
         private long period;
-        private boolean pingEnabled;
 
         /**
          * Sets the maximum number of retries for registration attempts.
@@ -90,17 +87,6 @@ public class DefaultRegistrationConfig implements RegistrationConfig {
          */
         public Builder period(long period) {
             this.period = period;
-            return this;
-        }
-
-        /**
-         * Sets whether capability-side ping is enabled.
-         *
-         * @param pingEnabled {@code true} to enable ping, {@code false} to disable.
-         * @return The builder instance.
-         */
-        public Builder pingEnabled(boolean pingEnabled) {
-            this.pingEnabled = pingEnabled;
             return this;
         }
 
@@ -171,10 +157,5 @@ public class DefaultRegistrationConfig implements RegistrationConfig {
     @Override
     public long getPeriod() {
         return period;
-    }
-
-    @Override
-    public boolean isPingEnabled() {
-        return pingEnabled;
     }
 }

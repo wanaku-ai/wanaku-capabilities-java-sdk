@@ -8,7 +8,7 @@ When a capability service registers with the Wanaku Router, it receives a unique
 
 - Maintain identity across service restarts
 - Avoid duplicate registrations
-- Enable proper heartbeat and state update operations
+- Enable proper state update operations
 
 ## Data File Format
 
@@ -168,7 +168,7 @@ public void writeEntry(ServiceTarget target) {
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │              Service registered with known ID               │
-│              Heartbeats and state updates use this ID       │
+│              State updates use this ID                      │
 └─────────────────────────────────────────────────────────────┘
 ```
 

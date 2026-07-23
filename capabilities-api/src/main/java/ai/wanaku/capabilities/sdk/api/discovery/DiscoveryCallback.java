@@ -7,7 +7,7 @@ import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
  *
  * <p>Implementations of this interface can be registered with a {@link RegistrationManager}
  * to receive notifications when registration-related operations occur, such as successful
- * registration, deregistration attempts, or periodic health check pings.</p>
+ * registration or deregistration attempts.</p>
  *
  * <p>Callbacks are invoked synchronously after the corresponding operation completes.
  * If a callback throws an exception, it will be logged but will not prevent other
@@ -16,19 +16,14 @@ import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
  * <p>Usage example:</p>
  * <pre>{@code
  * RegistrationManager manager = ...;
- * manager.addCallBack(new RegistrationCallback() {
+ * manager.addCallBack(new DiscoveryCallback() {
  *     @Override
- *     public void onRegistration(RegistrationManager manager) {
+ *     public void onRegistration(RegistrationManager manager, ServiceTarget target) {
  *         // Handle successful registration
  *     }
  *
  *     @Override
- *     public void onPing(RegistrationManager manager, int status) {
- *         // Handle ping result
- *     }
- *
- *     @Override
- *     public void onDeregistration(RegistrationManager manager, int status) {
+ *     public void onDeregistration(RegistrationManager manager, ServiceTarget target, int status) {
  *         // Handle deregistration result
  *     }
  * });
@@ -37,18 +32,6 @@ import ai.wanaku.capabilities.sdk.api.types.providers.ServiceTarget;
  * @see RegistrationManager#addCallBack(DiscoveryCallback)
  */
 public interface DiscoveryCallback {
-
-    /**
-     * Invoked after a ping operation is sent to the discovery service.
-     * This callback is triggered when the service sends a heartbeat to indicate
-     * it is still active and operational.
-     *
-     * @param manager the {@link RegistrationManager} that performed the ping operation
-     * @param target the {@link ServiceTarget} that was pinged
-     * @param status the HTTP status code returned by the ping operation
-     *               (200 indicates success, other values indicate various failure conditions)
-     */
-    void onPing(RegistrationManager manager, ServiceTarget target, int status);
 
     /**
      * Invoked after the service has been successfully registered with the discovery service.

@@ -20,7 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * A client for interacting with the Wanaku Discovery and Registration API.
- * This class handles HTTP requests for service registration, deregistration, ping, and state updates.
+ * This class handles HTTP requests for service registration, deregistration, and state updates.
  */
 public class DiscoveryServiceHttpClient {
     private static final Logger LOG = LoggerFactory.getLogger(DiscoveryServiceHttpClient.class);
@@ -125,27 +125,6 @@ public class DiscoveryServiceHttpClient {
      */
     public HttpResponse<String> deregister(ServiceTarget serviceTarget) {
         return executeRequest("DELETE", "", serviceTarget);
-    }
-
-    /**
-     * Sends a ping request to the Wanaku Discovery API for a given service ID.
-     *
-     * @param id The ID of the service to ping.
-     * @return The {@link HttpResponse} from the ping API call.
-     * @throws RuntimeException If an I/O error occurs during the request.
-     */
-    public HttpResponse<String> ping(String id) {
-        try {
-            URI uri = URI.create(this.baseUrl + this.serviceBasePath + "/heartbeats");
-
-            HttpRequest request = withAuth(HttpRequest.newBuilder().uri(uri))
-                    .POST(HttpRequest.BodyPublishers.ofString(id))
-                    .build();
-
-            return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (InterruptedException | IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**
