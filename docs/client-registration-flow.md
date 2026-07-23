@@ -38,7 +38,7 @@ The Wanaku registration system enables capability services (tools, resources, co
        │  │ PHASE 2: REGISTRATION                               │   │
        │  └─────────────────────────────────────────────────────┘   │
        │                                                            │
-       ├──── POST /api/v1/management/discovery/register ──────────► │
+       ├──── POST /api/v1/management/discovery ────────────────────► │
        │     Body: ServiceTarget (without ID)                       │
        │     Auth: Bearer {token}                                   │
        │                                                            │
@@ -53,7 +53,7 @@ The Wanaku registration system enables capability services (tools, resources, co
        │  │ PHASE 3: DEREGISTRATION                             │   │
        │  └─────────────────────────────────────────────────────┘   │
        │                                                            │
-       ├──── POST /api/v1/management/discovery/deregister ────────► │
+       ├──── DELETE /api/v1/management/discovery ─────────────────► │
        │     Body: ServiceTarget                                    │
        │                                                            │
        │ ◄──── 200 OK ────────────────────────────────────────────┤
@@ -86,13 +86,13 @@ sequenceDiagram
     Auth-->>Client: Access token + refresh token
 
     Note over Client: Registration Phase
-    Client->>Router: POST /api/v1/management/discovery/register
+    Client->>Router: POST /api/v1/management/discovery
     Router-->>Client: WanakuResponse<ServiceTarget> with assigned ID
     Client->>Storage: Persist service ID
     Client->>Client: Trigger onRegistration callbacks
 
     Note over Client: Deregistration Phase
-    Client->>Router: POST /api/v1/management/discovery/deregister
+    Client->>Router: DELETE /api/v1/management/discovery
     Router-->>Client: 200 OK
     Client->>Client: Trigger onDeregistration callbacks
 ```
@@ -103,8 +103,8 @@ All endpoints use the base path: `/api/v1/management/discovery`
 
 | Endpoint | Method | Request Body | Response | Description |
 |----------|--------|--------------|----------|-------------|
-| `/register` | POST | `ServiceTarget` | `WanakuResponse<ServiceTarget>` | Register service, receive assigned ID |
-| `/deregister` | POST | `ServiceTarget` | Status code | Remove service from registry |
+| `/` | POST | `ServiceTarget` | `WanakuResponse<ServiceTarget>` | Register service, receive assigned ID |
+| `/` | DELETE | `ServiceTarget` | Status code | Remove service from registry |
 
 ### Authentication
 
