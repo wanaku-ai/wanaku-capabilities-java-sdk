@@ -67,6 +67,8 @@
 
     <modules>
         <module>capabilities-parent</module>
+        <module>capabilities-api</module>
+        <module>capabilities-infinispan-marshallers</module>
         <module>capabilities-common</module>
         <module>capabilities-discovery</module>
         <module>capabilities-security</module>
@@ -79,7 +81,6 @@
         <module>capabilities-maven-downloader</module>
         <module>capabilities-bom</module>
         <module>capabilities-archetypes</module>
-        <module>capabilities-api</module>
     </modules>
 
     <profiles>
