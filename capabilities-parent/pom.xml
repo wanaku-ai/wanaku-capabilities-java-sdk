@@ -24,7 +24,7 @@
 
         <camel.version>4.21.0</camel.version>
         <forage.version>1.5.0</forage.version>
-        <jgit.version>7.7.0.202606012155-r</jgit.version>
+        <jgit.version>7.7.1.202607240634-r</jgit.version>
         <jackson-dataformat-yaml.version>2.22.1</jackson-dataformat-yaml.version>
         <jackson-databind.version>2.22.1</jackson-databind.version>
         <jackson-annotations.version>2.22</jackson-annotations.version>
