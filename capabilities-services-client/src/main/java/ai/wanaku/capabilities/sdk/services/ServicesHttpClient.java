@@ -30,8 +30,6 @@ import ai.wanaku.capabilities.sdk.api.types.WanakuResponse;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionEvent;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionRequest;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionResponse;
-import ai.wanaku.capabilities.sdk.api.types.io.ResourcePayload;
-import ai.wanaku.capabilities.sdk.api.types.io.ToolPayload;
 import ai.wanaku.capabilities.sdk.common.config.ServiceConfig;
 import ai.wanaku.capabilities.sdk.common.exceptions.WanakuWebException;
 import ai.wanaku.capabilities.sdk.common.serializer.Serializer;
@@ -256,17 +254,6 @@ public class ServicesHttpClient {
     }
 
     /**
-     * Adds a new tool with payload (configuration and secrets).
-     *
-     * @param toolPayload The {@link ToolPayload} containing tool reference and configuration data.
-     * @return The response containing the added tool reference.
-     * @throws WanakuException If an error occurs during the request.
-     */
-    public WanakuResponse<ToolReference> addToolWithPayload(ToolPayload toolPayload) {
-        return executePost("/api/v1/tools/payloads", toolPayload, new TypeReference<>() {});
-    }
-
-    /**
      * Lists all available tools.
      *
      * @return The response containing the list of tool references.
@@ -319,17 +306,6 @@ public class ServicesHttpClient {
      */
     public WanakuResponse<ResourceReference> exposeResource(ResourceReference resourceReference) {
         return executePost("/api/v1/resources", resourceReference, new TypeReference<>() {});
-    }
-
-    /**
-     * Exposes a new resource with payload (configuration and secrets).
-     *
-     * @param resourcePayload The {@link ResourcePayload} containing resource reference and configuration data.
-     * @return The response containing the exposed resource reference.
-     * @throws WanakuException If an error occurs during the request.
-     */
-    public WanakuResponse<ResourceReference> exposeResourceWithPayload(ResourcePayload resourcePayload) {
-        return executePost("/api/v1/resources/payloads", resourcePayload, new TypeReference<>() {});
     }
 
     /**
