@@ -9,6 +9,7 @@ import ai.wanaku.capabilities.sdk.api.types.DataStore;
 import ai.wanaku.capabilities.sdk.api.types.ForwardReference;
 import ai.wanaku.capabilities.sdk.api.types.ResourceReference;
 import ai.wanaku.capabilities.sdk.api.types.ToolReference;
+import ai.wanaku.capabilities.sdk.api.types.io.TemplateInstantiationRequest;
 import ai.wanaku.capabilities.sdk.common.config.DefaultServiceConfig;
 import ai.wanaku.capabilities.sdk.common.serializer.JacksonSerializer;
 import com.sun.net.httpserver.HttpServer;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ServicesHttpClientTest {
 
@@ -300,6 +302,99 @@ class ServicesHttpClientTest {
         assertEquals(1, requests.size());
         assertEquals("DELETE", requests.getFirst().method());
         assertEquals("/api/v1/data-store?name=my-store", requests.getFirst().path());
+    }
+
+    // ==================== Service Templates API Tests ====================
+
+    @Test
+    void listServiceTemplatesUsesGetAtListPath() {
+        client.listServiceTemplates();
+
+        assertEquals(1, requests.size());
+        assertEquals("GET", requests.getFirst().method());
+        assertEquals("/api/v1/service-template/list", requests.getFirst().path());
+    }
+
+    @Test
+    void listServiceTemplatesWithSearchUsesGetWithQueryParam() {
+        client.listServiceTemplates("kafka");
+
+        assertEquals(1, requests.size());
+        assertEquals("GET", requests.getFirst().method());
+        assertEquals(
+                "/api/v1/service-template/list?search=kafka",
+                requests.getFirst().path());
+    }
+
+    @Test
+    void getServiceTemplateUsesGetWithQueryParam() {
+        client.getServiceTemplate("my-template");
+
+        assertEquals(1, requests.size());
+        assertEquals("GET", requests.getFirst().method());
+        assertEquals(
+                "/api/v1/service-template/get?name=my-template",
+                requests.getFirst().path());
+    }
+
+    @Test
+    void downloadServiceTemplateUsesGetWithQueryParam() {
+        client.downloadServiceTemplate("my-template");
+
+        assertEquals(1, requests.size());
+        assertEquals("GET", requests.getFirst().method());
+        assertEquals(
+                "/api/v1/service-template/download?name=my-template",
+                requests.getFirst().path());
+    }
+
+    @Test
+    void deployServiceTemplateUsesPostAtDeployPath() {
+        client.deployServiceTemplate(new DataStore());
+
+        assertEquals(1, requests.size());
+        assertEquals("POST", requests.getFirst().method());
+        assertEquals("/api/v1/service-template/deploy", requests.getFirst().path());
+    }
+
+    @Test
+    void removeServiceTemplateUsesDeleteWithQueryParam() {
+        client.removeServiceTemplate("my-template");
+
+        assertEquals(1, requests.size());
+        assertEquals("DELETE", requests.getFirst().method());
+        assertEquals(
+                "/api/v1/service-template/remove?name=my-template",
+                requests.getFirst().path());
+    }
+
+    @Test
+    void getServiceTemplatePropertiesUsesGetWithQueryParam() {
+        client.getServiceTemplateProperties("my-template");
+
+        assertEquals(1, requests.size());
+        assertEquals("GET", requests.getFirst().method());
+        assertEquals(
+                "/api/v1/service-template/properties?name=my-template",
+                requests.getFirst().path());
+    }
+
+    @Test
+    void instantiateServiceTemplateUsesPostAtInstantiatePath() {
+        client.instantiateServiceTemplate(new TemplateInstantiationRequest("my-template"));
+
+        assertEquals(1, requests.size());
+        assertEquals("POST", requests.getFirst().method());
+        assertEquals("/api/v1/service-template/instantiate", requests.getFirst().path());
+    }
+
+    @Test
+    void instantiateServiceTemplateRejectsMissingTemplateName() {
+        TemplateInstantiationRequest request = new TemplateInstantiationRequest();
+
+        assertThrows(IllegalArgumentException.class, () -> client.instantiateServiceTemplate(request));
+
+        assertEquals(0, requests.size());
     }
 
     // ==================== No-Auth Tests ====================

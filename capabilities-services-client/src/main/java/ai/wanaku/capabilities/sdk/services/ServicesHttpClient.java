@@ -13,6 +13,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,11 +26,14 @@ import ai.wanaku.capabilities.sdk.api.types.DataStore;
 import ai.wanaku.capabilities.sdk.api.types.ForwardReference;
 import ai.wanaku.capabilities.sdk.api.types.Namespace;
 import ai.wanaku.capabilities.sdk.api.types.ResourceReference;
+import ai.wanaku.capabilities.sdk.api.types.ServiceTemplateDetail;
+import ai.wanaku.capabilities.sdk.api.types.ServiceTemplateSummary;
 import ai.wanaku.capabilities.sdk.api.types.ToolReference;
 import ai.wanaku.capabilities.sdk.api.types.WanakuResponse;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionEvent;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionRequest;
 import ai.wanaku.capabilities.sdk.api.types.execution.CodeExecutionResponse;
+import ai.wanaku.capabilities.sdk.api.types.io.TemplateInstantiationRequest;
 import ai.wanaku.capabilities.sdk.common.config.ServiceConfig;
 import ai.wanaku.capabilities.sdk.common.exceptions.WanakuWebException;
 import ai.wanaku.capabilities.sdk.common.serializer.Serializer;
@@ -40,7 +44,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * A client for interacting with the Wanaku Services API.
- * This class handles HTTP requests for tools, resources, forwards, and namespaces operations.
+ * This class handles HTTP requests for tools, resources, forwards, namespaces, and service template operations.
  */
 public class ServicesHttpClient {
     private static final Logger LOG = LoggerFactory.getLogger(ServicesHttpClient.class);
@@ -470,6 +474,101 @@ public class ServicesHttpClient {
      */
     public WanakuResponse<DataStore> getServiceCatalog(String name) {
         return executeGet("/api/v1/service-catalog/download?name=" + encode(name), new TypeReference<>() {});
+    }
+
+    // ==================== Service Templates API Methods ====================
+
+    /**
+     * Lists all service templates.
+     *
+     * @return The response containing the list of template summaries.
+     * @throws WanakuException If an error occurs during the request.
+     */
+    public WanakuResponse<List<ServiceTemplateSummary>> listServiceTemplates() {
+        return listServiceTemplates(null);
+    }
+
+    /**
+     * Lists service templates, optionally filtered by a search term.
+     *
+     * @param search The search term to filter templates by name or description, or {@code null} to list all.
+     * @return The response containing the list of matching template summaries.
+     * @throws WanakuException If an error occurs during the request.
+     */
+    public WanakuResponse<List<ServiceTemplateSummary>> listServiceTemplates(String search) {
+        String path = "/api/v1/service-template/list";
+        if (search != null && !search.isBlank()) {
+            path = path + "?search=" + encode(search);
+        }
+        return executeGet(path, new TypeReference<>() {});
+    }
+
+    /**
+     * Gets a service template by name, including per-system details such as routes, rules,
+     * dependencies and properties files.
+     *
+     * @param name The name of the template to retrieve.
+     * @return The response containing the template detail.
+     * @throws WanakuException If an error occurs during the request.
+     */
+    public WanakuResponse<ServiceTemplateDetail> getServiceTemplate(String name) {
+        return executeGet("/api/v1/service-template/get?name=" + encode(name), new TypeReference<>() {});
+    }
+
+    /**
+     * Downloads a service template by name, returning the raw DataStore with Base64-encoded ZIP data.
+     *
+     * @param name The name of the template to download.
+     * @return The response containing the DataStore with the Base64-encoded ZIP.
+     * @throws WanakuException If an error occurs during the request.
+     */
+    public WanakuResponse<DataStore> downloadServiceTemplate(String name) {
+        return executeGet("/api/v1/service-template/download?name=" + encode(name), new TypeReference<>() {});
+    }
+
+    /**
+     * Deploys a service template ZIP package.
+     *
+     * @param dataStore The {@link DataStore} containing the Base64-encoded ZIP.
+     * @return The response containing the created data store entry.
+     * @throws WanakuException If an error occurs during the request.
+     */
+    public WanakuResponse<DataStore> deployServiceTemplate(DataStore dataStore) {
+        return executePost("/api/v1/service-template/deploy", dataStore, new TypeReference<>() {});
+    }
+
+    /**
+     * Removes a service template by name.
+     *
+     * @param name The name of the template to remove.
+     * @throws WanakuException If an error occurs during the request.
+     */
+    public void removeServiceTemplate(String name) {
+        executeDelete("/api/v1/service-template/remove?name=" + encode(name));
+    }
+
+    /**
+     * Gets the properties declared in a service template.
+     *
+     * @param name The name of the template.
+     * @return The response containing a map of system name to property key-value pairs.
+     * @throws WanakuException If an error occurs during the request.
+     */
+    public WanakuResponse<Map<String, Map<String, String>>> getServiceTemplateProperties(String name) {
+        return executeGet("/api/v1/service-template/properties?name=" + encode(name), new TypeReference<>() {});
+    }
+
+    /**
+     * Instantiates a service template by filling in property values, creating a new service catalog.
+     *
+     * @param request The {@link TemplateInstantiationRequest} containing the template name and property values.
+     * @return The response containing the newly created service catalog DataStore.
+     * @throws WanakuException If an error occurs during the request.
+     */
+    public WanakuResponse<DataStore> instantiateServiceTemplate(TemplateInstantiationRequest request) {
+        request.validate();
+
+        return executePost("/api/v1/service-template/instantiate", request, new TypeReference<>() {});
     }
 
     // ==================== Code Execution Engine API Methods ====================
