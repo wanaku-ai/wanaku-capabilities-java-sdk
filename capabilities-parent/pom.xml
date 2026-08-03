@@ -40,7 +40,7 @@
         <langchain4j.version>1.17.2</langchain4j.version>
         <maven.resolver.version>2.0.21</maven.resolver.version>
         <maven.resolver-provider.version>3.9.16</maven.resolver-provider.version>
-        <jspecify.version>1.0.0</jspecify.version>
+        <jspecify.version>1.0.1</jspecify.version>
         <mockito.version>5.23.0</mockito.version>
         <palantir-java-format.version>2.71.0</palantir-java-format.version>
     </properties>
