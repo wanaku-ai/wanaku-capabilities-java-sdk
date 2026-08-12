@@ -16,7 +16,6 @@ public class PluginConfiguration {
     private static final String PROPERTIES_FILE = "camel-integration-capability.properties";
 
     private String registrationUrl;
-    private int grpcPort = 9190;
     private String registrationAnnounceAddress = "auto";
     private String serviceName = "camel";
     private String routesRef;
@@ -58,7 +57,6 @@ public class PluginConfiguration {
 
         // Apply properties then override with environment variables
         config.registrationUrl = getConfigValue(props, "registration.url", "REGISTRATION_URL", null);
-        config.grpcPort = Integer.parseInt(getConfigValue(props, "grpc.port", "GRPC_PORT", "9190"));
         config.registrationAnnounceAddress =
                 getConfigValue(props, "registration.announce.address", "REGISTRATION_ANNOUNCE_ADDRESS", "auto");
         config.serviceName = getConfigValue(props, "service.name", "SERVICE_NAME", "camel");
@@ -121,10 +119,6 @@ public class PluginConfiguration {
     // Getters
     public String getRegistrationUrl() {
         return registrationUrl;
-    }
-
-    public int getGrpcPort() {
-        return grpcPort;
     }
 
     public String getRegistrationAnnounceAddress() {

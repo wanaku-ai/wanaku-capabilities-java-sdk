@@ -10,7 +10,6 @@ class PluginConfigurationTest {
     @Test
     void load_defaults() {
         PluginConfiguration config = PluginConfiguration.load();
-        assertEquals(9190, config.getGrpcPort());
         assertEquals("camel", config.getServiceName());
     }
 

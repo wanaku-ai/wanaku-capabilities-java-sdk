@@ -148,7 +148,7 @@ Represents a capability service endpoint.
 | `id` | string | No* | UUID assigned by server on registration |
 | `serviceName` | string | Yes | Unique service identifier |
 | `host` | string | Yes | IP address or hostname |
-| `port` | int | Yes | gRPC service port |
+| `port` | int | Yes | Service port |
 | `serviceType` | string | Yes | Service category (see below) |
 | `serviceSubType` | string | No | Engine variant (e.g., "jvm", "interpreted") |
 | `languageName` | string | No | Implementation language |
@@ -246,7 +246,7 @@ String address = DiscoveryHelper.resolveRegistrationAddress(announceAddress);
 ServiceTarget serviceTarget = ServiceTarget.newEmptyTarget(
     "my-awesome-tool",    // Service name
     address,              // Host/IP
-    9090,                 // gRPC port
+    9090,                 // Service port
     "tool-invoker"        // Service type
 );
 ```

@@ -27,11 +27,7 @@ Plain-Java SDK for building new capabilities for the [Wanaku MCP Router](https:/
 - `capabilities-parent` — shared dependency management and plugin configuration
 - `capabilities-common` — common utilities
 - `capabilities-api` — public API (does not need tests)
-- `capabilities-exchange` — gRPC/Protobuf service definitions (`.proto` files live here)
-- `capabilities-discovery` — service discovery
 - `capabilities-security` — OAuth2/OIDC security (Nimbus SDK)
-- `capabilities-config-providers` — configuration provider API + file-based implementation
-- `capabilities-data-files` — data file handling
 - `capabilities-runtimes` — runtime implementations (Camel runtime, common runtime)
 - `capabilities-services-client` — service client
 - `capabilities-code-execution-engines` — LangChain4j code execution integration
@@ -41,7 +37,7 @@ Plain-Java SDK for building new capabilities for the [Wanaku MCP Router](https:/
 
 ## Active Technologies
 
-- Java 21, Apache Camel, gRPC/Protobuf, Jackson, JGit, LangChain4j
+- Java 21, Apache Camel, Jackson, JGit, LangChain4j
 - Testing: JUnit Jupiter, Mockito
 - Code quality: Spotless (Palantir format), PMD, SpotBugs, JaCoCo
 
