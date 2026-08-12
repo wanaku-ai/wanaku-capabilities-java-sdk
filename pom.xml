@@ -68,11 +68,7 @@
     <modules>
         <module>capabilities-parent</module>
         <module>capabilities-common</module>
-        <module>capabilities-discovery</module>
         <module>capabilities-security</module>
-        <module>capabilities-data-files</module>
-        <module>capabilities-config-providers</module>
-        <module>capabilities-exchange</module>
         <module>capabilities-runtimes</module>
         <module>capabilities-services-client</module>
         <module>capabilities-code-execution-engines</module>

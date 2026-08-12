@@ -47,26 +47,6 @@
         </dependency>
         <dependency>
             <groupId>ai.wanaku.sdk</groupId>
-            <artifactId>capabilities-config-provider-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ai.wanaku.sdk</groupId>
-            <artifactId>capabilities-config-provider-file</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ai.wanaku.sdk</groupId>
-            <artifactId>capabilities-discovery</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ai.wanaku.sdk</groupId>
-            <artifactId>capabilities-data-files</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ai.wanaku.sdk</groupId>
-            <artifactId>capabilities-exchange</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ai.wanaku.sdk</groupId>
             <artifactId>capabilities-runtimes-common</artifactId>
         </dependency>
 
