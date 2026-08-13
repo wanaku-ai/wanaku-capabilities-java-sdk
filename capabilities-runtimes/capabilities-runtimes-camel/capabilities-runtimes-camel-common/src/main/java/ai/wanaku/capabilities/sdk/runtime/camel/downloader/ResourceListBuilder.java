@@ -39,20 +39,6 @@ public class ResourceListBuilder {
     }
 
     /**
-     * Adds a rules reference to the resource list.
-     * This is an optional resource.
-     *
-     * @param rulesRef the rules reference URI string (e.g., "datastore://rules.yaml" or "file:///path/to/rules.yaml")
-     * @return this builder for method chaining
-     */
-    public ResourceListBuilder addRulesRef(String rulesRef) {
-        if (rulesRef != null && !rulesRef.isEmpty()) {
-            resources.add(ResourceRefs.newRulesRef(rulesRef));
-        }
-        return this;
-    }
-
-    /**
      * Adds a dependencies reference to the resource list.
      * This is an optional resource.
      *

@@ -23,7 +23,6 @@ import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
  * catalog.name=my-catalog
  * catalog.services=system1,system2
  * catalog.routes.system1=system1/routes.camel.yaml
- * catalog.rules.system1=system1/rules.wanaku-rules.yaml
  * catalog.dependencies.system1=system1/dependencies.txt
  * </pre>
  */
@@ -32,7 +31,6 @@ public final class ServiceCatalogExtractor {
 
     private static final String INDEX_FILE = "index.properties";
     private static final String PROP_ROUTES_PREFIX = "catalog.routes.";
-    private static final String PROP_RULES_PREFIX = "catalog.rules.";
     private static final String PROP_DEPENDENCIES_PREFIX = "catalog.dependencies.";
     private static final String PROP_PROPERTIES_PREFIX = "catalog.properties.";
 
@@ -64,9 +62,6 @@ public final class ServiceCatalogExtractor {
 
         String routesEntry = requireProperty(props, PROP_ROUTES_PREFIX + system, system);
         result.put(ResourceType.ROUTES_REF, dataDir.resolve(routesEntry));
-
-        String rulesEntry = requireProperty(props, PROP_RULES_PREFIX + system, system);
-        result.put(ResourceType.RULES_REF, dataDir.resolve(rulesEntry));
 
         String depsEntry = props.getProperty(PROP_DEPENDENCIES_PREFIX + system);
         if (depsEntry != null && !depsEntry.isBlank()) {
