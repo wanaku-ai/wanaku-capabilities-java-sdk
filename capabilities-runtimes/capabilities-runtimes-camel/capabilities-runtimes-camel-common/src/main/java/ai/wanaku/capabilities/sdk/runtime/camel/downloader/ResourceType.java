@@ -6,8 +6,6 @@ package ai.wanaku.capabilities.sdk.runtime.camel.downloader;
 public enum ResourceType {
     /** Camel route definitions. */
     ROUTES_REF,
-    /** MCP rule files that govern tool and resource behaviour. */
-    RULES_REF,
     /** Maven dependency coordinates required at runtime. */
     DEPENDENCY_REF,
     /** Configuration properties files. */
