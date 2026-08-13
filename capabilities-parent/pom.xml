@@ -20,7 +20,7 @@
         <spotbugs-maven-plugin.version>4.10.3.0</spotbugs-maven-plugin.version>
         <spotless-maven-plugin.version>3.9.0</spotless-maven-plugin.version>
 
-        <camel.version>4.21.0</camel.version>
+        <camel.version>4.22.0</camel.version>
         <forage.version>1.5.0</forage.version>
         <jgit.version>7.7.1.202607240634-r</jgit.version>
         <jackson-dataformat-yaml.version>2.22.1</jackson-dataformat-yaml.version>
