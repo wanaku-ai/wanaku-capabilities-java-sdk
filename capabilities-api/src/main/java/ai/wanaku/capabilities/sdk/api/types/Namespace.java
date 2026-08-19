@@ -1,13 +1,14 @@
 package ai.wanaku.capabilities.sdk.api.types;
 
-import org.jspecify.annotations.Nullable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Represents a namespace within the Wanaku system.
  * <p>
  * Namespaces provide logical grouping and isolation for capabilities, tools, and resources.
- * Each namespace has a unique identifier, a human-readable name, and a path that defines
- * its location within the namespace hierarchy.
+ * The name serves as the unique identifier, URL path segment, and display name.
+ * Names must follow DNS-label conventions: lowercase alphanumeric and hyphens,
+ * 1-63 chars, must start and end with an alphanumeric character.
  */
 public class Namespace extends LabelsAwareEntity<String> {
     /**
@@ -15,66 +16,35 @@ public class Namespace extends LabelsAwareEntity<String> {
      */
     public Namespace() {}
 
-    private String id;
-    private @Nullable String name;
-    private String path;
+    private String name;
 
-    /**
-     * Gets the unique identifier for this namespace.
-     *
-     * @return the namespace identifier
-     */
+    @JsonIgnore
     @Override
     public String getId() {
-        return id;
+        return name;
     }
 
-    /**
-     * Sets the unique identifier for this namespace.
-     *
-     * @param id the namespace identifier to set
-     */
+    @JsonIgnore
     @Override
     public void setId(String id) {
-        this.id = id;
+        this.name = id;
     }
 
     /**
-     * Gets the human-readable name of this namespace.
+     * Gets the namespace name, which also serves as its identifier and URL path segment.
      *
      * @return the namespace name
      */
-    public @Nullable String getName() {
+    public String getName() {
         return name;
     }
 
     /**
-     * Sets the human-readable name of this namespace.
+     * Sets the namespace name.
      *
      * @param name the namespace name to set
      */
-    public void setName(@Nullable String name) {
+    public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * Gets the hierarchical path of this namespace.
-     * <p>
-     * The path defines the location of this namespace within the namespace hierarchy
-     * and is used for namespace resolution and organization.
-     *
-     * @return the namespace path
-     */
-    public String getPath() {
-        return path;
-    }
-
-    /**
-     * Sets the hierarchical path of this namespace.
-     *
-     * @param path the namespace path to set
-     */
-    public void setPath(String path) {
-        this.path = path;
     }
 }
