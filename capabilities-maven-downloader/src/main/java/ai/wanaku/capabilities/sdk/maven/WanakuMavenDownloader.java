@@ -130,7 +130,8 @@ public class WanakuMavenDownloader implements AutoCloseable {
     }
 
     /**
-     * Downloads the given artifacts and all their transitive compile-scope dependencies.
+     * Downloads the given artifacts and their compile and runtime dependencies as one graph.
+     * Maven conflict mediation applies to all declared artifacts before the classloader is populated.
      *
      * @param gavs the Maven coordinates to resolve
      * @return paths to all resolved JAR files (including transitive dependencies)
@@ -139,33 +140,34 @@ public class WanakuMavenDownloader implements AutoCloseable {
     public List<Path> download(List<GAV> gavs) {
         Objects.requireNonNull(gavs, "gavs must not be null");
 
-        DependencyFilter filter = DependencyFilterUtils.classpathFilter(JavaScopes.COMPILE, JavaScopes.RUNTIME);
-        List<Path> allPaths = new ArrayList<>();
+        if (gavs.isEmpty()) {
+            return List.of();
+        }
 
+        LOG.debug("Resolving {}", gavs);
+        CollectRequest collectRequest = new CollectRequest();
         for (GAV gav : gavs) {
-            LOG.debug("Resolving {}", gav);
+            collectRequest.addDependency(new Dependency(
+                    new DefaultArtifact(gav.groupId(), gav.artifactId(), "jar", gav.version()), JavaScopes.COMPILE));
+        }
+        collectRequest.setRepositories(repositories);
 
-            CollectRequest collectRequest = new CollectRequest();
-            collectRequest.setRoot(new Dependency(
-                    new DefaultArtifact(gav.groupId(), gav.artifactId(), "jar", gav.version()), "compile"));
-            collectRequest.setRepositories(repositories);
+        DependencyFilter filter = DependencyFilterUtils.classpathFilter(JavaScopes.COMPILE, JavaScopes.RUNTIME);
+        DependencyRequest request = new DependencyRequest(collectRequest, filter);
+        DependencyResult result;
+        try {
+            result = repositorySystem.resolveDependencies(session, request);
+        } catch (DependencyResolutionException e) {
+            throw new DependencyDownloadException("Failed to resolve " + gavs, e);
+        }
 
-            DependencyRequest request = new DependencyRequest(collectRequest, filter);
-
-            DependencyResult result;
-            try {
-                result = repositorySystem.resolveDependencies(session, request);
-            } catch (DependencyResolutionException e) {
-                throw new DependencyDownloadException("Failed to resolve " + gav, e);
-            }
-
-            for (ArtifactResult ar : result.getArtifactResults()) {
-                Path jarPath = ar.getArtifact().getPath();
-                if (jarPath != null) {
-                    allPaths.add(jarPath);
-                    classLoader.addJar(jarPath);
-                    LOG.debug("  resolved {} -> {}", ar.getArtifact(), jarPath);
-                }
+        List<Path> allPaths = new ArrayList<>();
+        for (ArtifactResult ar : result.getArtifactResults()) {
+            Path jarPath = ar.getArtifact().getPath();
+            if (jarPath != null) {
+                allPaths.add(jarPath);
+                classLoader.addJar(jarPath);
+                LOG.debug("  resolved {} -> {}", ar.getArtifact(), jarPath);
             }
         }
 
