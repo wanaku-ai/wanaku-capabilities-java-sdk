@@ -14,11 +14,13 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ai.wanaku.capabilities.sdk.api.exceptions.WanakuException;
@@ -40,6 +42,8 @@ import ai.wanaku.capabilities.sdk.common.serializer.Serializer;
 import ai.wanaku.capabilities.sdk.security.ServiceAuthenticator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -54,6 +58,7 @@ public class ServicesHttpClient {
     private final Serializer serializer;
     private final ObjectMapper objectMapper;
     private final ServiceAuthenticator serviceAuthenticator;
+    private final UnaryOperator<HttpRequest.Builder> requestCustomizer;
 
     /**
      * Constructs a {@code ServicesHttpClient} with the given configuration.
@@ -61,7 +66,24 @@ public class ServicesHttpClient {
      * @param config The {@link ServiceConfig} containing base URL and serializer.
      */
     public ServicesHttpClient(ServiceConfig config) {
-        this.httpClient = HttpClient.newHttpClient();
+        this(config, HttpClient.newHttpClient(), UnaryOperator.identity());
+    }
+
+    /**
+     * Constructs a client with a caller-managed HTTP transport and request settings.
+     * The customizer runs after the configured OAuth authorization is added.
+     * The caller owns the HTTP client's lifecycle.
+     *
+     * @param config the service location, serializer, and optional OAuth configuration
+     * @param httpClient the transport used to send requests
+     * @param requestCustomizer the operation that adds headers or a request timeout
+     * @throws NullPointerException if a required argument is null
+     */
+    public ServicesHttpClient(
+            ServiceConfig config, HttpClient httpClient, UnaryOperator<HttpRequest.Builder> requestCustomizer) {
+        Objects.requireNonNull(config, "Service configuration is required");
+        this.httpClient = Objects.requireNonNull(httpClient, "HTTP client is required");
+        this.requestCustomizer = Objects.requireNonNull(requestCustomizer, "Request customizer is required");
         this.baseUrl = sanitize(config);
         this.serializer = config.getSerializer();
         this.objectMapper = new ObjectMapper();
@@ -90,7 +112,7 @@ public class ServicesHttpClient {
         if (serviceAuthenticator != null) {
             builder.header("Authorization", serviceAuthenticator.toHeaderValue());
         }
-        return builder;
+        return Objects.requireNonNull(requestCustomizer.apply(builder), "Request customizer returned null");
     }
 
     /**
@@ -180,6 +202,15 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     private <T> T executeGet(String path, TypeReference<T> typeReference) {
+        return executeGet(path, body -> objectMapper.readValue(body, typeReference));
+    }
+
+    @FunctionalInterface
+    private interface ResponseDecoder<T> {
+        T read(String body) throws IOException;
+    }
+
+    private <T> T executeGet(String path, ResponseDecoder<T> decoder) {
         try {
             URI uri = URI.create(this.baseUrl + path);
 
@@ -191,7 +222,7 @@ public class ServicesHttpClient {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                return objectMapper.readValue(response.body(), typeReference);
+                return decoder.read(response.body());
             } else {
                 throw new WanakuWebException(
                         "HTTP error: " + response.statusCode() + " - " + response.body(), response.statusCode());
@@ -473,7 +504,29 @@ public class ServicesHttpClient {
      * @throws WanakuException If an error occurs during the request.
      */
     public WanakuResponse<DataStore> getServiceCatalog(String name) {
-        return executeGet("/api/v1/service-catalog/download?name=" + encode(name), new TypeReference<>() {});
+        return executeGet("/api/v1/service-catalog/download?name=" + encode(name), this::readServiceCatalog);
+    }
+
+    private WanakuResponse<DataStore> readServiceCatalog(String body) throws IOException {
+        JsonNode response = objectMapper.readTree(body);
+        if (response == null || response.hasNonNull("error")) {
+            throw new WanakuException("Service catalog response does not contain one DataStore");
+        }
+        JsonNode data = response;
+        if (response.has("data") && !response.get("data").isTextual()) {
+            data = response.get("data");
+        }
+        if (data.isArray() && data.size() == 1) {
+            data = data.get(0);
+        }
+        if (!data.isObject() || !data.hasNonNull("data") || !data.get("data").isTextual()) {
+            throw new WanakuException("Service catalog response does not contain one DataStore");
+        }
+        DataStore store = objectMapper
+                .readerFor(DataStore.class)
+                .without(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .readValue(data);
+        return new WanakuResponse<>(store);
     }
 
     // ==================== Service Templates API Methods ====================
