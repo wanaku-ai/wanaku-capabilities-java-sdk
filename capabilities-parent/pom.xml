@@ -23,7 +23,7 @@
         <camel.version>4.22.0</camel.version>
         <forage.version>1.6.1</forage.version>
         <jgit.version>7.8.0.202609011348-r</jgit.version>
-        <jackson-dataformat-yaml.version>2.22.1</jackson-dataformat-yaml.version>
+        <jackson-dataformat-yaml.version>2.22.3</jackson-dataformat-yaml.version>
         <jackson-databind.version>2.22.2</jackson-databind.version>
         <jackson-annotations.version>2.22</jackson-annotations.version>
         <jakarta.ws.rs-api.version>3.1.0</jakarta.ws.rs-api.version>
