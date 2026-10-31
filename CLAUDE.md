@@ -33,7 +33,6 @@ Plain-Java SDK for building new capabilities for the [Wanaku MCP Router](https:/
 - `capabilities-code-execution-engines` — LangChain4j code execution integration
 - `capabilities-maven-downloader` — Maven artifact resolution
 - `capabilities-bom` — Bill of Materials
-- `capabilities-archetypes` — Maven archetypes for scaffolding new capabilities
 
 ## Active Technologies
 
@@ -47,3 +46,9 @@ Plain-Java SDK for building new capabilities for the [Wanaku MCP Router](https:/
 - Import order: `jakarta|javax`, `org.w3c|org.xml`, `java|org|io|`, then everything else; wildcards last
 - Unused imports are removed automatically
 - Wildcard imports are forbidden
+
+## Documentation
+
+- User documentation lives in `docs/`. Follow `docs/contributing/documentation.md`.
+- Add each new page to `docs/nav.json`. When you move or rename a page, add a line to `docs/redirects.txt`.
+- Run `python3 .github/check-docs-nav.py` and `npx markdownlint-cli2` before you push.

@@ -14,6 +14,7 @@ The `docs/` tree has one folder for each reader task:
 | Folder | Reader task |
 |---|---|
 | `get-started/` | Add the SDK to a project. |
+| `guides/` | Do a task with one or more SDK modules. |
 | `reference/` | Look up modules, types, and classes. |
 | `contributing/` | Build, test, document, and release the SDK. |
 

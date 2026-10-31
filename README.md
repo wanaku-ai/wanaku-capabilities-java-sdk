@@ -1,7 +1,6 @@
 # Wanaku Capabilities Java SDK
 
-This project is a plain-Java SDK designed to facilitate the creation of new capabilities for the [Wanaku MCP Router](http://wanaku.ai).
-These new capabilities serve to augment Wanaku by enabling it to handle various tool types, extending its functionality and versatility.
+This project is the set of plain-Java libraries that the Java components of [Wanaku](https://wanaku.ai) share: Wanaku Barn, the Camel Integration Capability, and the Wanaku Semantic Router.
 
 For more information about the main Wanaku project, please visit the [Wanaku GitHub repository](http://github.com/wanaku-ai/wanaku).
 
@@ -9,6 +8,7 @@ For more information about the main Wanaku project, please visit the [Wanaku Git
 
 - [Documentation home](docs/index.md) - What the SDK contains
 - [Get started](docs/get-started/index.md) - Add the SDK to a Maven project
+- [Guides](docs/guides/index.md) - Call the Wanaku services API, load service catalogs and routes, download Maven artifacts
 - [Modules](docs/reference/modules.md) - The published artifacts
 - [Contributing](docs/contributing/index.md) - Build, test, document, and release the SDK
 

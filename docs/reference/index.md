@@ -9,7 +9,8 @@ Use these pages to look up the parts of the Wanaku Capabilities Java SDK.
 
 | Page | Contents |
 |---|---|
-| [Modules](modules.md) | Each published artifact, its purpose, and its main packages and classes. |
+| [Modules](modules.md) | Each published artifact, its purpose, its main classes, and its dependencies. |
+| [API types](api-types.md) | The types and exceptions in `capabilities-api`. |
 
 ## Next steps
 

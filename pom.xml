@@ -74,7 +74,6 @@
         <module>capabilities-code-execution-engines</module>
         <module>capabilities-maven-downloader</module>
         <module>capabilities-bom</module>
-        <module>capabilities-archetypes</module>
         <module>capabilities-api</module>
     </modules>
 

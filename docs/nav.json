@@ -5,18 +5,49 @@
       "link": "get-started/"
     },
     {
+      "text": "Guides",
+      "link": "guides/",
+      "items": [
+        {
+          "text": "Call the Wanaku services API",
+          "link": "guides/call-the-services-api"
+        },
+        {
+          "text": "Load service catalogs and routes",
+          "link": "guides/load-catalogs-and-routes"
+        },
+        {
+          "text": "Download Maven artifacts",
+          "link": "guides/download-maven-artifacts"
+        }
+      ]
+    },
+    {
       "text": "Reference",
       "link": "reference/",
       "items": [
-        { "text": "Modules", "link": "reference/modules" }
+        {
+          "text": "Modules",
+          "link": "reference/modules"
+        },
+        {
+          "text": "API types",
+          "link": "reference/api-types"
+        }
       ]
     },
     {
       "text": "Contributing",
       "link": "contributing/",
       "items": [
-        { "text": "Write SDK documentation", "link": "contributing/documentation" },
-        { "text": "Release guide", "link": "contributing/release" }
+        {
+          "text": "Write SDK documentation",
+          "link": "contributing/documentation"
+        },
+        {
+          "text": "Release guide",
+          "link": "contributing/release"
+        }
       ]
     }
   ]
