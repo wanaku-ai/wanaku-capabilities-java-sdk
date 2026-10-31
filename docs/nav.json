@@ -1,0 +1,23 @@
+{
+  "sidebar": [
+    {
+      "text": "Get started",
+      "link": "get-started/"
+    },
+    {
+      "text": "Reference",
+      "link": "reference/",
+      "items": [
+        { "text": "Modules", "link": "reference/modules" }
+      ]
+    },
+    {
+      "text": "Contributing",
+      "link": "contributing/",
+      "items": [
+        { "text": "Write SDK documentation", "link": "contributing/documentation" },
+        { "text": "Release guide", "link": "contributing/release" }
+      ]
+    }
+  ]
+}

@@ -7,6 +7,6 @@ hero:
   tagline: Learn how to extend Wanaku capabilities by creating capabilities in plain Java.
   actions:
     - theme: brand
-      text: Read the Usage Guide
-      link: ./docs/usage
+      text: Read the documentation
+      link: ./docs/
 ---

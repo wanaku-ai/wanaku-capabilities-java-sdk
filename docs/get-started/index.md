@@ -1,10 +1,18 @@
-# SDK Usage Guide
+---
+title: Get started
+description: Add the Wanaku Capabilities Java SDK to a Maven project with the BOM, or generate a new project from the capabilities-archetypes-java-tool archetype.
+---
 
-This guide provides instructions on how to use the Wanaku Capabilities Java SDK to generate new capabilities.
+# Get started
+
+This page shows how to add the Wanaku Capabilities Java SDK to a Maven project. The SDK needs Java 21.
 
 ## Generating a New Capability Project
 
 To create a new project based on the Wanaku Capabilities Java SDK archetype, use the following Maven command. Remember to replace `ai.test` with your desired package, `groupId`, `artifactId`, and `name`.
+
+> [!NOTE]
+> On `main`, the archetype generates a `pom.xml` with the SDK dependencies and no Java source files.
 
 ```bash
 mvn -B archetype:generate -DarchetypeGroupId=ai.wanaku.sdk \
@@ -28,6 +36,7 @@ mvn -B archetype:generate -DarchetypeGroupId=ai.wanaku.sdk \
 - `-Dname`: A human-readable name for your capability (e.g., `My Awesome Tool`).
 - `-Dwanaku-sdk-version`: The version of the Wanaku SDK to be used in the generated project. This should match `${WANAKU_VERSION}`.
 
-## Learn More
+## Next steps
 
-- **[Client Registration Flow](client-registration-flow.md)** - Client Registration Flow
+- [Modules](../reference/modules.md): find the modules that you need.
+- [Contributing](../contributing/index.md): build the SDK from source.
