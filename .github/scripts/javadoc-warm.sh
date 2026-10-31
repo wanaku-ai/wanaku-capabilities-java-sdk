@@ -7,11 +7,10 @@ set -euo pipefail
 VERSION="${1:?Usage: $0 <version>}"
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 find "$PROJECT_ROOT" -name "pom.xml" \
     -not -path "*/target/*" \
-    -not -path "*/archetype-resources/*" \
     -not -path "*/tests/*" \
     | sort | while read -r pom; do
 
@@ -38,7 +37,7 @@ print(f'{gid} {aid} {pkg}')
 PYEOF
     )
 
-    if [[ "$pkg" == "pom" || "$pkg" == "maven-archetype" ]]; then
+    if [[ "$pkg" == "pom" ]]; then
         continue
     fi
 
