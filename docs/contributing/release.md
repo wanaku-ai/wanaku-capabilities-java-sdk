@@ -11,16 +11,16 @@ Releases are cut from release branches following the `X.Y.x` naming convention (
 
 ```shell
 git checkout main
-git checkout -b 0.2.x
-git push upstream 0.2.x
+git checkout -b 0.3.x
+git push upstream 0.3.x
 ```
 
 ## Set the versions
 
 ```shell
-export RELEASE_BRANCH=0.2.x
-export CURRENT_DEVELOPMENT_VERSION=0.2.0
-export NEXT_DEVELOPMENT_VERSION=0.2.1
+export RELEASE_BRANCH=0.3.x
+export CURRENT_DEVELOPMENT_VERSION=0.3.0
+export NEXT_DEVELOPMENT_VERSION=0.3.1
 ```
 
 ## Trigger the release
