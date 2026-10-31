@@ -1,0 +1,5 @@
+# Old slug, new slug. One line for each moved or removed page.
+usage get-started/
+release contributing/release
+client-registration-flow reference/modules
+registration-data-files reference/modules
